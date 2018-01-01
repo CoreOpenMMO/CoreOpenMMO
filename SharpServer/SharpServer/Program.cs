@@ -1,6 +1,7 @@
 ﻿using CommandLine;
+using Newtonsoft.Json;
 using System;
-using System.IO;
+using System.Linq;
 
 namespace SharpServer {
 
@@ -20,9 +21,12 @@ namespace SharpServer {
         }
 
         private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments value) {
-            var globalFilePath = Path.Combine(value.DataDirectoryPath, "global.lua");
-            Console.WriteLine(Path.GetFullPath(globalFilePath));
-            Console.WriteLine(File.Exists(globalFilePath));
+            var knight = Vocation.DefaultKnight();
+            var vocations = ReadOnlyArray<Vocation>.WrapCollection(new Vocation[] { knight });
+            var serialized = JsonConvert.SerializeObject(vocations, Formatting.Indented);
+            var deserialized = JsonConvert.DeserializeObject<ReadOnlyArray<Vocation>>(serialized, settings: new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            Console.WriteLine(serialized);
+            Console.WriteLine(Enumerable.SequenceEqual(vocations, deserialized));
         }
 
         private static void ReportCommandLineParsingError(NotParsed<CommandLineArguments> failedAttempt) {

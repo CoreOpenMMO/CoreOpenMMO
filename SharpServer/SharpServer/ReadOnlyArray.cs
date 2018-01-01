@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpServer {
 
@@ -12,6 +14,14 @@ namespace SharpServer {
                 throw new ArgumentNullException(nameof(items));
 
             this._items = items;
+        }
+
+        [JsonConstructor]
+        private ReadOnlyArray(IEnumerable<T> items) {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            _items = items.ToArray();
         }
 
         public T this[int index] => _items[index];
