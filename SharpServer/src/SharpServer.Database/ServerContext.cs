@@ -5,8 +5,8 @@ namespace SharpServer.Database
 {
     public class ServerContext : DbContext
     {
-        public DbSet<User> User { get; set; }
-        public DbSet<Character> Character { get; set; }
+        public DbSet<Account> Account { get; set; }
+        public DbSet<Player> Player { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

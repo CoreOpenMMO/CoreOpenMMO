@@ -17,6 +17,8 @@ namespace SharpServer {
             } else {
                 throw new InvalidOperationException("Fo reals? This line should never be reached.");
             }
+
+            Console.ReadLine();
         }
 
         private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments value) {

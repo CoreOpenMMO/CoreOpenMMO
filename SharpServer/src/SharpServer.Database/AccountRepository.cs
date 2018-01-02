@@ -3,21 +3,18 @@ using SharpServer.Domain.Entities;
 
 namespace SharpServer.Database
 {
-    public class UserRepository
+    public class AccountRepository
     {
-        public UserRepository()
+        public AccountRepository()
         {
             Init();
         }
 
-        public bool CheckUserLogin(string username, string password)
+        public bool CheckAccountLogin(string username, string password)
         {
             using (var db = new ServerContext())
             {
-                if (db.User.Any(c => c.UserName.Equals(username) && c.Password.Equals(password)))
-                    return true;
-
-                return false;
+                return db.Account.Any(c => c.UserName.Equals(username) && c.Password.Equals(password));
             }
         }
         
@@ -25,30 +22,29 @@ namespace SharpServer.Database
         {
             using (var db = new ServerContext())
             {
-                if (!db.User.Any())
+                if (!db.Account.Any())
                 {
-                    db.User.Add(new User()
+                    db.Account.Add(new Account()
                     {
                         Password = "1",
                         UserName = "1"
                     });
-                    db.User.Add(new User()
+                    db.Account.Add(new Account()
                     {
                         Password = "2",
                         UserName = "2"
                     });
-                    db.User.Add(new User()
+                    db.Account.Add(new Account()
                     {
                         Password = "3",
                         UserName = "3"
                     });
-
-                    db.User.Add(new User()
+                    db.Account.Add(new Account()
                     {
                         Password = "4",
                         UserName = "4"
                     });
-                    db.User.Add(new User()
+                    db.Account.Add(new Account()
                     {
                         Password = "5",
                         UserName = "5"
