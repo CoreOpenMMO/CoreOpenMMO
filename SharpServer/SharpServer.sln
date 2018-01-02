@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpServer", "SharpServer\SharpServer.csproj", "{1A56E43D-E26F-4E5D-8678-47A775D99BD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpServer", "SharpServer\SharpServer.csproj", "{1A56E43D-E26F-4E5D-8678-47A775D99BD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpServer.Tests", "SharpServer.Tests\SharpServer.Tests.csproj", "{62F4D73A-A398-4149-A8E1-0E476F32A1AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1A56E43D-E26F-4E5D-8678-47A775D99BD2}.Debug|x64.Build.0 = Debug|x64
 		{1A56E43D-E26F-4E5D-8678-47A775D99BD2}.Release|x64.ActiveCfg = Release|x64
 		{1A56E43D-E26F-4E5D-8678-47A775D99BD2}.Release|x64.Build.0 = Release|x64
+		{62F4D73A-A398-4149-A8E1-0E476F32A1AD}.Debug|x64.ActiveCfg = Debug|x64
+		{62F4D73A-A398-4149-A8E1-0E476F32A1AD}.Debug|x64.Build.0 = Debug|x64
+		{62F4D73A-A398-4149-A8E1-0E476F32A1AD}.Release|x64.ActiveCfg = Release|x64
+		{62F4D73A-A398-4149-A8E1-0E476F32A1AD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

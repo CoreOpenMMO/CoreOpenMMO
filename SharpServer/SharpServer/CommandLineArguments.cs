@@ -18,11 +18,5 @@ namespace SharpServer {
             else
                 DataDirectoryPath = dataDirectoryPath;
         }
-
-        public SerializationManager GetSerializationManager() {
-            var serializationManager = new SerializationManager(dataDirectoryPath: DataDirectoryPath);
-
-            return serializationManager;
-        }
     }
 }
