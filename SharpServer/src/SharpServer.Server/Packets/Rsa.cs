@@ -42,7 +42,7 @@ namespace SharpServer.Server.Packets
 
         public static bool Decrypt(ref byte[] buffer, int position, int length)
         {
-            if (length - position != 128)
+            if (length - position < 128)
                 return false;
 
             byte[] temp = new byte[128];
@@ -67,7 +67,7 @@ namespace SharpServer.Server.Packets
 
                 output = m2 + otServerQ * h;
             }
-
+            
             Array.Copy(GetPaddedValue(output), 0, buffer, position, 128);
             return true;
         }

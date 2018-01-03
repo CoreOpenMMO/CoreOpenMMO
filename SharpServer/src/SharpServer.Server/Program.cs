@@ -75,7 +75,7 @@ namespace SharpServer.Server
                 // There might be more data, so store the data received so far.
                 NetworkMessage.StringBuilder.Append(Encoding.ASCII.GetString(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length));
 
-                NetworkMessage.Length = NetworkMessage.Buffer.Length;
+                NetworkMessage.Length = NetworkMessage.WorkSocket.EndSend(ar);
 
                 byte protocol = NetworkMessage.GetByte();
                 var os = NetworkMessage.GetUInt16(); 

@@ -18,8 +18,8 @@ namespace SharpServer.Server.Packets
 
         public int Length
         {
-            get => _length;
-            set => _length = value;
+            get { return _length; }
+            set { _length = value; }
         }
 
 
@@ -88,7 +88,7 @@ namespace SharpServer.Server.Packets
         public string GetString()
         {
             int len = (int)GetUInt16();
-            string t = Encoding.Default.GetString(Buffer, _position, len);
+            string t = System.Text.ASCIIEncoding.Default.GetString(Buffer, _position, len);
             _position += len;
             return t;
         }
@@ -138,7 +138,7 @@ namespace SharpServer.Server.Packets
         public void AddString(string value)
         {
             AddUInt16((ushort)value.Length);
-            AddBytes(Encoding.Default.GetBytes(value));
+            AddBytes(System.Text.ASCIIEncoding.Default.GetBytes(value));
         }
 
         public void AddUInt16(ushort value)
@@ -188,7 +188,7 @@ namespace SharpServer.Server.Packets
         public string PeekString()
         {
             int len = (int)PeekUInt16();
-            return Encoding.ASCII.GetString(PeekBytes(len + 2), 2, len);
+            return System.Text.ASCIIEncoding.ASCII.GetString(PeekBytes(len + 2), 2, len);
         }
 
         #endregion
