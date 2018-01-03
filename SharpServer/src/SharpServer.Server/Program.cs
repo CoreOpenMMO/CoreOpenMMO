@@ -10,6 +10,7 @@ using MoonSharp.Interpreter.Interop;
 using SharpServer.Server.Entities;
 using SharpServer.Server.LuaServices;
 using SharpServer.Server.Packets;
+using SharpServer.Server.Utils;
 
 namespace SharpServer.Server
 {
@@ -72,30 +73,54 @@ namespace SharpServer.Server
         public static void ReadCallback(IAsyncResult ar)
         {
             try {
-                // There might be more data, so store the data received so far.
-                NetworkMessage.StringBuilder.Append(Encoding.ASCII.GetString(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length));
-
+             
                 NetworkMessage.Length = NetworkMessage.WorkSocket.EndSend(ar);
-
-                byte protocol = NetworkMessage.GetByte();
-                var os = NetworkMessage.GetUInt16(); 
                 
-                var version = NetworkMessage.GetUInt16();
+                ByteBuffer buffer = new ByteBuffer();
+                buffer.WriteBytes(NetworkMessage.Buffer);
+                buffer.Length2 = NetworkMessage.Length;
+
+                var protocol = buffer.ReadByte();
+                var os = buffer.ReadInteger();
+                var version = buffer.ReadInteger();
 
                 if (version >= 971)
-                    NetworkMessage.SkipBytes(17);
+                    buffer.SkipBytes(17);
                 else
-                    NetworkMessage.SkipBytes(12);
+                    buffer.SkipBytes(12);
 
-                NetworkMessage.RSADecrypt();
+                buffer.RSADecrypt();
 
-                xteaKey[0] = NetworkMessage.GetUInt32();
-                xteaKey[1] = NetworkMessage.GetUInt32();
-                xteaKey[2] = NetworkMessage.GetUInt32();
-                xteaKey[3] = NetworkMessage.GetUInt32();
+                //var version = buffer.ReadInteger();
 
-                var accountName = NetworkMessage.GetString();
-                var password = NetworkMessage.GetString();
+                xteaKey[0] = (uint)buffer.ReadInteger();
+                xteaKey[1] = (uint)buffer.ReadInteger();
+                xteaKey[2] = (uint)buffer.ReadInteger();
+                xteaKey[3] = (uint)buffer.ReadInteger();
+
+                var accountName = buffer.ReadString();
+                var password = buffer.ReadString();
+
+
+                //byte protocol = NetworkMessage.GetByte();
+                //var os = NetworkMessage.GetUInt16(); 
+
+                //var version = NetworkMessage.GetUInt16();
+
+                //if (version >= 971)
+                //    NetworkMessage.SkipBytes(17);
+                //else
+                //    NetworkMessage.SkipBytes(12);
+
+                //NetworkMessage.RSADecrypt();
+
+                //xteaKey[0] = NetworkMessage.GetUInt32();
+                //xteaKey[1] = NetworkMessage.GetUInt32();
+                //xteaKey[2] = NetworkMessage.GetUInt32();
+                //xteaKey[3] = NetworkMessage.GetUInt32();
+
+                //var accountName = NetworkMessage.GetString();
+                //var password = NetworkMessage.GetString();
             }
             catch (Exception e)
             {
@@ -103,6 +128,7 @@ namespace SharpServer.Server
             }
         }
         
+
         private static void Send(Socket handler, String data)
         {
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -137,7 +163,7 @@ namespace SharpServer.Server
             _script = new Script();
 
             RegisterLuaService("player", typeof(LuaPlayerService));
-            RegisterLuaService("account", typeof(LuaPlayerService));
+            RegisterLuaService("account", typeof(LuaAccountService));
 
             ExecuteLuaScript();
 

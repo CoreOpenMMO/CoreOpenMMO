@@ -27,9 +27,9 @@ namespace SharpServer.Server.Utils
      * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT 
      * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
      * */
-    public class BigInteger
+    public class Big
     {
-        // maximum length of the BigInteger in uint (4 bytes)
+        // maximum length of the Big in uint (4 bytes)
         // change this to suit the required level of precision.
 
         private const int maxLength = 70;
@@ -39,10 +39,10 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Constructor (Default value for BigInteger is 0
+        // Constructor (Default value for Big is 0
         //***********************************************************************
 
-        public BigInteger()
+        public Big()
         {
             data = new uint[maxLength];
             dataLength = 1;
@@ -53,12 +53,12 @@ namespace SharpServer.Server.Utils
         // Constructor (Default value provided by long)
         //***********************************************************************
 
-        public BigInteger(long value)
+        public Big(long value)
         {
             data = new uint[maxLength];
             long tempVal = value;
 
-            // copy bytes from long to BigInteger without any assumption of
+            // copy bytes from long to Big without any assumption of
             // the length of the long datatype
 
             dataLength = 0;
@@ -89,11 +89,11 @@ namespace SharpServer.Server.Utils
         // Constructor (Default value provided by ulong)
         //***********************************************************************
 
-        public BigInteger(ulong value)
+        public Big(ulong value)
         {
             data = new uint[maxLength];
 
-            // copy bytes from ulong to BigInteger without any assumption of
+            // copy bytes from ulong to Big without any assumption of
             // the length of the ulong datatype
 
             dataLength = 0;
@@ -114,10 +114,10 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Constructor (Default value provided by BigInteger)
+        // Constructor (Default value provided by Big)
         //***********************************************************************
 
-        public BigInteger(BigInteger bi)
+        public Big(Big bi)
         {
             data = new uint[maxLength];
 
@@ -135,28 +135,28 @@ namespace SharpServer.Server.Utils
         // Example (base 10)
         // -----------------
         // To initialize "a" with the default value of 1234 in base 10
-        //      BigInteger a = new BigInteger("1234", 10)
+        //      Big a = new Big("1234", 10)
         //
         // To initialize "a" with the default value of -1234
-        //      BigInteger a = new BigInteger("-1234", 10)
+        //      Big a = new Big("-1234", 10)
         //
         // Example (base 16)
         // -----------------
         // To initialize "a" with the default value of 0x1D4F in base 16
-        //      BigInteger a = new BigInteger("1D4F", 16)
+        //      Big a = new Big("1D4F", 16)
         //
         // To initialize "a" with the default value of -0x1D4F
-        //      BigInteger a = new BigInteger("-1D4F", 16)
+        //      Big a = new Big("-1D4F", 16)
         //
         // Note that string values are specified in the <sign><magnitude>
         // format.
         //
         //***********************************************************************
 
-        public BigInteger(string value, int radix)
+        public Big(string value, int radix)
         {
-            BigInteger multiplier = new BigInteger(1);
-            BigInteger result = new BigInteger();
+            Big multiplier = new Big(1);
+            Big result = new Big();
             value = (value.ToUpper()).Trim();
             int limit = 0;
 
@@ -218,14 +218,14 @@ namespace SharpServer.Server.Utils
         // E.g.
         // To initialize "a" with the default value of 0x1D4F in base 16
         //      byte[] temp = { 0x1D, 0x4F };
-        //      BigInteger a = new BigInteger(temp)
+        //      Big a = new Big(temp)
         //
         // Note that this method of initialization does not allow the
         // sign to be specified.
         //
         //***********************************************************************
 
-        public BigInteger(byte[] inData)
+        public Big(byte[] inData)
         {
             dataLength = inData.Length >> 2;
 
@@ -265,7 +265,7 @@ namespace SharpServer.Server.Utils
         // specified length.)
         //***********************************************************************
 
-        public BigInteger(byte[] inData, int inLen)
+        public Big(byte[] inData, int inLen)
         {
             dataLength = inLen >> 2;
 
@@ -307,7 +307,7 @@ namespace SharpServer.Server.Utils
         // Constructor (Default value provided by an array of unsigned integers)
         //*********************************************************************
 
-        public BigInteger(uint[] inData)
+        public Big(uint[] inData)
         {
             dataLength = inData.Length;
 
@@ -328,27 +328,27 @@ namespace SharpServer.Server.Utils
 
         //***********************************************************************
         // Overloading of the typecast operator.
-        // For BigInteger bi = 10;
+        // For Big bi = 10;
         //***********************************************************************
 
-        public static implicit operator BigInteger(long value)
+        public static implicit operator Big(long value)
         {
-            return (new BigInteger(value));
+            return (new Big(value));
         }
 
-        public static implicit operator BigInteger(ulong value)
+        public static implicit operator Big(ulong value)
         {
-            return (new BigInteger(value));
+            return (new Big(value));
         }
 
-        public static implicit operator BigInteger(int value)
+        public static implicit operator Big(int value)
         {
-            return (new BigInteger((long)value));
+            return (new Big((long)value));
         }
 
-        public static implicit operator BigInteger(uint value)
+        public static implicit operator Big(uint value)
         {
-            return (new BigInteger((ulong)value));
+            return (new Big((ulong)value));
         }
 
 
@@ -356,9 +356,9 @@ namespace SharpServer.Server.Utils
         // Overloading of addition operator
         //***********************************************************************
 
-        public static BigInteger operator +(BigInteger bi1, BigInteger bi2)
+        public static Big operator +(Big bi1, Big bi2)
         {
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
@@ -396,9 +396,9 @@ namespace SharpServer.Server.Utils
         // Overloading of the unary ++ operator
         //***********************************************************************
 
-        public static BigInteger operator ++(BigInteger bi1)
+        public static Big operator ++(Big bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
 
             long val, carry = 1;
             int index = 0;
@@ -441,9 +441,9 @@ namespace SharpServer.Server.Utils
         // Overloading of subtraction operator
         //***********************************************************************
 
-        public static BigInteger operator -(BigInteger bi1, BigInteger bi2)
+        public static Big operator -(Big bi1, Big bi2)
         {
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
@@ -490,9 +490,9 @@ namespace SharpServer.Server.Utils
         // Overloading of the unary -- operator
         //***********************************************************************
 
-        public static BigInteger operator --(BigInteger bi1)
+        public static Big operator --(Big bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
 
             long val;
             bool carryIn = true;
@@ -537,7 +537,7 @@ namespace SharpServer.Server.Utils
         // Overloading of multiplication operator
         //***********************************************************************
 
-        public static BigInteger operator *(BigInteger bi1, BigInteger bi2)
+        public static Big operator *(Big bi1, Big bi2)
         {
             int lastPos = maxLength - 1;
             bool bi1Neg = false, bi2Neg = false;
@@ -556,7 +556,7 @@ namespace SharpServer.Server.Utils
             }
             catch (Exception) { }
 
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             // multiply the absolute values
             try
@@ -633,9 +633,9 @@ namespace SharpServer.Server.Utils
         // Overloading of unary << operators
         //***********************************************************************
 
-        public static BigInteger operator <<(BigInteger bi1, int shiftVal)
+        public static Big operator <<(Big bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
             result.dataLength = shiftLeft(result.data, shiftVal);
 
             return result;
@@ -687,9 +687,9 @@ namespace SharpServer.Server.Utils
         // Overloading of unary >> operators
         //***********************************************************************
 
-        public static BigInteger operator >>(BigInteger bi1, int shiftVal)
+        public static Big operator >>(Big bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
             result.dataLength = shiftRight(result.data, shiftVal);
 
 
@@ -759,9 +759,9 @@ namespace SharpServer.Server.Utils
         // Overloading of the NOT operator (1's complement)
         //***********************************************************************
 
-        public static BigInteger operator ~(BigInteger bi1)
+        public static Big operator ~(Big bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
 
             for (int i = 0; i < maxLength; i++)
                 result.data[i] = (uint)(~(bi1.data[i]));
@@ -779,15 +779,15 @@ namespace SharpServer.Server.Utils
         // Overloading of the NEGATE operator (2's complement)
         //***********************************************************************
 
-        public static BigInteger operator -(BigInteger bi1)
+        public static Big operator -(Big bi1)
         {
             // handle neg of zero separately since it'll cause an overflow
             // if we proceed.
 
             if (bi1.dataLength == 1 && bi1.data[0] == 0)
-                return (new BigInteger());
+                return (new Big());
 
-            BigInteger result = new BigInteger(bi1);
+            Big result = new Big(bi1);
 
             // 1's complement
             for (int i = 0; i < maxLength; i++)
@@ -823,13 +823,13 @@ namespace SharpServer.Server.Utils
         // Overloading of equality operator
         //***********************************************************************
 
-        public static bool operator ==(BigInteger bi1, BigInteger bi2)
+        public static bool operator ==(Big bi1, Big bi2)
         {
             return bi1.Equals(bi2);
         }
 
 
-        public static bool operator !=(BigInteger bi1, BigInteger bi2)
+        public static bool operator !=(Big bi1, Big bi2)
         {
             return !(bi1.Equals(bi2));
         }
@@ -837,7 +837,7 @@ namespace SharpServer.Server.Utils
 
         public override bool Equals(object o)
         {
-            BigInteger bi = (BigInteger)o;
+            Big bi = (Big)o;
 
             if (this.dataLength != bi.dataLength)
                 return false;
@@ -861,7 +861,7 @@ namespace SharpServer.Server.Utils
         // Overloading of inequality operator
         //***********************************************************************
 
-        public static bool operator >(BigInteger bi1, BigInteger bi2)
+        public static bool operator >(Big bi1, Big bi2)
         {
             int pos = maxLength - 1;
 
@@ -887,7 +887,7 @@ namespace SharpServer.Server.Utils
         }
 
 
-        public static bool operator <(BigInteger bi1, BigInteger bi2)
+        public static bool operator <(Big bi1, Big bi2)
         {
             int pos = maxLength - 1;
 
@@ -913,13 +913,13 @@ namespace SharpServer.Server.Utils
         }
 
 
-        public static bool operator >=(BigInteger bi1, BigInteger bi2)
+        public static bool operator >=(Big bi1, Big bi2)
         {
             return (bi1 == bi2 || bi1 > bi2);
         }
 
 
-        public static bool operator <=(BigInteger bi1, BigInteger bi2)
+        public static bool operator <=(Big bi1, Big bi2)
         {
             return (bi1 == bi2 || bi1 < bi2);
         }
@@ -932,8 +932,8 @@ namespace SharpServer.Server.Utils
         // Algorithm taken from [1]
         //***********************************************************************
 
-        private static void multiByteDivide(BigInteger bi1, BigInteger bi2,
-                                            BigInteger outQuotient, BigInteger outRemainder)
+        private static void multiByteDivide(Big bi1, Big bi2,
+                                            Big outQuotient, Big outRemainder)
         {
             uint[] result = new uint[maxLength];
 
@@ -1003,8 +1003,8 @@ namespace SharpServer.Server.Utils
                 for (int h = 0; h < divisorLen; h++)
                     dividendPart[h] = remainder[pos - h];
 
-                BigInteger kk = new BigInteger(dividendPart);
-                BigInteger ss = bi2 * (long)q_hat;
+                Big kk = new Big(dividendPart);
+                Big ss = bi2 * (long)q_hat;
 
                 //Console.WriteLine("ss before = " + ss);
                 while (ss > kk)
@@ -1013,7 +1013,7 @@ namespace SharpServer.Server.Utils
                     ss -= bi2;
                     //Console.WriteLine(ss);
                 }
-                BigInteger yy = kk - ss;
+                Big yy = kk - ss;
 
                 //Console.WriteLine("ss = " + ss);
                 //Console.WriteLine("kk = " + kk);
@@ -1062,8 +1062,8 @@ namespace SharpServer.Server.Utils
         // a divisor that has only 1 digit.
         //***********************************************************************
 
-        private static void singleByteDivide(BigInteger bi1, BigInteger bi2,
-                                             BigInteger outQuotient, BigInteger outRemainder)
+        private static void singleByteDivide(Big bi1, Big bi2,
+                                             Big outQuotient, Big outRemainder)
         {
             uint[] result = new uint[maxLength];
             int resultPos = 0;
@@ -1127,10 +1127,10 @@ namespace SharpServer.Server.Utils
         // Overloading of division operator
         //***********************************************************************
 
-        public static BigInteger operator /(BigInteger bi1, BigInteger bi2)
+        public static Big operator /(Big bi1, Big bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
+            Big quotient = new Big();
+            Big remainder = new Big();
 
             int lastPos = maxLength - 1;
             bool divisorNeg = false, dividendNeg = false;
@@ -1170,10 +1170,10 @@ namespace SharpServer.Server.Utils
         // Overloading of modulus operator
         //***********************************************************************
 
-        public static BigInteger operator %(BigInteger bi1, BigInteger bi2)
+        public static Big operator %(Big bi1, Big bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger(bi1);
+            Big quotient = new Big();
+            Big remainder = new Big(bi1);
 
             int lastPos = maxLength - 1;
             bool dividendNeg = false;
@@ -1210,9 +1210,9 @@ namespace SharpServer.Server.Utils
         // Overloading of bitwise AND operator
         //***********************************************************************
 
-        public static BigInteger operator &(BigInteger bi1, BigInteger bi2)
+        public static Big operator &(Big bi1, Big bi2)
         {
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
@@ -1235,9 +1235,9 @@ namespace SharpServer.Server.Utils
         // Overloading of bitwise OR operator
         //***********************************************************************
 
-        public static BigInteger operator |(BigInteger bi1, BigInteger bi2)
+        public static Big operator |(Big bi1, Big bi2)
         {
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
@@ -1260,9 +1260,9 @@ namespace SharpServer.Server.Utils
         // Overloading of bitwise XOR operator
         //***********************************************************************
 
-        public static BigInteger operator ^(BigInteger bi1, BigInteger bi2)
+        public static Big operator ^(Big bi1, Big bi2)
         {
-            BigInteger result = new BigInteger();
+            Big result = new Big();
 
             int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
@@ -1285,12 +1285,12 @@ namespace SharpServer.Server.Utils
         // Returns max(this, bi)
         //***********************************************************************
 
-        public BigInteger max(BigInteger bi)
+        public Big max(Big bi)
         {
             if (this > bi)
-                return (new BigInteger(this));
+                return (new Big(this));
             else
-                return (new BigInteger(bi));
+                return (new Big(bi));
         }
 
 
@@ -1298,12 +1298,12 @@ namespace SharpServer.Server.Utils
         // Returns min(this, bi)
         //***********************************************************************
 
-        public BigInteger min(BigInteger bi)
+        public Big min(Big bi)
         {
             if (this < bi)
-                return (new BigInteger(this));
+                return (new Big(this));
             else
-                return (new BigInteger(bi));
+                return (new Big(bi));
 
         }
 
@@ -1312,17 +1312,17 @@ namespace SharpServer.Server.Utils
         // Returns the absolute value
         //***********************************************************************
 
-        public BigInteger abs()
+        public Big abs()
         {
             if ((this.data[maxLength - 1] & 0x80000000) != 0)
                 return (-this);
             else
-                return (new BigInteger(this));
+                return (new Big(this));
         }
 
 
         //***********************************************************************
-        // Returns a string representing the BigInteger in base 10.
+        // Returns a string representing the Big in base 10.
         //***********************************************************************
 
         public override string ToString()
@@ -1332,12 +1332,12 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Returns a string representing the BigInteger in sign-and-magnitude
+        // Returns a string representing the Big in sign-and-magnitude
         // format in the specified radix.
         //
         // Example
         // -------
-        // If the value of BigInteger is -255 in base 10, then
+        // If the value of Big is -255 in base 10, then
         // ToString(16) returns "-FF"
         //
         //***********************************************************************
@@ -1350,7 +1350,7 @@ namespace SharpServer.Server.Utils
             string charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             string result = "";
 
-            BigInteger a = this;
+            Big a = this;
 
             bool negative = false;
             if ((a.data[maxLength - 1] & 0x80000000) != 0)
@@ -1363,9 +1363,9 @@ namespace SharpServer.Server.Utils
                 catch (Exception) { }
             }
 
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
-            BigInteger biRadix = new BigInteger(radix);
+            Big quotient = new Big();
+            Big remainder = new Big();
+            Big biRadix = new Big(radix);
 
             if (a.dataLength == 1 && a.data[0] == 0)
                 result = "0";
@@ -1391,14 +1391,14 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Returns a hex string showing the contains of the BigInteger
+        // Returns a hex string showing the contains of the Big
         //
         // Examples
         // -------
-        // 1) If the value of BigInteger is 255 in base 10, then
+        // 1) If the value of Big is 255 in base 10, then
         //    ToHexString() returns "FF"
         //
-        // 2) If the value of BigInteger is -255 in base 10, then
+        // 2) If the value of Big is -255 in base 10, then
         //    ToHexString() returns ".....FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01",
         //    which is the 2's complement representation of -255.
         //
@@ -1422,13 +1422,13 @@ namespace SharpServer.Server.Utils
         // Modulo Exponentiation
         //***********************************************************************
 
-        public BigInteger modPow(BigInteger exp, BigInteger n)
+        public Big modPow(Big exp, Big n)
         {
             if ((exp.data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive exponents only."));
 
-            BigInteger resultNum = 1;
-            BigInteger tempNum;
+            Big resultNum = 1;
+            Big tempNum;
             bool thisNegative = false;
 
             if ((this.data[maxLength - 1] & 0x80000000) != 0)   // negative this
@@ -1443,7 +1443,7 @@ namespace SharpServer.Server.Utils
                 n = -n;
 
             // calculate constant = b^(2k) / m
-            BigInteger constant = new BigInteger();
+            Big constant = new Big();
 
             int i = n.dataLength << 1;
             constant.data[i] = 0x00000001;
@@ -1497,13 +1497,13 @@ namespace SharpServer.Server.Utils
         // Reference [4]
         //***********************************************************************
 
-        private BigInteger BarrettReduction(BigInteger x, BigInteger n, BigInteger constant)
+        private Big BarrettReduction(Big x, Big n, Big constant)
         {
             int k = n.dataLength,
                 kPlusOne = k + 1,
                 kMinusOne = k - 1;
 
-            BigInteger q1 = new BigInteger();
+            Big q1 = new Big();
 
             // q1 = x / b^(k-1)
             for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
@@ -1513,8 +1513,8 @@ namespace SharpServer.Server.Utils
                 q1.dataLength = 1;
 
 
-            BigInteger q2 = q1 * constant;
-            BigInteger q3 = new BigInteger();
+            Big q2 = q1 * constant;
+            Big q3 = new Big();
 
             // q3 = q2 / b^(k+1)
             for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
@@ -1526,7 +1526,7 @@ namespace SharpServer.Server.Utils
 
             // r1 = x mod b^(k+1)
             // i.e. keep the lowest (k+1) words
-            BigInteger r1 = new BigInteger();
+            Big r1 = new Big();
             int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
             for (int i = 0; i < lengthToCopy; i++)
                 r1.data[i] = x.data[i];
@@ -1536,7 +1536,7 @@ namespace SharpServer.Server.Utils
             // r2 = (q3 * n) mod b^(k+1)
             // partial multiplication of q3 and n
 
-            BigInteger r2 = new BigInteger();
+            Big r2 = new Big();
             for (int i = 0; i < q3.dataLength; i++)
             {
                 if (q3.data[i] == 0) continue;
@@ -1563,7 +1563,7 @@ namespace SharpServer.Server.Utils
             r1 -= r2;
             if ((r1.data[maxLength - 1] & 0x80000000) != 0)        // negative
             {
-                BigInteger val = new BigInteger();
+                Big val = new Big();
                 val.data[kPlusOne] = 0x00000001;
                 val.dataLength = kPlusOne + 1;
                 r1 += val;
@@ -1580,10 +1580,10 @@ namespace SharpServer.Server.Utils
         // Returns gcd(this, bi)
         //***********************************************************************
 
-        public BigInteger gcd(BigInteger bi)
+        public Big gcd(Big bi)
         {
-            BigInteger x;
-            BigInteger y;
+            Big x;
+            Big y;
 
             if ((data[maxLength - 1] & 0x80000000) != 0)     // negative
                 x = -this;
@@ -1595,7 +1595,7 @@ namespace SharpServer.Server.Utils
             else
                 y = bi;
 
-            BigInteger g = y;
+            Big g = y;
 
             while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0))
             {
@@ -1648,12 +1648,12 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Returns the position of the most significant bit in the BigInteger.
+        // Returns the position of the most significant bit in the Big.
         //
-        // Eg.  The result is 0, if the value of BigInteger is 0...0000 0000
-        //      The result is 1, if the value of BigInteger is 0...0000 0001
-        //      The result is 2, if the value of BigInteger is 0...0000 0010
-        //      The result is 2, if the value of BigInteger is 0...0000 0011
+        // Eg.  The result is 0, if the value of Big is 0...0000 0000
+        //      The result is 1, if the value of Big is 0...0000 0001
+        //      The result is 2, if the value of Big is 0...0000 0010
+        //      The result is 2, if the value of Big is 0...0000 0011
         //
         //***********************************************************************
 
@@ -1677,7 +1677,7 @@ namespace SharpServer.Server.Utils
         }
 
         //***********************************************************************
-        // Returns the lowest 4 bytes of the BigInteger as an int.
+        // Returns the lowest 4 bytes of the Big as an int.
         //***********************************************************************
 
         public int IntValue()
@@ -1687,7 +1687,7 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Returns the lowest 8 bytes of the BigInteger as a long.
+        // Returns the lowest 8 bytes of the Big as a long.
         //***********************************************************************
 
         public long LongValue()
@@ -1714,7 +1714,7 @@ namespace SharpServer.Server.Utils
         // Algorithm adapted from [3] and [4] with some optimizations
         //***********************************************************************
 
-        public static int Jacobi(BigInteger a, BigInteger b)
+        public static int Jacobi(Big a, Big b)
         {
             // Jacobi defined only for odd integers
             if ((b.data[0] & 0x1) == 0)
@@ -1749,7 +1749,7 @@ namespace SharpServer.Server.Utils
                 }
             }
 
-            BigInteger a1 = a >> e;
+            Big a1 = a >> e;
 
             int s = 1;
             if ((e & 0x1) != 0 && ((b.data[0] & 0x7) == 3 || (b.data[0] & 0x7) == 5))
@@ -1769,25 +1769,25 @@ namespace SharpServer.Server.Utils
         // the inverse does not exist.  (i.e. gcd(this, modulus) != 1)
         //***********************************************************************
 
-        public BigInteger modInverse(BigInteger modulus)
+        public Big modInverse(Big modulus)
         {
-            BigInteger[] p = { 0, 1 };
-            BigInteger[] q = new BigInteger[2];    // quotients
-            BigInteger[] r = { 0, 0 };             // remainders
+            Big[] p = { 0, 1 };
+            Big[] q = new Big[2];    // quotients
+            Big[] r = { 0, 0 };             // remainders
 
             int step = 0;
 
-            BigInteger a = modulus;
-            BigInteger b = this;
+            Big a = modulus;
+            Big b = this;
 
             while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0))
             {
-                BigInteger quotient = new BigInteger();
-                BigInteger remainder = new BigInteger();
+                Big quotient = new Big();
+                Big remainder = new Big();
 
                 if (step > 1)
                 {
-                    BigInteger pval = (p[0] - (p[1] * q[0])) % modulus;
+                    Big pval = (p[0] - (p[1] * q[0])) % modulus;
                     p[0] = p[1];
                     p[1] = pval;
                 }
@@ -1817,7 +1817,7 @@ namespace SharpServer.Server.Utils
             if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1))
                 throw (new ArithmeticException("No inverse!"));
 
-            BigInteger result = ((p[0] - (p[1] * q[0])) % modulus);
+            Big result = ((p[0] - (p[1] * q[0])) % modulus);
 
             if ((result.data[maxLength - 1] & 0x80000000) != 0)
                 result += modulus;  // get the least positive modulus
@@ -1827,7 +1827,7 @@ namespace SharpServer.Server.Utils
 
 
         //***********************************************************************
-        // Returns the value of the BigInteger as a byte array.  The lowest
+        // Returns the value of the Big as a byte array.  The lowest
         // index contains the MSB.
         //***********************************************************************
 
@@ -1915,14 +1915,14 @@ namespace SharpServer.Server.Utils
 
         //***********************************************************************
         // Returns a value that is equivalent to the integer square root
-        // of the BigInteger.
+        // of the Big.
         //
         // The integer square root of "this" is defined as the largest integer n
         // such that (n * n) <= this
         //
         //***********************************************************************
 
-        public BigInteger sqrt()
+        public Big sqrt()
         {
             uint numBits = (uint)this.bitCount();
 
@@ -1936,7 +1936,7 @@ namespace SharpServer.Server.Utils
 
             uint mask;
 
-            BigInteger result = new BigInteger();
+            Big result = new Big();
             if (bitPos == 0)
                 mask = 0x80000000;
             else
@@ -1997,12 +1997,12 @@ namespace SharpServer.Server.Utils
         //       V(0) = 2 % n, V(1) = P % n
         //***********************************************************************
 
-        public static BigInteger[] LucasSequence(BigInteger P, BigInteger Q,
-                                                 BigInteger k, BigInteger n)
+        public static Big[] LucasSequence(Big P, Big Q,
+                                                 Big k, Big n)
         {
             if (k.dataLength == 1 && k.data[0] == 0)
             {
-                BigInteger[] result = new BigInteger[3];
+                Big[] result = new Big[3];
 
                 result[0] = 0; result[1] = 2 % n; result[2] = 1 % n;
                 return result;
@@ -2010,7 +2010,7 @@ namespace SharpServer.Server.Utils
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            BigInteger constant = new BigInteger();
+            Big constant = new Big();
 
             int nLen = n.dataLength << 1;
             constant.data[nLen] = 0x00000001;
@@ -2037,7 +2037,7 @@ namespace SharpServer.Server.Utils
                 }
             }
 
-            BigInteger t = k >> s;
+            Big t = k >> s;
 
             //Console.WriteLine("s = " + s + " t = " + t);
             return LucasSequenceHelper(P, Q, t, n, constant, s);
@@ -2051,11 +2051,11 @@ namespace SharpServer.Server.Utils
         // k must be odd.  i.e LSB == 1
         //***********************************************************************
 
-        private static BigInteger[] LucasSequenceHelper(BigInteger P, BigInteger Q,
-                                                        BigInteger k, BigInteger n,
-                                                        BigInteger constant, int s)
+        private static Big[] LucasSequenceHelper(Big P, Big Q,
+                                                        Big k, Big n,
+                                                        Big constant, int s)
         {
-            BigInteger[] result = new BigInteger[3];
+            Big[] result = new Big[3];
 
             if ((k.data[0] & 0x00000001) == 0)
                 throw (new ArgumentException("Argument k must be odd."));
@@ -2065,7 +2065,7 @@ namespace SharpServer.Server.Utils
 
             // v = v0, v1 = v1, u1 = u1, Q_k = Q^0
 
-            BigInteger v = 2 % n, Q_k = 1 % n,
+            Big v = 2 % n, Q_k = 1 % n,
                        v1 = P % n, u1 = Q_k;
             bool flag = true;
 

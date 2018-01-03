@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SharpServer.Server.Packets
@@ -21,11 +22,9 @@ namespace SharpServer.Server.Packets
             get { return _length; }
             set { _length = value; }
         }
-
-
+        
         #endregion
-
-
+        
         #region Properties
 
         public byte[] GetPacket()
@@ -218,7 +217,8 @@ namespace SharpServer.Server.Packets
 
         public void RSADecrypt()
         {
-            Rsa.Decrypt(ref Buffer, _position, Length);
+            
+            //Rsa.RSADecrypt(ref Buffer, _position);
         }
 
         public bool XteaDecrypt(uint[] key)
