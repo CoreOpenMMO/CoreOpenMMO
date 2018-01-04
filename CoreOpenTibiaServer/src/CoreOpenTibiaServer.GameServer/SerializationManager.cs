@@ -1,5 +1,6 @@
-﻿using System;
+﻿using COTS.GameServer.Vocations;
 using Newtonsoft.Json;
+using System;
 
 namespace COTS.GameServer {
 
@@ -14,12 +15,12 @@ namespace COTS.GameServer {
             }
         }
 
-        public static string Serialize(Vocation knight) {
-            if (knight == null)
-                throw new ArgumentNullException(nameof(knight));
+        public static string Serialize(Vocation vocation) {
+            if (vocation == null)
+                throw new ArgumentNullException(nameof(vocation));
 
             var serialized = JsonConvert.SerializeObject(
-                value: knight,
+                value: vocation,
                 settings: JsonSerializerSettings);
 
             return serialized;
