@@ -1,9 +1,9 @@
 ﻿using CommandLine;
 using COTS.GameServer.Network;
 
-namespace COTS.GameServer {
+namespace COTS.GameServer.CommandLineArguments {
 
-    public sealed class CommandLineArguments {
+    public sealed partial class CommandLineArguments {
 
         [Option(
             longName: nameof(DataDirectoryPath),
@@ -20,20 +20,5 @@ namespace COTS.GameServer {
             HelpText = "The port clients will connect to."
             )]
         public int ClientConnectionPort { get; }
-
-        public CommandLineArguments(
-            string dataDirectoryPath,
-            int clientConnectionPort
-            ) {
-            DataDirectoryPath = string.IsNullOrEmpty(dataDirectoryPath)
-                ? "Data"
-                : dataDirectoryPath;
-
-            ClientConnectionPort = clientConnectionPort;
-        }
-
-        public ConnectionManager GetClientConnectionManager() {
-            return new ConnectionManager(port: ClientConnectionPort);
-        }
     }
 }
