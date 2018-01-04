@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace COTS.GameServer.CommandLineArguments {
+namespace COTS.GameServer.CommandLineArgumentsParsing {
 
     public sealed partial class CommandLineArguments {
 

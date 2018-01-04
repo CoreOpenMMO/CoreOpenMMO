@@ -1,6 +1,6 @@
 ﻿using COTS.GameServer.Network;
 
-namespace COTS.GameServer.CommandLineArguments {
+namespace COTS.GameServer.CommandLineArgumentsParsing {
 
     public sealed partial class CommandLineArguments {
 

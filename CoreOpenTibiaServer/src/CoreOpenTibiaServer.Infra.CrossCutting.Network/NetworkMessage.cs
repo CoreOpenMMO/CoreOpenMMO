@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Text;
 
 namespace COTS.Infra.CrossCutting.Network {
@@ -19,6 +20,24 @@ namespace COTS.Infra.CrossCutting.Network {
                 throw new ArgumentNullException(nameof(message));
 
             return TextEncoding.GetBytes(message);
+        }
+
+        public static byte[] Encode(LoginInformation loginInformation) {
+            if (loginInformation == null)
+                throw new ArgumentNullException(nameof(loginInformation));
+
+            var serialized = JsonConvert.SerializeObject(loginInformation);
+            var encoded = NetworkMessage.Encode(serialized);
+            return encoded;
+        }
+
+        public static LoginInformation DecodeLoginInformation(byte[] bytes) {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            var decoded = NetworkMessage.Decode(bytes);
+            var deserialized = JsonConvert.DeserializeObject<LoginInformation>(decoded);
+            return deserialized;
         }
     }
 }
