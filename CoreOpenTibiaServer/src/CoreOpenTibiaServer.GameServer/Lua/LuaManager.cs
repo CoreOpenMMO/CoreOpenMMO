@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 
-namespace COTS.Server.Lua
+namespace COTS.GameServer.Lua
 {
     public class LuaManager
     {

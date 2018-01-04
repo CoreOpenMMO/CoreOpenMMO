@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     /// <summary>
     /// This class represents the vocation of a character.

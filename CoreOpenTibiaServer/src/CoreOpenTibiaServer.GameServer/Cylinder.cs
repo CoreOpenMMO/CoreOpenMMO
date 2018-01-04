@@ -1,4 +1,4 @@
-﻿namespace COTS.Server
+﻿namespace COTS.GameServer
 {
     public sealed class Cylinder
     {

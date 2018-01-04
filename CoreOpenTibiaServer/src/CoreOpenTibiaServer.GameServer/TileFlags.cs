@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     [Flags]
     public enum TileFlags {

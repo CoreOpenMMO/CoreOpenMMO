@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     public sealed class ReadOnlyArray<T> : IReadOnlyList<T> {
         private readonly T[] _items;

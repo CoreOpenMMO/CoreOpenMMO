@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace COTS.Server.Tests {
+namespace COTS.GameServer.Tests {
 
     [TestClass]
     public sealed class VocationTests {

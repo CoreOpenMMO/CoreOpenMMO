@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using COTS.Infra.CrossCutting.Network;
 
-namespace COTS.Server.Network
+namespace COTS.GameServer.Network
 {
     public class AsynchronousSocketListener
     {

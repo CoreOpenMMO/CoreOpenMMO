@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     /// <summary>
     /// Represents a 3D point with integer coordinates.

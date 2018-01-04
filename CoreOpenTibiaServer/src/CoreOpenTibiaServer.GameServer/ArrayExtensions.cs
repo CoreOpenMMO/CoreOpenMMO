@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     public static class ArrayExtensions {
 

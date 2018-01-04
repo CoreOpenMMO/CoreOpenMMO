@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     /// <summary>
     /// This class is immutable because it's only created by the data base manager.

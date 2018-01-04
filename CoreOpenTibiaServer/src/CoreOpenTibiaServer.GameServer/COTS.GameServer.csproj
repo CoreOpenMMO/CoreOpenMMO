@@ -32,8 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreOpenTibiaServer.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
-    <ProjectReference Include="..\src\CoreOpenTibiaServer.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
-    <ProjectReference Include="..\src\SharpServer.Domain\CoreOpenTibiaServer.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     public sealed class CommandLineArguments {
 

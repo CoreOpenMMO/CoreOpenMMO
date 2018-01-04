@@ -1,4 +1,4 @@
-﻿namespace COTS.Server {
+﻿namespace COTS.GameServer {
 
     public static class HashHelper {
         public const int Start = 1610612741;

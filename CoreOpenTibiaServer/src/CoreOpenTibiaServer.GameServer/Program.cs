@@ -2,10 +2,10 @@
 using System.IO;
 using System.Threading.Tasks;
 using CommandLine;
-using COTS.Server.Lua;
-using COTS.Server.Network;
+using COTS.GameServer.Lua;
+using COTS.GameServer.Network;
 
-namespace COTS.Server {
+namespace COTS.GameServer {
 
     public sealed class Program {
 

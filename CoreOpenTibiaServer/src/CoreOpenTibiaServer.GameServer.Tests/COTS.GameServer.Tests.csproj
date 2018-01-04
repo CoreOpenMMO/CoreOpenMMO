@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreOpenTibiaServer.Server\COTS.Server.csproj" />
+    <ProjectReference Include="..\CoreOpenTibiaServer.GameServer\COTS.GameServer.csproj" />
   </ItemGroup>
 
 </Project>
