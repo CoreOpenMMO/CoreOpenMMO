@@ -4,10 +4,4 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Linq">
-      <HintPath>C:\Users\Felip\.nuget\packages\system.linq\4.1.0\ref\netstandard1.6\System.Linq.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
