@@ -83,6 +83,7 @@ namespace COTS.GameServer.Network
                 var accountName = NetworkMessage.GetString();
                 var password = NetworkMessage.GetString();
 
+                Console.WriteLine($"New player connection: {accountName}");
             }
             catch (Exception e)
             {
