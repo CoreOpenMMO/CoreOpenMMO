@@ -56,12 +56,30 @@ namespace COTS.Infra.CrossCutting.Network {
             return encoded;
         }
 
-        public static LoginRequest DecodeLoginInformation(byte[] bytes) {
+        public static LoginRequest DecodeLoginRequest(byte[] bytes) {
             if (bytes == null)
                 throw new ArgumentNullException(nameof(bytes));
 
             var decoded = NetworkMessage.Decode(bytes);
             var deserialized = JsonConvert.DeserializeObject<LoginRequest>(decoded);
+            return deserialized;
+        }
+
+        public static byte[] EncodeAndPrependByteCount(LoginResponse loginResponse) {
+            if (loginResponse == null)
+                throw new ArgumentNullException(nameof(loginResponse));
+
+            var serialized = JsonConvert.SerializeObject(loginResponse);
+            var encoded = NetworkMessage.EncodeAndPrependByteCount(serialized);
+            return encoded;
+        }
+
+        public static LoginResponse DecodeLoginResponse(byte[] bytes) {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            var decoded = NetworkMessage.Decode(bytes);
+            var deserialized = JsonConvert.DeserializeObject<LoginResponse>(decoded);
             return deserialized;
         }
     }
