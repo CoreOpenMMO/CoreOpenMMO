@@ -1,9 +1,8 @@
-﻿using CommandLine;
-using COTS.GameServer.CommandLineArgumentsParsing;
-using COTS.GameServer.Lua;
+﻿using COTS.GameServer.Lua;
 using COTS.Infra.CrossCutting.Network;
 using System;
 using System.Threading.Tasks;
+using CommandLine;
 
 namespace COTS.GameServer {
 
