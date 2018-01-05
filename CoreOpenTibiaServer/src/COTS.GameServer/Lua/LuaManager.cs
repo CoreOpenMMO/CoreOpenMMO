@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using COTS.Domain.LuaServices;
+using Microsoft.Extensions.Logging;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 
@@ -8,43 +8,53 @@ namespace COTS.GameServer.Lua
 {
     public class LuaManager
     {
-
-        public static void RegisterLuaService(string globalName, Type type)
-        {
-            UserData.RegistrationPolicy = InteropRegistrationPolicy.Automatic;
-            _script.Globals[globalName] = Activator.CreateInstance(type);
-        }
-        
+        private static ILogger<LuaManager> _logger;
+        private static IServiceProvider _provider;
         private static Script _script;
 
-        public static async Task Initialize()
+        public LuaManager(ILogger<LuaManager> logger, IServiceProvider provider)
+        {
+            _provider = provider;
+            _logger = logger;
+        }
+        
+        public void Run()
         {
             _script = new Script();
 
-            await LoadLuaFiles();
-            await RegisterLuaServices();
+            LoadLuaFiles();
+            RegisterLuaServices();
         }
 
-        private static async Task LoadLuaFiles()
+        private void LoadLuaFiles()
         {
             Console.WriteLine("Loading lua files...");
+            _logger.LogWarning("Lua files not found...");
 
             //TODO FELIPE MUNIZ -> LOAD LUA FILES
 
         }
-
-        private static async Task RegisterLuaServices()
+        
+        private void RegisterLuaServices()
         {
-            Console.WriteLine("Registering lua services...");
+            Console.WriteLine("Recording lua services...");
 
             _script = new Script();
             RegisterLuaService("player", typeof(LuaPlayerService));
             ExecuteLuaScript();
         }
-        
-        private static void ExecuteLuaScript()
+
+        private void ExecuteLuaScript()
         {
-            _script.DoString(@"print('name: ' .. player:getPlayerNameByGuid(1));");
+            Console.WriteLine("Executing lua script...");
+            _script.DoString(@"print('Player name: ' .. player:getNameById(1));");
+        }
+
+
+        public static void RegisterLuaService(string globalName, Type type)
+        {
+            UserData.RegistrationPolicy = InteropRegistrationPolicy.Automatic;
+            _script.Globals[globalName] = _provider.GetService(type);
         }
 
     }
