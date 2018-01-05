@@ -26,12 +26,15 @@ namespace COTS.Infra.CrossCutting.Network {
                 throw new ArgumentNullException(nameof(message));
 
             var encodedMessageByteCount = TextEncoder.GetByteCount(message);
-            // +4 because a int, used to store the message length, is guaranteed to be 4 bytes
-            var buffer = new byte[4 + encodedMessageByteCount];
+
+            // To anyone trying to implement our protocol, it's important to notice
+            // that sizeof(int) is guaranteed to be 4.
+            // We are using sizeof just to avoid magic numbers.
+            var buffer = new byte[sizeof(int) + encodedMessageByteCount];
 
             // Copying the encodedMessageByteCount
             var encodedLength = BitConverter.GetBytes(encodedMessageByteCount);
-            Array.Copy(encodedLength, buffer, 4);
+            Array.Copy(encodedLength, buffer, sizeof(int));
 
             // Encoding the message
             var bytesWritten = TextEncoder.GetBytes(
@@ -39,7 +42,7 @@ namespace COTS.Infra.CrossCutting.Network {
                charIndex: 0,
                charCount: message.Length,
                bytes: buffer,
-               byteIndex: 4);
+               byteIndex: sizeof(int));
 
             if (bytesWritten != encodedMessageByteCount)
                 throw new InvalidOperationException("The Encoder lied to us >:(");
@@ -47,11 +50,11 @@ namespace COTS.Infra.CrossCutting.Network {
             return buffer;
         }
 
-        public static byte[] EncodeAndPrependByteCount(LoginRequest loginInformation) {
-            if (loginInformation == null)
-                throw new ArgumentNullException(nameof(loginInformation));
+        public static byte[] EncodeAndPrependByteCount(LoginRequest loginRequest) {
+            if (loginRequest == null)
+                throw new ArgumentNullException(nameof(loginRequest));
 
-            var serialized = JsonConvert.SerializeObject(loginInformation);
+            var serialized = JsonConvert.SerializeObject(loginRequest);
             var encoded = NetworkMessage.EncodeAndPrependByteCount(serialized);
             return encoded;
         }

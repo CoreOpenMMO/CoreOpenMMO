@@ -10,7 +10,7 @@ namespace COTS.Infra.CrossCutting.Network {
         public readonly int ClientVersion;
 
         [JsonProperty(Order = 1)]
-        public readonly int ProtocolVersion;
+        public readonly int CommunicationProtocolVersion;
 
         [JsonProperty(Order = 2)]
         public readonly string Account;
@@ -21,7 +21,7 @@ namespace COTS.Infra.CrossCutting.Network {
         [JsonConstructor]
         public LoginRequest(
             int clientVersion,
-            int protocolVersion,
+            int communicationProtocolVersion,
             string account,
             string password
             ) {
@@ -31,9 +31,27 @@ namespace COTS.Infra.CrossCutting.Network {
                 throw new ArgumentNullException(nameof(password));
 
             ClientVersion = clientVersion;
-            ProtocolVersion = protocolVersion;
+            CommunicationProtocolVersion = communicationProtocolVersion;
             Account = account;
             Password = password;
+        }
+
+        public override int GetHashCode() {
+            return HashHelper.Start
+                .CombineHashCode(ClientVersion)
+                .CombineHashCode(CommunicationProtocolVersion)
+                .CombineHashCode(Account)
+                .CombineHashCode(Password);
+        }
+
+        public override bool Equals(object obj) => Equals(obj as LoginRequest);
+
+        public bool Equals(LoginRequest other) {
+            return other != null &&
+                ClientVersion == other.ClientVersion &&
+                CommunicationProtocolVersion == other.CommunicationProtocolVersion &&
+                Account == other.Account &&
+                Password == other.Password;
         }
     }
 }
