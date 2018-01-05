@@ -1,21 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using CommandLine;
+﻿using CommandLine;
+using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
-using COTS.GameServer.Network;
-using COTS.Infra.CrossCutting.Ioc;
+using COTS.Infra.CrossCutting.Network;
+using System;
+using System.Threading.Tasks;
 
 namespace COTS.GameServer {
 
     public sealed class Program {
 
-        public Program()
-        {
-            BootStrapper.RegisterServices();
-        }
-        
-        private static async Task Main(string[] args) {
+        private static void Main(string[] args) {
             var parser = Parser.Default;
             var parseAttempt = parser.ParseArguments<CommandLineArguments>(args: args);
 
@@ -27,16 +21,20 @@ namespace COTS.GameServer {
                 throw new InvalidOperationException("Fo reals? This line should never be reached.");
             }
 
-            await LuaManager.Initialize();
-            AsynchronousSocketListener.StartListening();
+            var original = "testiculos";
+            var encoded = NetworkMessage.Encode(original);
+            Console.WriteLine(encoded.Length);
+            var decoded = NetworkMessage.Decode(encoded);
+            Console.WriteLine(original == decoded);
 
             Console.ReadLine();
         }
 
-        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments value) {
-            var globalFilePath = Path.Combine(value.DataDirectoryPath, "global.lua");
-            Console.WriteLine(Path.GetFullPath(globalFilePath));
-            Console.WriteLine(File.Exists(globalFilePath));
+        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments) {
+            Task.WaitAny(LuaManager.Initialize());
+
+            var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
+            Task.Run(() => clientConnectionManager.StartListening());
         }
 
         private static void ReportCommandLineParsingError(NotParsed<CommandLineArguments> failedAttempt) {

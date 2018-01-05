@@ -1,194 +1,89 @@
-﻿using System;
-using System.Linq;
-using System.Net.Sockets;
+﻿using Newtonsoft.Json;
+using System;
 using System.Text;
 
-namespace COTS.Infra.CrossCutting.Network
-{
-    public class NetworkMessage : IDisposable
-    {
-        private int _readPos;
-        private readonly int _initialPos = 6;
-        private readonly int _maxBufferSize = 24590;
+namespace COTS.Infra.CrossCutting.Network {
 
-        public byte[] Buffer { get; set; }
-        public Socket WorkSocket { get; set; }
-        public StringBuilder StringBuilder = new StringBuilder();
+    public sealed class NetworkMessage {
+        public static readonly Encoding TextEncoder = Encoding.UTF8;
 
-        public NetworkMessage()
-        {
-            Buffer = new byte[_maxBufferSize];
-            _readPos = _initialPos;
+        public static string Decode(byte[] bytes) {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            return TextEncoder.GetString(bytes);
         }
 
-        public void SkipBytes(int count)
-        {
-            _readPos += count;
+        public static byte[] Encode(string message) {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            return TextEncoder.GetBytes(message);
         }
 
-        public int GetReadPos()
-        {
-            return _readPos;
+        public static byte[] EncodeAndPrependByteCount(string message) {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            var encodedMessageByteCount = TextEncoder.GetByteCount(message);
+
+            // To anyone trying to implement our protocol, it's important to notice
+            // that sizeof(int) is guaranteed to be 4.
+            // We are using sizeof just to avoid magic numbers.
+            var buffer = new byte[sizeof(int) + encodedMessageByteCount];
+
+            // Copying the encodedMessageByteCount
+            var encodedLength = BitConverter.GetBytes(encodedMessageByteCount);
+            Array.Copy(encodedLength, buffer, sizeof(int));
+
+            // Encoding the message
+            var bytesWritten = TextEncoder.GetBytes(
+               s: message,
+               charIndex: 0,
+               charCount: message.Length,
+               bytes: buffer,
+               byteIndex: sizeof(int));
+
+            if (bytesWritten != encodedMessageByteCount)
+                throw new InvalidOperationException("The Encoder lied to us >:(");
+
+            return buffer;
         }
 
-        public byte[] ToArray()
-        {
-            return Buffer.ToArray();
+        public static byte[] EncodeAndPrependByteCount(LoginRequest loginRequest) {
+            if (loginRequest == null)
+                throw new ArgumentNullException(nameof(loginRequest));
+
+            var serialized = JsonConvert.SerializeObject(loginRequest);
+            var encoded = NetworkMessage.EncodeAndPrependByteCount(serialized);
+            return encoded;
         }
 
-        public int Count()
-        {
-            return Buffer.ToList().Count;
+        public static LoginRequest DecodeLoginRequest(byte[] bytes) {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            var decoded = NetworkMessage.Decode(bytes);
+            var deserialized = JsonConvert.DeserializeObject<LoginRequest>(decoded);
+            return deserialized;
         }
 
-        public int Length()
-        {
-            return Buffer.Length;
+        public static byte[] EncodeAndPrependByteCount(LoginResponse loginResponse) {
+            if (loginResponse == null)
+                throw new ArgumentNullException(nameof(loginResponse));
+
+            var serialized = JsonConvert.SerializeObject(loginResponse);
+            var encoded = NetworkMessage.EncodeAndPrependByteCount(serialized);
+            return encoded;
         }
 
-        public void Clear()
-        {
-            Buffer = new byte[_maxBufferSize];
-            _readPos = _initialPos;
-        }
+        public static LoginResponse DecodeLoginResponse(byte[] bytes) {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
 
-        #region"Write Data"
-        public void WriteByte(byte inputs)
-        {
-            Buffer.ToList().Add(inputs);
-        }
-
-        public void WriteBytes(byte[] input)
-        {
-            Buffer.ToList().AddRange(input);
-        }
-
-        public void WriteShort(short input)
-        {
-            Buffer.ToList().AddRange(BitConverter.GetBytes(input));
-        }
-
-        public void WriteInteger(int input)
-        {
-            Buffer.ToList().AddRange(BitConverter.GetBytes(input));
-        }
-
-        public void WriteFloat(float input)
-        {
-            Buffer.ToList().AddRange(BitConverter.GetBytes(input));
-        }
-
-        public void WriteString(string input)
-        {
-            try
-            {
-                Buffer.ToList().AddRange(BitConverter.GetBytes(input.Length));
-                Buffer.ToList().AddRange(Encoding.ASCII.GetBytes(input));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        #endregion
-
-        #region "Read Data"
-        
-        public byte ReadByte(bool peek = true)
-        {
-            if (Buffer.ToList().Count > _readPos)
-            {
-                var ret = Buffer[_readPos];
-                if (peek & Buffer.ToList().Count > _readPos)
-                    _readPos += 1;
-
-                return ret;
-            }
-
-            throw new Exception("Byte Buffer Past Limit!");
-        }
-
-        public byte[] ReadBytes(int length, bool peek = true)
-        {
-            var ret = Buffer.ToList().GetRange(_readPos, length).ToArray();
-            if (peek)
-                _readPos += length;
-
-            return ret;
-        }
-
-        public float ReadFloat(bool peek = true)
-        {
-            if (Buffer.ToList().Count > _readPos)
-            {
-                var ret = BitConverter.ToSingle(Buffer, _readPos);
-                if (peek & Buffer.ToList().Count > _readPos)
-                    _readPos += 4;
-
-                return ret;
-            }
-
-            throw new Exception("Byte Buffer is Past its Limit!");
-        }
-
-        public int ReadInteger(bool peek = true)
-        {
-            if (Buffer.ToList().Count > _readPos)
-            {
-                var ret = BitConverter.ToInt32(Buffer, _readPos);
-                if (peek & Buffer.ToList().Count > _readPos)
-                    _readPos += 4;
-
-                return ret;
-            }
-
-            throw new Exception("Byte Buffer is Past its Limit!");
-        }
-        #endregion
-
-        public byte[] ReadBytes(int count)
-        {
-            if (_readPos + count > Length())
-                throw new IndexOutOfRangeException("NetworkMessage GetBytes() out of range.");
-
-            var result = new byte[count];
-            Array.Copy(Buffer, _readPos, result, 0, count);
-            _readPos += count;
-            return result;
-        }
-
-        public string ReadString()
-        {
-            var len = ReadUInt16();
-            var result = Encoding.Default.GetString(Buffer, _readPos, len);
-            _readPos += len;
-            return result;
-        }
-
-        public ushort ReadUInt16()
-        {
-            return BitConverter.ToUInt16(ReadBytes(2), 0);
-        }
-
-        private bool _disposedValue = false;
-
-        //IDisposable
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                    Buffer.ToList().Clear();
-
-                _readPos = _initialPos;
-            }
-            _disposedValue = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            var decoded = NetworkMessage.Decode(bytes);
+            var deserialized = JsonConvert.DeserializeObject<LoginResponse>(decoded);
+            return deserialized;
         }
     }
 }
