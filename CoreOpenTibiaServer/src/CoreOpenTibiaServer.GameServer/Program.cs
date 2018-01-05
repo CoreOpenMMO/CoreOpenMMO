@@ -4,11 +4,17 @@ using System.Threading.Tasks;
 using CommandLine;
 using COTS.GameServer.Lua;
 using COTS.GameServer.Network;
+using COTS.Infra.CrossCutting.Ioc;
 
 namespace COTS.GameServer {
 
     public sealed class Program {
 
+        public Program()
+        {
+            BootStrapper.RegisterServices();
+        }
+        
         private static async Task Main(string[] args) {
             var parser = Parser.Default;
             var parseAttempt = parser.ParseArguments<CommandLineArguments>(args: args);

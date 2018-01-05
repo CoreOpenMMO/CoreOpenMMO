@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using COTS.Domain.LuaServices;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 
@@ -37,8 +38,8 @@ namespace COTS.GameServer.Lua
             Console.WriteLine("Registering lua services...");
 
             _script = new Script();
-            //RegisterLuaService("player", typeof(LuaPlayerService));
-            //ExecuteLuaScript();
+            RegisterLuaService("player", typeof(LuaPlayerService));
+            ExecuteLuaScript();
         }
         
         private static void ExecuteLuaScript()

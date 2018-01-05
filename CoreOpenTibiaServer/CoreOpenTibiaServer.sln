@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.GameServer", "src\Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.GameServer.Tests", "src\CoreOpenTibiaServer.GameServer.Tests\COTS.GameServer.Tests.csproj", "{D0161BA0-65D5-4AE5-9F54-EEC8E0E9C542}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COTS.Infra.CrossCutting.Ioc", "src\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj", "{69D8F766-74AF-4559-A119-077905AECCA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{D0161BA0-65D5-4AE5-9F54-EEC8E0E9C542}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0161BA0-65D5-4AE5-9F54-EEC8E0E9C542}.Release|x64.ActiveCfg = Release|x64
 		{D0161BA0-65D5-4AE5-9F54-EEC8E0E9C542}.Release|x64.Build.0 = Release|x64
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Debug|x64.Build.0 = Debug|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Release|x64.ActiveCfg = Release|Any CPU
+		{69D8F766-74AF-4559-A119-077905AECCA9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +104,7 @@ Global
 		{A77658C3-5133-44E1-9915-8701419300B2} = {B12D4468-6F07-40BF-A06F-D352727A7B78}
 		{726F7F0F-D8FD-4601-9A62-108B0D5F6271} = {689BBF33-A884-4522-9600-07569F3F2B77}
 		{D0161BA0-65D5-4AE5-9F54-EEC8E0E9C542} = {689BBF33-A884-4522-9600-07569F3F2B77}
+		{69D8F766-74AF-4559-A119-077905AECCA9} = {90F36248-741F-41D5-8C53-DBE2D98784D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3CC2F9B4-4E5F-4A77-8401-9ABA5E6FB84F}

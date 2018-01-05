@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreOpenTibiaServer.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
+    <ProjectReference Include="..\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj" />
   </ItemGroup>
 
 </Project>
