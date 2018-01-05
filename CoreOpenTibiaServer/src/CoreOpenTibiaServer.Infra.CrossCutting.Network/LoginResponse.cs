@@ -6,7 +6,7 @@ using System.Linq;
 namespace COTS.Infra.CrossCutting.Network {
 
     [JsonObject(MemberSerialization.OptOut)]
-    public sealed class LoginResponse {
+    public sealed class LoginResponse : IEquatable<LoginResponse> {
 
         public enum ResponseType {
             FailedDueToMalformedLoginRequest = 0,
@@ -21,7 +21,7 @@ namespace COTS.Infra.CrossCutting.Network {
         public readonly ResponseType Status;
 
         [JsonProperty(Order = 1)]
-        public readonly int PremiumAccountTimeRemaining;
+        public readonly int PremiumAccountDaysRemaining;
 
         [JsonProperty(Order = 2)]
         public readonly IReadOnlyList<string> CharacterNames;
@@ -30,14 +30,30 @@ namespace COTS.Infra.CrossCutting.Network {
         public LoginResponse(
             ResponseType status,
             IEnumerable<string> characterNames,
-            int premiumAccountTimeRemaining
+            int premiumAccountDaysRemaining
             ) {
             if (characterNames == null)
                 throw new ArgumentNullException(nameof(characterNames));
 
             Status = status;
             CharacterNames = characterNames.ToArray();
-            PremiumAccountTimeRemaining = premiumAccountTimeRemaining;
+            PremiumAccountDaysRemaining = premiumAccountDaysRemaining;
+        }
+
+        public override int GetHashCode() {
+            return HashHelper.Start
+                .CombineHashCode(Status)
+                .CombineHashCode(CharacterNames.Count)
+                .CombineHashCode(PremiumAccountDaysRemaining);
+        }
+
+        public override bool Equals(object obj) => Equals(obj as LoginResponse);
+
+        public bool Equals(LoginResponse other) {
+            return other != null &&
+                Status == other.Status &&
+                PremiumAccountDaysRemaining == other.PremiumAccountDaysRemaining &&
+                Enumerable.SequenceEqual(CharacterNames, other.CharacterNames);
         }
     }
 }

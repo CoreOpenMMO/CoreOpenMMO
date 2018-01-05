@@ -4,7 +4,7 @@ using System;
 namespace COTS.Infra.CrossCutting.Network {
 
     [JsonObject(MemberSerialization.OptOut)]
-    public sealed class LoginRequest {
+    public sealed class LoginRequest : IEquatable<LoginRequest> {
 
         [JsonProperty(Order = 0)]
         public readonly int ClientVersion;

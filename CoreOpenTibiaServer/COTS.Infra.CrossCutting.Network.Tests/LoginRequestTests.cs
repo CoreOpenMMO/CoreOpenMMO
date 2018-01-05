@@ -38,7 +38,9 @@ namespace COTS.Infra.CrossCutting.Network.Tests {
                 .ToArray();
             var decoded = NetworkMessage.DecodeLoginRequest(legitmateBytes);
 
-            Assert.AreEqual(expected: original, actual: decoded);
+            Assert.AreEqual(
+                expected: original,
+                actual: decoded);
         }
     }
 }
