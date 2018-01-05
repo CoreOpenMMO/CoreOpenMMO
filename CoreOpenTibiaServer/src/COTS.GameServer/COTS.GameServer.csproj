@@ -31,6 +31,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="MoonSharp" Version="2.0.0" />
+    <PackageReference Include="Mpir.NET" Version="0.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
@@ -38,6 +39,7 @@
     <ProjectReference Include="..\COTS.Domain\COTS.Domain.csproj" />
     <ProjectReference Include="..\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj" />
     <ProjectReference Include="..\COTS.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
+    <ProjectReference Include="..\COTS.Infra.CrossCutting.Security\COTS.Infra.CrossCutting.Security.csproj" />
     <ProjectReference Include="..\COTS.Infra.Data\COTS.Data.csproj" />
   </ItemGroup>
 

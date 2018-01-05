@@ -7,7 +7,7 @@ namespace COTS.Infra.CrossCutting.Security
         protected static BigInteger N;
         protected static BigInteger D;
         protected static BigInteger Me = new BigInteger("65537", 10);
-
+        
         public static bool SetKey(string p, string q)
         {
             Console.WriteLine("Setting up RSA encyption");

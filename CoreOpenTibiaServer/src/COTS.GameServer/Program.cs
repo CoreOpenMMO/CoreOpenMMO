@@ -1,11 +1,12 @@
 ﻿using CommandLine;
 using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
-using COTS.Infra.CrossCutting.Network;
 using System;
 using System.Threading.Tasks;
+using COTS.GameServer.Network;
 using Microsoft.Extensions.DependencyInjection;
 using COTS.Infra.CrossCutting.Ioc;
+using NetworkMessage = COTS.Infra.CrossCutting.Network.NetworkMessage;
 
 namespace COTS.GameServer {
 
@@ -45,9 +46,9 @@ namespace COTS.GameServer {
         private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments) {           
             _serviceProvider.GetService<LuaManager>().Run();
 
-            var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
-            Task.Run(() => clientConnectionManager.StartListening());
-        }
+            //var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
+            //Task.Run(() => clientConnectionManager.StartListening());
+            AsynchronousSocketListener.StartListening();}
 
         private static void ReportCommandLineParsingError(NotParsed<CommandLineArguments> failedAttempt) {
             throw new NotImplementedException();
