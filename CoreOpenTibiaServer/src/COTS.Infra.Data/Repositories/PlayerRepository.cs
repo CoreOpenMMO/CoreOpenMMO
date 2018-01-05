@@ -20,13 +20,13 @@ namespace COTS.Data.Repositories
                 {
                     db.Player.Add(new Player()
                     {
-                        Name = "Felipe",
+                        Name = "Player 1",
                         UserId = 1,
                         WorldId = 1
                     });
                     db.Player.Add(new Player()
                     {
-                        Name = "Muniz",
+                        Name = "Player 2",
                         UserId = 1,
                         WorldId = 1
                     });

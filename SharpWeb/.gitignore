@@ -1,0 +1,7 @@
+
+.env
+/public/bundles/
+/var/
+/vendor/
+/.idea/
+.web-server-pid
