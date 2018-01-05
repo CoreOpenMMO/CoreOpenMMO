@@ -4,12 +4,6 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreOpenTibiaServer.GameServer\COTS.GameServer.csproj" />
+    <ProjectReference Include="..\COTS.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
   </ItemGroup>
 
 </Project>
