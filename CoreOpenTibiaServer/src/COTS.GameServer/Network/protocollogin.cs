@@ -145,31 +145,55 @@ namespace COTS.GameServer.Network
 
                 output.AddString(motd);
 
-                //Add session key
-                output.AddByte(0x28);
-                output.AddString(username + "\n" + password + "\n" + token + "\n" + ticks);
+                if(version > 1071)
+                { //Add session key
+                    output.AddByte(0x28);
+                    output.AddString(username + "\n" + password + "\n" + token + "\n" + ticks);
+                }
 
-                ////Add char list
+                //Add char list
                 output.AddByte(0x64);
-
-                output.AddByte(1); // number of worlds
-
-                output.AddByte(0); // world id
-                output.AddString("COTS"); // ServerName
-                output.AddString("127.0.0.1"); //IP
-                output.AddInt16(7171); // GAME PORT
-                output.AddByte(0);
-
-                byte charmax = 0xff;
                 
+                byte charmax = 0xff;
                 var size = (byte)Math.Min(charmax, account.Characters.Count);
-                output.AddByte(size);
-
-                account.Characters.ForEach(c =>
+                var serverName = "COTS";
+                var serverIp = "127.0.0.1";
+                Int16 gamePort = 7171;
+                if(version > 1010)
                 {
+                    output.AddByte(1); // number of worlds
+                    output.AddByte(0); // world id
+                    output.AddString(serverName);
+                    output.AddString(serverIp);
+                    output.AddInt16(gamePort);
                     output.AddByte(0);
-                    output.AddString(c);
-                });
+                    output.AddByte(size);
+
+                    account.Characters.ForEach(c =>
+                    {
+                        output.AddByte(0);
+                        output.AddString(c);
+                    });
+                }
+                else
+                {
+                    var ipAddress = IPAddress.Parse(serverIp);
+                    var ipBytes = ipAddress.GetAddressBytes();
+                    var serverIPAdress = (uint) ipBytes[0] << 24;
+                    serverIPAdress += (uint) ipBytes[1] << 16;
+                    serverIPAdress += (uint) ipBytes[2] << 8;
+                    serverIPAdress += (uint) ipBytes[3];
+
+                    output.AddByte((byte)(account.Characters.Count));
+                    account.Characters.ForEach(c =>
+                    {
+                        output.AddString(c);
+                        output.AddString(serverName);
+                        output.AddUInt32(serverIPAdress);
+                        output.AddInt16(gamePort);
+                    }
+                    );
+                }
 
                 var frepremium = true;
 
