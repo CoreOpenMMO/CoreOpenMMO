@@ -46,7 +46,7 @@ namespace COTS.GameServer {
         private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments)
         {
             _serviceProvider.GetService<LuaManager>().Run();
-            _serviceProvider.GetService<AsynchronousSocketListener>().StartListening();
+            _serviceProvider.GetService<ProtocolLogin>().StartListening();
 
             //var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
             //Task.Run(() => clientConnectionManager.StartListening());
@@ -59,7 +59,7 @@ namespace COTS.GameServer {
         public static void ConfigureLocalServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<LuaManager>();
-            serviceCollection.AddTransient<AsynchronousSocketListener>();
+            serviceCollection.AddTransient<ProtocolLogin>();
         }
     }
 }

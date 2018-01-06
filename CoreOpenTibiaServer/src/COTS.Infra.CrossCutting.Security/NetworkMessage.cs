@@ -36,6 +36,15 @@ namespace COTS.Infra.CrossCutting.Security
             protected set { _buffer = value; }
         }
 
+        private uint[] _key;
+
+        public uint[] Key
+        {
+            get { return _key; }
+            set { _key = value; }
+        }
+
+
         private Socket _handler;
 
         public Socket Handler
@@ -81,6 +90,7 @@ namespace COTS.Infra.CrossCutting.Security
             _position = 6;
             _buffer = buffer;
             _handler = handler;
+            _key = new uint[4];
         }
 
         /// <summary>
@@ -598,9 +608,11 @@ namespace COTS.Infra.CrossCutting.Security
             return GetByte() == 0;
         }
 
-        public bool XteaDecrypt(uint[] key)
+        public bool XteaDecrypt()
         {
-            bool result = XTea.DecryptXtea(ref _buffer, ref _length, _position, key);
+            _key = new uint[4];
+
+            bool result = XTea.DecryptXtea(ref _buffer, ref _length, _position, _key);
 
             ushort innerLength = GetUInt16();
             if (innerLength > Length - 8)

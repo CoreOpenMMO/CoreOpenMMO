@@ -48,7 +48,7 @@ namespace COTS.Infra.CrossCutting.Security
         /// <param name="msg"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static unsafe bool EncryptXtea(OutputMessage msg, uint[] key)
+        public static unsafe bool EncryptXtea(ref OutputMessage msg, uint[] key)
         {
             if (key == null)
                 return false;

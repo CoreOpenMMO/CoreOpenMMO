@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using COTS.Domain.Interfaces.Services;
 using COTS.Infra.CrossCutting.Security;
+using Microsoft.Extensions.Logging;
 
 namespace COTS.GameServer.Network
 {
-    public class AsynchronousSocketListener
+    public class ProtocolLogin
     {
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         private static NetworkMessage NetworkMessage { get; set; }
 
         private IPlayerService _playerService;
         private IAccountService _accountService;
+        private ILogger<ProtocolLogin> _logger;
 
-        public AsynchronousSocketListener(IAccountService accountService, IPlayerService playerService)
+        public ProtocolLogin(IAccountService accountService, IPlayerService playerService, ILogger<ProtocolLogin> logger)
         {
             _accountService = accountService;
             _playerService = playerService;
+            _logger = logger;
         }
 
         public void StartListening()
@@ -62,14 +62,13 @@ namespace COTS.GameServer.Network
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
 
-            Console.WriteLine($"New connection from client!");
+            //Console.WriteLine($"New connection from client!");
             NetworkMessage = new NetworkMessage(handler);
 
             handler.BeginReceive(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length, 0, ReadCallback, NetworkMessage);
-
         }
 
-        public async void ReadCallback(IAsyncResult ar)
+        public void ReadCallback(IAsyncResult ar)
         {
             try
             {
@@ -87,19 +86,17 @@ namespace COTS.GameServer.Network
                 Rsa.SetKey("14299623962416399520070177382898895550795403345466153217470516082934737582776038882967213386204600674145392845853859217990626450972452084065728686565928113",
                            "7630979195970404721891201847792002125535401292779123937207447574596692788513647179235335529307251350570728407373705564708871762033017096809910315212884101");
                 
-                var key = new uint[4];
-
                 NetworkMessage.RsaDecrypt();
-                NetworkMessage.XteaDecrypt(key);
 
-                NetworkMessage.SkipBytes(14);
-
+                NetworkMessage.Key[0] = NetworkMessage.GetUInt32();
+                NetworkMessage.Key[1] = NetworkMessage.GetUInt32();
+                NetworkMessage.Key[2] = NetworkMessage.GetUInt32();
+                NetworkMessage.Key[3] = NetworkMessage.GetUInt32();
+                
                 var username = NetworkMessage.GetString();
                 var password = NetworkMessage.GetString();
                 //var password = SHA1.Create(NetworkMessage.GetString());
-
-                Console.WriteLine($"New player connection: {username}");
-
+                
                 NetworkMessage.SkipBytes((NetworkMessage.Length - 128) - NetworkMessage.Position);
 
                 //var token = NetworkMessage.GetString();
@@ -111,8 +108,14 @@ namespace COTS.GameServer.Network
                     DisconnectClient("Account name or password is not correct.", version);
                     return;
                 }
-
+                
                 account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId);
+                
+                Console.WriteLine($"\nNew login from: {NetworkMessage.Handler.RemoteEndPoint} \n" +
+                                    $"Account: {account.UserName} \n" +
+                                    $"Characters: {account.Characters.Count} \n" +
+                                    $"PremiumDays: {account.PremiumDays} \n");
+
                 var output = new OutputMessage();
                 
                 long ticks = DateTime.Now.Ticks / 30;
@@ -197,12 +200,17 @@ namespace COTS.GameServer.Network
             var output = new OutputMessage();
             output.AddByte(version >= 1076 ? (byte)0x0B : (byte)0x0A);
             output.AddString(message);
+
             Send(output);
         }
-
-
+        
         private void Send(OutputMessage output)
         {
+            output.WriteMessageLength();
+
+            XTea.EncryptXtea(ref output, NetworkMessage.Key);
+            output.AddCryptoHeader(true);
+            
             NetworkMessage.Handler.BeginSend(output.Buffer, 0, output.Length, 0, SendCallback, NetworkMessage.Handler);
         }
 
@@ -211,13 +219,8 @@ namespace COTS.GameServer.Network
             try
             {
                 Socket handler = (Socket)ar.AsyncState;
-
-                int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
-
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
-
             }
             catch (Exception e)
             {
