@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using COTS.Domain.Entities;
+﻿using COTS.Domain.Entities;
 using COTS.Domain.Interfaces.Repositories;
 using COTS.Domain.Interfaces.Services;
 
@@ -14,9 +13,9 @@ namespace COTS.Domain.Services
             _accountRepository = accountRepository;
         }
 
-        public Task<bool> CheckAccountLogin(string username, string password)
+        public Account GetAccountByLogin(string username, string password)
         {
-            return _accountRepository.CheckAccountLogin(username, password);
+            return _accountRepository.GetAccountByLogin(username, password).Result;
         }
     }
 }

@@ -5,6 +5,6 @@ namespace COTS.Domain.Interfaces.Repositories
 {
     public interface IAccountRepository : IRepositoryBase<Account>
     {
-        Task<bool> CheckAccountLogin(string username, string password);
+        Task<Account> GetAccountByLogin(string username, string password);
     }
 }

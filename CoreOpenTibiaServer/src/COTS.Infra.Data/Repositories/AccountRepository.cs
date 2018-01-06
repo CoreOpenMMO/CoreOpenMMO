@@ -14,11 +14,11 @@ namespace COTS.Data.Repositories
             Init();
         }
 
-        public async Task<bool> CheckAccountLogin(string username, string password)
+        public async Task<Account> GetAccountByLogin(string username, string password)
         {
             using (var db = new COTSContext())
             {
-                return await db.Account.AnyAsync(c => c.UserName.Equals(username) && c.Password.Equals(password));
+                return await db.Account.FirstOrDefaultAsync(c => c.UserName.Equals(username) && c.Password.Equals(password));
             }
         }
         

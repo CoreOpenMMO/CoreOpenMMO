@@ -36,6 +36,14 @@ namespace COTS.Infra.CrossCutting.Security
             protected set { _buffer = value; }
         }
 
+        private Socket _handler;
+
+        public Socket Handler
+        {
+            get { return _handler; }
+            protected set { _handler = value; }
+        }
+        
         /// <summary>
         /// Maximum buffer size of empty instance
         /// </summary>
@@ -54,13 +62,25 @@ namespace COTS.Infra.CrossCutting.Security
         }
 
         /// <summary>
+        /// Creates empty ByteStream 
+        /// </summary>
+        public NetworkMessage(Socket handler)
+        {
+            _length = 0;
+            _position = 0;
+            _buffer = new byte[Constants.NetworkMessageSizeMax];
+            _handler = handler;
+        }
+
+        /// <summary>
         /// Fills whole content of the given byte array to ByteStream 
         /// </summary>
-        public NetworkMessage(byte[] buffer)
+        public NetworkMessage(byte[] buffer, Socket handler)
         {
             _length = buffer.Length;
             _position = 6;
             _buffer = buffer;
+            _handler = handler;
         }
 
         /// <summary>
@@ -354,7 +374,7 @@ namespace COTS.Infra.CrossCutting.Security
         /// </summary>
         public void AddString(string value)
         {
-            byte[] str = System.Text.Encoding.UTF8.GetBytes(value);
+            byte[] str = System.Text.Encoding.ASCII.GetBytes(value);
             AddUInt16((ushort)str.Length);
             AddBytes(str);
         }

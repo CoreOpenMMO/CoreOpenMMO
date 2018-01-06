@@ -43,12 +43,14 @@ namespace COTS.GameServer {
             Console.ReadLine();
         }
 
-        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments) {           
+        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments)
+        {
             _serviceProvider.GetService<LuaManager>().Run();
+            _serviceProvider.GetService<AsynchronousSocketListener>().StartListening();
 
             //var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
             //Task.Run(() => clientConnectionManager.StartListening());
-            AsynchronousSocketListener.StartListening();}
+        }
 
         private static void ReportCommandLineParsingError(NotParsed<CommandLineArguments> failedAttempt) {
             throw new NotImplementedException();
@@ -57,6 +59,7 @@ namespace COTS.GameServer {
         public static void ConfigureLocalServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<LuaManager>();
+            serviceCollection.AddTransient<AsynchronousSocketListener>();
         }
     }
 }

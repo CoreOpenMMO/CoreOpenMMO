@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using COTS.Domain.Interfaces.Services;
 using COTS.Infra.CrossCutting.Security;
 
 namespace COTS.GameServer.Network
@@ -12,8 +15,18 @@ namespace COTS.GameServer.Network
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         private static NetworkMessage NetworkMessage { get; set; }
 
-        public static void StartListening()
+        private IPlayerService _playerService;
+        private IAccountService _accountService;
+
+        public AsynchronousSocketListener(IAccountService accountService, IPlayerService playerService)
         {
+            _accountService = accountService;
+            _playerService = playerService;
+        }
+
+        public void StartListening()
+        {
+
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 7171);
 
@@ -23,12 +36,12 @@ namespace COTS.GameServer.Network
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
+                Console.WriteLine("Server online!");
 
                 while (true)
                 {
                     AllDone.Reset();
 
-                    Console.WriteLine("Server online!");
                     listener.BeginAccept(AcceptCallback, listener);
 
                     AllDone.WaitOne();
@@ -42,7 +55,7 @@ namespace COTS.GameServer.Network
             Console.Read();
         }
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void AcceptCallback(IAsyncResult ar)
         {
             AllDone.Set();
 
@@ -50,17 +63,18 @@ namespace COTS.GameServer.Network
             Socket handler = listener.EndAccept(ar);
 
             Console.WriteLine($"New connection from client!");
-            NetworkMessage = new NetworkMessage();
+            NetworkMessage = new NetworkMessage(handler);
 
             handler.BeginReceive(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length, 0, ReadCallback, NetworkMessage);
 
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        public async void ReadCallback(IAsyncResult ar)
         {
             try
             {
-                NetworkMessage = new NetworkMessage(NetworkMessage.Buffer);
+                NetworkMessage = new NetworkMessage(NetworkMessage.Buffer, NetworkMessage.Handler);
+
                 var protocol = NetworkMessage.GetByte();
                 var os = NetworkMessage.GetInt16();
                 var version = NetworkMessage.GetInt16();
@@ -80,10 +94,97 @@ namespace COTS.GameServer.Network
 
                 NetworkMessage.SkipBytes(14);
 
-                var accountName = NetworkMessage.GetString();
+                var username = NetworkMessage.GetString();
                 var password = NetworkMessage.GetString();
+                //var password = SHA1.Create(NetworkMessage.GetString());
 
-                Console.WriteLine($"New player connection: {accountName}");
+                Console.WriteLine($"New player connection: {username}");
+
+                NetworkMessage.SkipBytes((NetworkMessage.Length - 128) - NetworkMessage.Position);
+
+                //var token = NetworkMessage.GetString();
+
+                var account = _accountService.GetAccountByLogin(username, password);
+
+                if (account == null)
+                {
+                    DisconnectClient("Account name or password is not correct.", version);
+                    return;
+                }
+
+                account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId);
+                var output = new OutputMessage();
+                
+                long ticks = DateTime.Now.Ticks / 30;
+
+                var token = "";
+
+                if (!string.IsNullOrEmpty(account.Password))
+                {
+                //    if (token.empty() || !(token == generateToken(account.key, ticks) || token == generateToken(account.key, ticks - 1) || token == generateToken(account.key, ticks + 1)))
+                //    {
+                //        output->addByte(0x0D);
+                //        output->addByte(0);
+                //        send(output);
+                //        disconnect();
+                //        return;
+                //    }
+                    output.AddByte(0x0C);
+                    output.AddByte(0);
+                }
+
+                ////Update premium days
+                //Game::updatePremium(account);
+
+                output.AddByte(0x14);
+
+                var motd = "0\nBem vindo ao COTS!";
+
+                output.AddString(motd);
+
+                //Add session key
+                output.AddByte(0x28);
+                output.AddString(username + "\n" + password + "\n" + token + "\n" + ticks);
+
+                ////Add char list
+                output.AddByte(0x64);
+
+                output.AddByte(1); // number of worlds
+
+                output.AddByte(0); // world id
+                output.AddString("COTS"); // ServerName
+                output.AddString("127.0.0.1"); //IP
+                output.AddInt16(7171); // GAME PORT
+                output.AddByte(0);
+
+                byte charmax = 0xff;
+                
+                var size = (byte)Math.Min(charmax, account.Characters.Count);
+                output.AddByte(size);
+
+                account.Characters.ForEach(c =>
+                {
+                    output.AddByte(0);
+                    output.AddString(c);
+                });
+
+                var frepremium = true;
+
+                //Add premium days
+                output.AddByte(0);
+                if (frepremium)
+                {
+                    output.AddByte(1);
+                    output.AddInt32(0);
+                }
+                else
+                {
+                    output.AddByte(account.PremiumDays > 0 ? (byte)1 : (byte)0);
+                    output.AddInt32((int)(DateTime.Now.Ticks + (account.PremiumDays * 86400)));
+                }
+
+                Send(output);
+                
             }
             catch (Exception e)
             {
@@ -91,15 +192,21 @@ namespace COTS.GameServer.Network
             }
         }
 
-
-        private static void Send(Socket handler, String data)
+        void DisconnectClient(string message, int version)
         {
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-            handler.BeginSend(byteData, 0, byteData.Length, 0, SendCallback, handler);
+            var output = new OutputMessage();
+            output.AddByte(version >= 1076 ? (byte)0x0B : (byte)0x0A);
+            output.AddString(message);
+            Send(output);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+
+        private void Send(OutputMessage output)
+        {
+            NetworkMessage.Handler.BeginSend(output.Buffer, 0, output.Length, 0, SendCallback, NetworkMessage.Handler);
+        }
+
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
