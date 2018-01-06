@@ -29,7 +29,7 @@ namespace COTS.GameServer.Network
 
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 7171);
-
+            
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
@@ -65,7 +65,7 @@ namespace COTS.GameServer.Network
             //Console.WriteLine($"New connection from client!");
             NetworkMessage = new NetworkMessage(handler);
 
-            handler.BeginReceive(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length, 0, ReadCallback, NetworkMessage);
+            NetworkMessage.Handler.BeginReceive(NetworkMessage.Buffer, 0, NetworkMessage.Buffer.Length, 0, ReadCallback, NetworkMessage);
         }
 
         public void ReadCallback(IAsyncResult ar)
@@ -75,55 +75,76 @@ namespace COTS.GameServer.Network
                 NetworkMessage = new NetworkMessage(NetworkMessage.Buffer, NetworkMessage.Handler);
 
                 var protocol = NetworkMessage.GetByte();
-                var os = NetworkMessage.GetInt16();
-                var version = NetworkMessage.GetInt16();
 
-                if (version >= 971)
-                    NetworkMessage.SkipBytes(17);
-                else
-                    NetworkMessage.SkipBytes(12);
+                if (protocol == 1)
+                    OnReceiveFirstMessage();
+                else if (protocol == 2)
+                    OnReceiveMessage();
 
-                Rsa.SetKey("14299623962416399520070177382898895550795403345466153217470516082934737582776038882967213386204600674145392845853859217990626450972452084065728686565928113",
-                           "7630979195970404721891201847792002125535401292779123937207447574596692788513647179235335529307251350570728407373705564708871762033017096809910315212884101");
-                
-                NetworkMessage.RsaDecrypt();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
 
-                NetworkMessage.Key[0] = NetworkMessage.GetUInt32();
-                NetworkMessage.Key[1] = NetworkMessage.GetUInt32();
-                NetworkMessage.Key[2] = NetworkMessage.GetUInt32();
-                NetworkMessage.Key[3] = NetworkMessage.GetUInt32();
-                
-                var username = NetworkMessage.GetString();
-                var password = NetworkMessage.GetString();
-                //var password = SHA1.Create(NetworkMessage.GetString());
-                
-                NetworkMessage.SkipBytes((NetworkMessage.Length - 128) - NetworkMessage.Position);
+        private void OnReceiveMessage()
+        {
+            Console.WriteLine("Receive message");
+        }
 
-                //var token = NetworkMessage.GetString();
 
-                var account = _accountService.GetAccountByLogin(username, password);
+        private void OnReceiveFirstMessage()
+        {
+            var os = NetworkMessage.GetInt16();
+            var version = NetworkMessage.GetInt16();
 
-                if (account == null)
-                {
-                    DisconnectClient("Account name or password is not correct.", version);
-                    return;
-                }
-                
-                account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId);
-                
-                Console.WriteLine($"\nNew login from: {NetworkMessage.Handler.RemoteEndPoint} \n" +
-                                    $"Account: {account.UserName} \n" +
-                                    $"Characters: {account.Characters.Count} \n" +
-                                    $"PremiumDays: {account.PremiumDays} \n");
+            if (version >= 971)
+                NetworkMessage.SkipBytes(17);
+            else
+                NetworkMessage.SkipBytes(12);
 
-                var output = new OutputMessage();
-                
-                long ticks = DateTime.Now.Ticks / 30;
+            Rsa.SetKey("14299623962416399520070177382898895550795403345466153217470516082934737582776038882967213386204600674145392845853859217990626450972452084065728686565928113",
+                       "7630979195970404721891201847792002125535401292779123937207447574596692788513647179235335529307251350570728407373705564708871762033017096809910315212884101");
 
-                var token = "";
+            NetworkMessage.RsaDecrypt();
 
-                if (!string.IsNullOrEmpty(account.Password))
-                {
+            NetworkMessage.Key[0] = NetworkMessage.GetUInt32();
+            NetworkMessage.Key[1] = NetworkMessage.GetUInt32();
+            NetworkMessage.Key[2] = NetworkMessage.GetUInt32();
+            NetworkMessage.Key[3] = NetworkMessage.GetUInt32();
+
+            var username = NetworkMessage.GetString();
+            var password = NetworkMessage.GetString();
+            //var password = SHA1.Create(NetworkMessage.GetString());
+
+            NetworkMessage.SkipBytes((NetworkMessage.Length - 128) - NetworkMessage.Position);
+
+            //var token = NetworkMessage.GetString();
+
+            var account = _accountService.GetAccountByLogin(username, password);
+
+            if (account == null)
+            {
+                DisconnectClient("Account name or password is not correct.", version);
+                return;
+            }
+
+            account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId);
+
+            Console.WriteLine($"\nNew login from: {NetworkMessage.Handler.RemoteEndPoint} \n" +
+                                $"Account: {account.UserName} \n" +
+                                $"Characters: {account.Characters.Count} \n" +
+                                $"PremiumDays: {account.PremiumDays} \n");
+
+            var output = new OutputMessage();
+
+            long ticks = DateTime.Now.Ticks / 30;
+
+            var token = "";
+
+            if (!string.IsNullOrEmpty(account.Password))
+            {
                 //    if (token.empty() || !(token == generateToken(account.key, ticks) || token == generateToken(account.key, ticks - 1) || token == generateToken(account.key, ticks + 1)))
                 //    {
                 //        output->addByte(0x0D);
@@ -132,91 +153,85 @@ namespace COTS.GameServer.Network
                 //        disconnect();
                 //        return;
                 //    }
-                    output.AddByte(0x0C);
-                    output.AddByte(0);
-                }
-
-                ////Update premium days
-                //Game::updatePremium(account);
-
-                output.AddByte(0x14);
-
-                var motd = "0\nBem vindo ao COTS!";
-
-                output.AddString(motd);
-
-                if(version > 1071)
-                { //Add session key
-                    output.AddByte(0x28);
-                    output.AddString(username + "\n" + password + "\n" + token + "\n" + ticks);
-                }
-
-                //Add char list
-                output.AddByte(0x64);
-                
-                byte charmax = 0xff;
-                var size = (byte)Math.Min(charmax, account.Characters.Count);
-                var serverName = "COTS";
-                var serverIp = "127.0.0.1";
-                Int16 gamePort = 7171;
-                if(version > 1010)
-                {
-                    output.AddByte(1); // number of worlds
-                    output.AddByte(0); // world id
-                    output.AddString(serverName);
-                    output.AddString(serverIp);
-                    output.AddInt16(gamePort);
-                    output.AddByte(0);
-                    output.AddByte(size);
-
-                    account.Characters.ForEach(c =>
-                    {
-                        output.AddByte(0);
-                        output.AddString(c);
-                    });
-                }
-                else
-                {
-                    var ipAddress = IPAddress.Parse(serverIp);
-                    var ipBytes = ipAddress.GetAddressBytes();
-                    var serverIPAdress = (uint) ipBytes[0] << 24;
-                    serverIPAdress += (uint) ipBytes[1] << 16;
-                    serverIPAdress += (uint) ipBytes[2] << 8;
-                    serverIPAdress += (uint) ipBytes[3];
-
-                    output.AddByte((byte)(account.Characters.Count));
-                    account.Characters.ForEach(c =>
-                    {
-                        output.AddString(c);
-                        output.AddString(serverName);
-                        output.AddUInt32(serverIPAdress);
-                        output.AddInt16(gamePort);
-                    }
-                    );
-                }
-
-                var frepremium = true;
-
-                //Add premium days
+                output.AddByte(0x0C);
                 output.AddByte(0);
-                if (frepremium)
-                {
-                    output.AddByte(1);
-                    output.AddInt32(0);
-                }
-                else
-                {
-                    output.AddByte(account.PremiumDays > 0 ? (byte)1 : (byte)0);
-                    output.AddInt32((int)(DateTime.Now.Ticks + (account.PremiumDays * 86400)));
-                }
+            }
 
-                Send(output);
-                
+            ////Update premium days
+            //Game::updatePremium(account);
+
+            output.AddByte(0x14);
+
+            var motd = "0\nBem vindo ao COTS!";
+
+            output.AddString(motd);
+
+            if (version > 1071)
+            { //Add session key
+                output.AddByte(0x28);
+                output.AddString(username + "\n" + password + "\n" + token + "\n" + ticks);
             }
-            catch (Exception e)
+
+            //Add char list
+            output.AddByte(0x64);
+
+            byte charmax = 0xff;
+            var size = (byte)Math.Min(charmax, account.Characters.Count);
+            var serverName = "COTS";
+            var serverIp = "127.0.0.1";
+            Int16 gamePort = 7171;
+            if (version > 1010)
             {
-                Console.WriteLine(e.ToString());
+                output.AddByte(1); // number of worlds
+                output.AddByte(0); // world id
+                output.AddString(serverName);
+                output.AddString(serverIp);
+                output.AddInt16(gamePort);
+                output.AddByte(0);
+                output.AddByte(size);
+
+                account.Characters.ForEach(c =>
+                {
+                    output.AddByte(0);
+                    output.AddString(c);
+                });
             }
+            else
+            {
+                var ipAddress = IPAddress.Parse(serverIp);
+                var ipBytes = ipAddress.GetAddressBytes();
+                var serverIPAdress = (uint)ipBytes[0] << 24;
+                serverIPAdress += (uint)ipBytes[1] << 16;
+                serverIPAdress += (uint)ipBytes[2] << 8;
+                serverIPAdress += (uint)ipBytes[3];
+
+                output.AddByte((byte)(account.Characters.Count));
+                account.Characters.ForEach(c =>
+                {
+                    output.AddString(c);
+                    output.AddString(serverName);
+                    output.AddUInt32(serverIPAdress);
+                    output.AddInt16(gamePort);
+                }
+                );
+            }
+
+            var frepremium = true;
+
+            //Add premium days
+            output.AddByte(0);
+            if (frepremium)
+            {
+                output.AddByte(1);
+                output.AddInt32(0);
+            }
+            else
+            {
+                output.AddByte(account.PremiumDays > 0 ? (byte)1 : (byte)0);
+                output.AddInt32((int)(DateTime.Now.Ticks + (account.PremiumDays * 86400)));
+            }
+
+            Send(output);
         }
 
         void DisconnectClient(string message, int version)
