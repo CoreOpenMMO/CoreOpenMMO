@@ -4,25 +4,31 @@ using System.IO;
 
 namespace COTS.GameServer.World {
 
-    public sealed class WorldLoader {
-        public readonly byte[] SerializedWorldData;
-        public readonly WorldNode RootNode;
-        public readonly List<byte> PropBuffer;
+    public static class WorldLoader {
+
+        /// <summary>
+        /// ['O', 'T', 'B', 'M'] or ['\0', '\0', '\0', '\0']
+        /// </summary>
+        private const int IdentifierLength = 4;
+
+        /// <summary>
+        /// NodeStart + NodeType + NodeEnd
+        /// </summary>
+        private const int MinimumNodeSize = 3;
+
+        private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
         public static WorldNode ParseTree(byte[] world) {
             if (world == null)
                 throw new ArgumentNullException(nameof(world));
-            if (world.Length == 0)
+            if (world.Length < MinimumWorldSize)
                 throw new MalformedWorldException();
-#warning Add more format checks
 
-#error Fix the last byte reading issue
             using (var stream = new MemoryStream(world)) {
+                // Skipping the first 4 bytes coz they are used to store a... identifier?
+                stream.Seek(4, SeekOrigin.Begin);
+
                 var firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
-                firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
-                firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
-                firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
-                firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
                 if (firstMarker != WorldNode.NodeMarker.Start)
                     throw new MalformedWorldException();
 
@@ -30,14 +36,13 @@ namespace COTS.GameServer.World {
                 var nodeStack = new Stack<WorldNode>(capacity: guessedNodeCount);
 
                 var rootNodeType = (byte)stream.ReadByte();
-                var rootNodeFirstContentByte = (byte)stream.ReadByte();
                 var rootNode = new WorldNode() {
                     Type = rootNodeType,
-                    PropsBegin = (int)stream.Position
+                    PropsBegin = (int)stream.Position + 1
                 };
                 nodeStack.Push(rootNode);
 
-                ParseTree(stream, nodeStack, rootNodeFirstContentByte);
+                ParseTreeAfterRootNodeStart(stream, nodeStack);
                 if (nodeStack.Count != 0)
                     throw new MalformedWorldException();
 
@@ -45,16 +50,18 @@ namespace COTS.GameServer.World {
             }
         }
 
-        private static void ParseTree(
+        private static void ParseTreeAfterRootNodeStart(
             MemoryStream stream,
-            Stack<WorldNode> nodeStack,
-            byte rootNodeFirstContentByte
+            Stack<WorldNode> nodeStack
             ) {
-            var currentByte = rootNodeFirstContentByte;
+            while (true) {
+                var currentInt = stream.ReadByte();
+                if (currentInt == -1)
+                    return;
 
-            while (stream.Position != stream.Length ) {
-                var markerType = (WorldNode.NodeMarker)currentByte;
-                switch (markerType) {
+                var currentByte = (byte)currentInt;
+                var currentMark = (WorldNode.NodeMarker)currentByte;
+                switch (currentMark) {
                     case WorldNode.NodeMarker.Start:
                     ProcessNodeStart(stream, nodeStack);
                     break;
@@ -72,8 +79,6 @@ namespace COTS.GameServer.World {
                     /// and we can safely skip it.
                     break;
                 }
-
-                currentByte = (byte)stream.ReadByte();
             }
         }
 
@@ -93,6 +98,7 @@ namespace COTS.GameServer.World {
                 PropsBegin = (int)stream.Position + sizeof(WorldNode.NodeMarker)
             };
 
+            currentNode.Children.Add(child);
             nodeStack.Push(child);
         }
 
@@ -107,12 +113,12 @@ namespace COTS.GameServer.World {
         }
 
         private static void ProcessNodeEscape(MemoryStream stream) {
-            var scapedByte = stream.ReadByte();
+            var escapedByte = stream.ReadByte();
             if (stream.Position == stream.Length)
                 throw new MalformedWorldException();
         }
 
-        public PropStream GetProps(WorldNode node) {
+        public static PropStream GetProps(WorldNode node) {
             throw new NotImplementedException();
         }
     }

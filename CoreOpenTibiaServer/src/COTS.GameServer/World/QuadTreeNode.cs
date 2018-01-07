@@ -48,9 +48,7 @@
             // Add comment to explain the *2 and -1
             return Children[childIndex].CreateLeaf(x * 2, y * 2, level - 1);
         }
-
-#warning Port `static Leaf getLeafStatic(Node node, uint32_t x, uint32_t y)'
-
+        
         private static uint ComputeChildrenIndex(uint x, uint y) {
             // I know, right?
             return

@@ -1,31 +1,57 @@
 ﻿using CommandLine;
 using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
-using COTS.Infra.CrossCutting.Network;
-using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using COTS.GameServer.World;
 using COTS.Infra.CrossCutting.Ioc;
+using COTS.Infra.CrossCutting.Network;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace COTS.GameServer {
 
-    public sealed class Program
-    {
-
+    public sealed class Program {
         private static ServiceProvider _serviceProvider;
 
         private static void Main(string[] args) {
+            var worldBytes = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
+            var nodes = WorldLoader.ParseTree(worldBytes);
+            Console.WriteLine("Done!!");
+            Console.ReadLine();
+            return;
+            //var startCount = 0;
+            //var stopCount = 0;
 
-            var nodes = World.WorldLoader.ParseTree(File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm"));
-            Console.WriteLine(nodes.PropsEnd);
+            //for (int i = 0; i < worldBytes.Length; i++) {
+            //    switch ((WorldNode.NodeMarker)worldBytes[i]) {
+            //        case WorldNode.NodeMarker.Escape:
+            //        i++;
+            //        break;
+
+            //        case WorldNode.NodeMarker.Start:
+            //        startCount++;
+            //        break;
+
+            //        case WorldNode.NodeMarker.End:
+            //        stopCount++;
+            //        break;
+
+            //        default:
+            //        break;
+            //    }
+            //}
+
+            //Console.WriteLine("start count: " + startCount);
+            //Console.WriteLine("stop count: " + stopCount);            
 
             var serviceCollection = new ServiceCollection();
             BootStrapper.ConfigureGlobalServices(serviceCollection);
             ConfigureLocalServices(serviceCollection);
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
-            
+
             var parser = Parser.Default;
             var parseAttempt = parser.ParseArguments<CommandLineArguments>(args: args);
 
@@ -46,7 +72,7 @@ namespace COTS.GameServer {
             Console.ReadLine();
         }
 
-        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments) {           
+        private static void RunWithSucessfullyParsedCommandLineArguments(CommandLineArguments commandLineArguments) {
             _serviceProvider.GetService<LuaManager>().Run();
 
             var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
@@ -57,8 +83,7 @@ namespace COTS.GameServer {
             throw new NotImplementedException();
         }
 
-        public static void ConfigureLocalServices(IServiceCollection serviceCollection)
-        {
+        public static void ConfigureLocalServices(IServiceCollection serviceCollection) {
             serviceCollection.AddTransient<LuaManager>();
         }
     }
