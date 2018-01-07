@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using COTS.Infra.CrossCutting.Ioc;
+using System.IO;
 
 namespace COTS.GameServer {
 
@@ -15,7 +16,10 @@ namespace COTS.GameServer {
         private static ServiceProvider _serviceProvider;
 
         private static void Main(string[] args) {
-            
+
+            var nodes = World.WorldLoader.ParseTree(File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm"));
+            Console.WriteLine(nodes.PropsEnd);
+
             var serviceCollection = new ServiceCollection();
             BootStrapper.ConfigureGlobalServices(serviceCollection);
             ConfigureLocalServices(serviceCollection);
