@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace COTS.Infra.CrossCutting.Network {
-
+namespace COTS.Infra.CrossCutting.Network
+{
     [JsonObject(MemberSerialization.OptOut)]
-    public sealed class LoginRequest : IEquatable<LoginRequest> {
-
+    public sealed class LoginRequest : IEquatable<LoginRequest>
+    {
         [JsonProperty(Order = 0)]
         public readonly int ClientVersion;
 
@@ -24,10 +24,11 @@ namespace COTS.Infra.CrossCutting.Network {
             int communicationProtocolVersion,
             string account,
             string password
-            ) {
-            if (account == null)
+            )
+        {
+            if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentNullException(nameof(account));
-            if (password == null)
+            if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentNullException(nameof(password));
 
             ClientVersion = clientVersion;
@@ -36,22 +37,21 @@ namespace COTS.Infra.CrossCutting.Network {
             Password = password;
         }
 
-        public override int GetHashCode() {
-            return HashHelper.Start
+        public override int GetHashCode() =>
+            HashHelper.Start
                 .CombineHashCode(ClientVersion)
                 .CombineHashCode(CommunicationProtocolVersion)
                 .CombineHashCode(Account)
                 .CombineHashCode(Password);
-        }
 
-        public override bool Equals(object obj) => Equals(obj as LoginRequest);
+        public override bool Equals(object obj) => 
+            Equals(obj as LoginRequest);
 
-        public bool Equals(LoginRequest other) {
-            return other != null &&
-                ClientVersion == other.ClientVersion &&
-                CommunicationProtocolVersion == other.CommunicationProtocolVersion &&
-                Account == other.Account &&
-                Password == other.Password;
-        }
+        public bool Equals(LoginRequest other) => 
+            other != null &&
+            ClientVersion == other.ClientVersion &&
+            CommunicationProtocolVersion == other.CommunicationProtocolVersion &&
+            Account == other.Account &&
+            Password == other.Password;
     }
 }
