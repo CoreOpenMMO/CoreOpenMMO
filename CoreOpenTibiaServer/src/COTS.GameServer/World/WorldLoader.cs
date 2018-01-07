@@ -18,6 +18,8 @@ namespace COTS.GameServer.World {
 
         private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
+        public static int highestDepth = 0;
+
         public static WorldNode ParseTree(byte[] world) {
             if (world == null)
                 throw new ArgumentNullException(nameof(world));
@@ -32,8 +34,8 @@ namespace COTS.GameServer.World {
                 if (firstMarker != WorldNode.NodeMarker.Start)
                     throw new MalformedWorldException();
 
-                var guessedNodeCount = world.Length / 4;
-                var nodeStack = new Stack<WorldNode>(capacity: guessedNodeCount);
+                var guessedMaximumNodeDepth = 128;
+                var nodeStack = new Stack<WorldNode>(capacity: guessedMaximumNodeDepth);
 
                 var rootNodeType = (byte)stream.ReadByte();
                 var rootNode = new WorldNode() {
@@ -100,6 +102,7 @@ namespace COTS.GameServer.World {
 
             currentNode.Children.Add(child);
             nodeStack.Push(child);
+            highestDepth = Math.Max(highestDepth, nodeStack.Count);
         }
 
         private static void ProcessNodeEnd(MemoryStream stream, Stack<WorldNode> nodeStack) {

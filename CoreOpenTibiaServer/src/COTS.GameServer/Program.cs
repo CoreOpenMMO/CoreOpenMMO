@@ -16,10 +16,12 @@ namespace COTS.GameServer {
         private static ServiceProvider _serviceProvider;
 
         private static void Main(string[] args) {
-            var worldBytes = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
+            var worldBytes = File.ReadAllBytes(@"T:\Downloads\global.otbm");
             var nodes = WorldLoader.ParseTree(worldBytes);
+            Console.WriteLine("Highest depth: " + WorldLoader.highestDepth);
             Console.WriteLine("Done!!");
             Console.ReadLine();
+
             return;
             //var startCount = 0;
             //var stopCount = 0;
