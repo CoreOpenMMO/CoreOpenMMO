@@ -3,13 +3,13 @@ using System.Net;
 using System.Net.Sockets;
 using COTS.Domain.Interfaces.Services;
 
-namespace COTS.GameServer.Network
+namespace COTS.GameServer.Network.Protocols
 {
     public class ProtocolGame
     {
-        private readonly TcpListener _gameListener;
         private readonly IPlayerService _playerService;
         private readonly IAccountService _accountService;
+        private readonly TcpListener _gameListener;
 
         public ProtocolGame(IPlayerService playerService, IAccountService accountService)
         {
@@ -22,10 +22,9 @@ namespace COTS.GameServer.Network
         {
             try
             {
-                Console.WriteLine("Game server online!");
-
                 _gameListener.Start();
                 _gameListener.BeginAcceptSocket(GameListenerCallback, _gameListener);
+                Console.WriteLine("Game server online!");
             }
             catch (Exception e)
             {

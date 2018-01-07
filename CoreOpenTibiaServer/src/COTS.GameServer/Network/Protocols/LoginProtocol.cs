@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace COTS.GameServer.Network
+namespace COTS.GameServer.Network.Protocols
 {
     public class ProtocolLogin
     {

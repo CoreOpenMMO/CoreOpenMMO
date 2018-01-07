@@ -8,7 +8,7 @@ using COTS.Infra.CrossCutting.Security.Enums;
 
 namespace COTS.GameServer.Network
 {
-    public class ConnectionManager
+    public sealed class ConnectionManager
     {
         private Socket _handler;
         private NetworkStream _networkStream;

@@ -33,12 +33,6 @@ namespace COTS.GameServer {
                 throw new InvalidOperationException("Fo reals? This line should never be reached.");
             }
 
-            //var original = "testiculos";
-            //var encoded = NetworkMessage.Encode(original);
-            //Console.WriteLine(encoded.Length);
-            //var decoded = NetworkMessage.Decode(encoded);
-            //Console.WriteLine(original == decoded);
-
             Console.ReadLine();
         }
 
