@@ -6,7 +6,7 @@ using COTS.Domain.Interfaces.Services;
 
 namespace COTS.Domain.Services
 {
-    public class BaseService<TEntity> : IDisposable, IBaseService<TEntity> where TEntity : class
+    public class BaseService<TEntity> : IDisposable, IServiceBase<TEntity> where TEntity : class
     {
         private readonly IRepositoryBase<TEntity> _repository;
 
