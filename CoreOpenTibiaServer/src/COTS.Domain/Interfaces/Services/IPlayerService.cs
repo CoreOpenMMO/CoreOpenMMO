@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using COTS.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace COTS.Domain.Interfaces.Services
 {
-    public interface IPlayerService : IBaseService<Player>
+    using Domain.Entities;
+
+    public interface IPlayerService : IServiceBase<Player>
     {
-        List<string> GetCharactersListByAccountId(int id);
+        IEnumerable<string> GetCharactersListByAccountId(int id);
     }
 }

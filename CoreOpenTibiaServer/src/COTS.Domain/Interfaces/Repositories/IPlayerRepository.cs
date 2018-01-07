@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using COTS.Domain.Entities;
 
 namespace COTS.Domain.Interfaces.Repositories
 {
+    using Entities;
+
     public interface IPlayerRepository : IRepositoryBase<Player>
     {
-        Task<List<string>> GetCharactersListByAccountId(int id);
+        IEnumerable<string> GetCharactersListByAccountId(int id);
     }
 }

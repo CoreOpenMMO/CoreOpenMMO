@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace COTS.Infra.CrossCutting.Network {
-
+namespace COTS.Infra.CrossCutting.Network
+{
     [JsonObject(MemberSerialization.OptOut)]
-    public sealed class LoginResponse : IEquatable<LoginResponse> {
-
-        public enum ResponseType {
+    public sealed class LoginResponse : IEquatable<LoginResponse>
+    {
+        public enum ResponseType
+        {
             FailedDueToMalformedLoginRequest = 0,
             DeniedDueToIncompatibleProtocolVersion = 1,
             DeniedDueToIncompatibleClientVersion = 2,
@@ -30,30 +31,27 @@ namespace COTS.Infra.CrossCutting.Network {
         public LoginResponse(
             ResponseType status,
             IEnumerable<string> characterNames,
-            int premiumAccountDaysRemaining
-            ) {
-            if (characterNames == null)
-                throw new ArgumentNullException(nameof(characterNames));
-
+            int premiumAccountDaysRemaining)
+        {
             Status = status;
-            CharacterNames = characterNames.ToArray();
             PremiumAccountDaysRemaining = premiumAccountDaysRemaining;
+            CharacterNames = characterNames?.ToArray() 
+                ?? throw new ArgumentNullException(nameof(characterNames));
         }
 
-        public override int GetHashCode() {
-            return HashHelper.Start
+        public override int GetHashCode() =>
+            HashHelper.Start
                 .CombineHashCode(Status)
                 .CombineHashCode(CharacterNames.Count)
                 .CombineHashCode(PremiumAccountDaysRemaining);
-        }
 
-        public override bool Equals(object obj) => Equals(obj as LoginResponse);
+        public override bool Equals(object obj) => 
+            Equals(obj as LoginResponse);
 
-        public bool Equals(LoginResponse other) {
-            return other != null &&
-                Status == other.Status &&
-                PremiumAccountDaysRemaining == other.PremiumAccountDaysRemaining &&
-                Enumerable.SequenceEqual(CharacterNames, other.CharacterNames);
-        }
+        public bool Equals(LoginResponse other) => 
+            other != null &&
+            Status == other.Status &&
+            PremiumAccountDaysRemaining == other.PremiumAccountDaysRemaining &&
+            Enumerable.SequenceEqual(CharacterNames, other.CharacterNames);
     }
 }

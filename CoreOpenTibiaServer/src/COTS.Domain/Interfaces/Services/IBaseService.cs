@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace COTS.Domain.Interfaces.Services
 {
-    public interface IBaseService<TEntity> where TEntity : class
+    public interface IServiceBase<TEntity> where TEntity : class
     {
         Task<bool> Add(TEntity obj);
         Task<IEnumerable<TEntity>> GetAll();

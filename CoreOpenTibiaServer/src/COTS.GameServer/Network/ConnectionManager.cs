@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using COTS.Domain.Interfaces.Services;
@@ -163,11 +164,9 @@ namespace COTS.GameServer.Network
 
                 var username = _networkMessage.GetString();
                 var password = _networkMessage.GetString();
-                //var password = SHA1.Create(NetworkMessage.GetString());
 
                 _networkMessage.SkipBytes((_networkMessage.Length - 128) - _networkMessage.Position);
 
-                //var token = NetworkMessage.GetString();
 
                 var account = _accountService.GetAccountByLogin(username, password);
 
@@ -177,7 +176,7 @@ namespace COTS.GameServer.Network
                     return;
                 }
 
-                account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId);
+                account.Characters = _playerService.GetCharactersListByAccountId(account.AccountId).ToList();
 
                 Console.WriteLine($"\nNew login from: {_handler.RemoteEndPoint} \n" +
                                     $"Account: {account.UserName} \n" +
