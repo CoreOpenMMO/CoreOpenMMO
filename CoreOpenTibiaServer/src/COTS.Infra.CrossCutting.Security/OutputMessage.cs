@@ -99,5 +99,34 @@ namespace COTS.Infra.CrossCutting.Security
             Length += count;
             Position += count;
         }
+
+        #region Checksum
+
+        public bool CheckAdler32()
+        {
+            return Tools.AdlerChecksum(Buffer, 6, Length) == GetAdler32();
+        }
+
+        public void InsertAdler32()
+        {
+            Array.Copy(BitConverter.GetBytes(Tools.AdlerChecksum(Buffer, 6, Length)), 0, Buffer, 2, 4);
+        }
+
+        public uint GetAdler32()
+        {
+            return BitConverter.ToUInt32(Buffer, 2);
+        }
+
+        #endregion
+
+        public void InsertPacketLength()
+        {
+            Array.Copy(BitConverter.GetBytes((ushort)(Length - 8)), 0, Buffer, 6, 2);
+        }
+
+        public void InsertTotalLength()
+        {
+            Array.Copy(BitConverter.GetBytes((ushort)(Length - 2)), 0, Buffer, 0, 2);
+        }
     }
 }

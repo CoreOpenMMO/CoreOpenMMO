@@ -305,9 +305,13 @@ namespace COTS.GameServer.Network
             {
                 OutputMessage message = new OutputMessage();
 
-                //GameServerConnectPacket.Add(message);
+                message.AddByte(0x1F); // type
 
-                //Send(message, false);
+                message.AddUInt32(0x1337); // time in seconds since server start
+
+                message.AddByte(0x10); // fractional time?
+
+                SendMessage(message, false);
             }
             catch (Exception ex)
             {
@@ -333,16 +337,24 @@ namespace COTS.GameServer.Network
             }
         }
 
-        private void SendMessage(OutputMessage output)
+        private void SendMessage(OutputMessage output, bool useEncrypt = true)
         {
             try
             {
                 output.WriteMessageLength();
+                if (useEncrypt)
+                {
+                    XTea.EncryptXtea(ref output, _networkMessage.Key);
+                    output.AddCryptoHeader(true);
+                }
+                else
+                {
+                    output.InsertAdler32();
+                    output.InsertTotalLength();
+                }
 
-                XTea.EncryptXtea(ref output, _networkMessage.Key);
-                output.AddCryptoHeader(true);
-
-                _handler.BeginSend(output.Buffer, 0, output.Length, 0, SendMessageCallback, _handler);
+                //_handler.BeginSend(output.Buffer, 0, output.Length, 0, SendMessageCallback, _handler);
+                _networkStream.BeginWrite(output.Buffer, 0, output.Length, null, null);
 
             }
             catch (ObjectDisposedException)
