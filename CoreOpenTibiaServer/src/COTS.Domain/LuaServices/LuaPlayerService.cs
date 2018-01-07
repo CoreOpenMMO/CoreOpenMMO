@@ -15,13 +15,13 @@ namespace COTS.Domain.LuaServices
         public LuaPlayerService(IPlayerRepository playerRepository) =>
             _playerRepository = playerRepository;
 
-        public virtual async Task<Player> GetByGuid(Guid guid) =>
-            await _playerRepository.GetByGuid(guid);
+        public virtual Player GetByGuid(Guid guid) =>
+            _playerRepository.GetByGuid(guid).Result;
 
-        public virtual async Task<Player> GetById(int id) =>
-            await _playerRepository.GetById(id);
+        public virtual Player GetById(int id) =>
+            _playerRepository.GetById(id).Result;
 
-        public virtual async Task<string> GetNameById(int id) =>
-            (await _playerRepository.GetById(id)).Name;
+        public virtual string GetNameById(int id) =>
+            _playerRepository.GetById(id).Result.Name;
     }
 }

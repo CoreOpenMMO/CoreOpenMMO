@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using COTS.Domain.LuaServices;
 using Microsoft.Extensions.Logging;
 using MoonSharp.Interpreter;
@@ -46,8 +47,11 @@ namespace COTS.GameServer.Lua
 
         private void ExecuteLuaScript()
         {
-            Console.WriteLine("Executing lua script...");
-            _script.DoString(@"print('Player name: ' .. player:getNameById(1));");
+            Task.Run(() =>
+            {
+                Console.WriteLine("Executing lua script...");
+                _script.DoString(@"print('Player name: ' .. player:getNameById(1));");
+            });
         }
 
 

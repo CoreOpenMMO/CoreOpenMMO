@@ -9,6 +9,7 @@ namespace COTS.Infra.CrossCutting.Ioc
     using Domain.Interfaces.Services;
     using Domain.LuaServices;
     using Domain.Services;
+    using System;
     using System.Linq;
     using System.Reflection;
 
@@ -30,9 +31,12 @@ namespace COTS.Infra.CrossCutting.Ioc
                 from type in repositoryAssembly.GetExportedTypes()
                 where type.Namespace == "COTS.Data.Repositories"
                 where type.GetInterfaces().Any()
+                where !type.Name.Contains("BaseRepository")
                 select new
                 {
-                    Contract = type.GetInterfaces().First(x => x.Name != typeof(IRepositoryBase<>).Name),
+                    Contract = type.GetInterfaces().First(x =>
+                        x.Name != typeof(IRepositoryBase<>).Name &&
+                        x.Name != typeof(IDisposable).Name),
                     Implementation = type
                 };
 
@@ -47,9 +51,12 @@ namespace COTS.Infra.CrossCutting.Ioc
                 from type in serviceAssembly.GetExportedTypes()
                 where type.Namespace == "COTS.Domain.Services"
                 where type.GetInterfaces().Any()
+                where !type.Name.Contains("BaseService")
                 select new
                 {
-                    Contract = type.GetInterfaces().First(x => x.Name != typeof(IServiceBase<>).Name),
+                    Contract = type.GetInterfaces().First(x => 
+                        x.Name != typeof(IServiceBase<>).Name &&
+                        x.Name != typeof(IDisposable).Name),
                     Implementation = type
                 };
 
