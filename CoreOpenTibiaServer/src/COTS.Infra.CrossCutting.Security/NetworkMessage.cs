@@ -13,7 +13,7 @@ namespace COTS.Infra.CrossCutting.Security
         public int Length
         {
             get { return _length; }
-            protected set { _length = value; }
+            set { _length = value; }
         }
 
         private int _position;
@@ -23,7 +23,7 @@ namespace COTS.Infra.CrossCutting.Security
         public int Position
         {
             get { return _position; }
-            protected set { _position = value; }
+            set { _position = value; }
         }
 
         private byte[] _buffer;
@@ -33,7 +33,7 @@ namespace COTS.Infra.CrossCutting.Security
         public byte[] Buffer
         {
             get { return _buffer; }
-            protected set { _buffer = value; }
+            set { _buffer = value; }
         }
 
         private uint[] _key;

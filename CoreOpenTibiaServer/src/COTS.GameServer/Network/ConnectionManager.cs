@@ -66,19 +66,16 @@ namespace COTS.GameServer.Network
         {
             try
             {
+                if (!EndReadAyncResult(ar)) return;
+
                 Console.WriteLine("ReceiveFirstMessageCallBack");
-
-                _networkMessage = new NetworkMessage(_networkMessage.Buffer);
-
+                
                 var protocol = (ClientPacketType)_networkMessage.GetByte();
 
                 switch (protocol)
                 {
-                    case ClientPacketType.LoginFirstMessageRequest:
-                        ReceiveLoginFirstMessage();
-                        break;
                     case ClientPacketType.LoginServerRequest:
-                        ReceiveMessage();
+                        ReceiveLoginFirstMessage();
                         break;
                     case ClientPacketType.GameServerRequest:
                         ReceiveMessage();
@@ -104,6 +101,41 @@ namespace COTS.GameServer.Network
             {
                 Console.WriteLine(ex.Message);
                 CloseConnection();
+            }
+        }
+
+        private bool EndReadAyncResult(IAsyncResult ar)
+        {
+            try
+            {
+                int read = _networkStream.EndRead(ar);
+
+                if (read == 0)
+                {
+                    CloseConnection();
+                    return false;
+                }
+
+                int size = (int)BitConverter.ToUInt16(_networkMessage.Buffer, 0) + 2;
+
+                while (read < size)
+                {
+                    if (_networkStream.CanRead)
+                        read += _networkStream.Read(_networkMessage.Buffer, read, size - read);
+                }
+                _networkMessage.Length = size;
+
+                _networkMessage.Position = 0;
+
+                _networkMessage.GetUInt16();
+                _networkMessage.GetUInt32(); 
+
+                return true;
+            }
+            catch
+            {
+                CloseConnection();
+                return false;
             }
         }
 
@@ -194,7 +226,7 @@ namespace COTS.GameServer.Network
                 var size = (byte)Math.Min(charmax, account.Characters.Count);
                 var serverName = "COTS";
                 var serverIp = "127.0.0.1";
-                Int16 gamePort = 7171;
+                Int16 gamePort = 7172;
                 if (version > 1010)
                 {
                     output.AddByte(1); // number of worlds
@@ -254,8 +286,7 @@ namespace COTS.GameServer.Network
                 CloseConnection();
             }
         }
-
-
+        
         private void CloseConnection()
         {
             try { 

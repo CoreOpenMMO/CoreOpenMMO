@@ -2,7 +2,6 @@
 {
     public enum ClientPacketType : byte
     {
-        LoginFirstMessageRequest = 0,
         LoginServerRequest = 0x01,
         GameServerRequest = 0x0A,
         Disconnect = 0x0F,

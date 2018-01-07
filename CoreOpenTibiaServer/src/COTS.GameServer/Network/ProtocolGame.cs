@@ -31,8 +31,6 @@ namespace COTS.GameServer.Network
             {
                 Console.WriteLine(e.ToString());
             }
-
-            Console.Read();
         }
 
         private void GameListenerCallback(IAsyncResult ar)
