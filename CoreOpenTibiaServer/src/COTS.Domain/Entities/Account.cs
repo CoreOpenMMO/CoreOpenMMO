@@ -7,14 +7,16 @@ namespace COTS.Domain.Entities
     public class Account
     {
         [Key]
-        public int AccountId { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public int AccountType { get; set; }
-        public int PremiumDays { get; set; }
-        public int LastDay { get; set; }
+        public virtual int AccountId { get; set; }
+        public virtual string UserName { get; set; }
+        public virtual string Password { get; set; }
+        public virtual int AccountType { get; set; }
+        public virtual int PremiumDays { get; set; }
+        public virtual int LastDay { get; set; }
         
+
+        // Should be changed to ICollection when Characters entity be implemented
         [NotMapped]
-        public List<string> Characters { get; set; }
+        public virtual List<string> Characters { get; set; }
     }
 }

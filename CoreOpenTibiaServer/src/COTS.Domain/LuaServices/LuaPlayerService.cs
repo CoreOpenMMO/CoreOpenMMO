@@ -1,33 +1,27 @@
 ﻿using System;
-using COTS.Domain.Entities;
-using COTS.Domain.Interfaces.Repositories;
 using MoonSharp.Interpreter;
 
 namespace COTS.Domain.LuaServices
 {
+    using Domain.Entities;
+    using Domain.Interfaces.Repositories;
+    using System.Threading.Tasks;
+
     [MoonSharpUserData]
     public class LuaPlayerService
     {
         private static IPlayerRepository _playerRepository;
 
-        public LuaPlayerService(IPlayerRepository playerRepository)
-        {
+        public LuaPlayerService(IPlayerRepository playerRepository) =>
             _playerRepository = playerRepository;
-        }
 
-        public static Player GetByGuid(Guid guid)
-        {
-            return _playerRepository.GetByGuid(guid).Result;
-        }
-        
-        public static Player GetById(int id)
-        {
-            return _playerRepository.GetById(id).Result;
-        }
+        public virtual async Task<Player> GetByGuid(Guid guid) =>
+            await _playerRepository.GetByGuid(guid);
 
-        public static string GetNameById(int id)
-        {
-            return _playerRepository.GetById(id).Result.Name;
-        }
+        public virtual async Task<Player> GetById(int id) =>
+            await _playerRepository.GetById(id);
+
+        public virtual async Task<string> GetNameById(int id) =>
+            (await _playerRepository.GetById(id)).Name;
     }
 }

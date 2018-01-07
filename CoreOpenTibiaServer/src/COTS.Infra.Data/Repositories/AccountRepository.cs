@@ -1,18 +1,18 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using COTS.Data.Context;
-using COTS.Domain.Entities;
-using COTS.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace COTS.Data.Repositories
 {
+    using Context;
+    using Domain.Entities;
+    using Domain.Interfaces.Repositories;
+
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
-        public AccountRepository(COTSContext context) : base(context)
-        {
-            Init();
-        }
+        public AccountRepository(COTSContext context)
+            : base(context) =>
+                Init();
 
         public async Task<Account> GetAccountByLogin(string username, string password)
         {

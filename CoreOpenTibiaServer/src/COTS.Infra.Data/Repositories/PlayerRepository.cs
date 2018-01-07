@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using COTS.Data.Context;
-using COTS.Domain.Entities;
-using COTS.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace COTS.Data.Repositories
 {
+    using Context;
+    using Domain.Entities;
+    using Domain.Interfaces.Repositories;
+
     public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
     {
         public PlayerRepository(COTSContext context) : base (context)
@@ -15,20 +14,13 @@ namespace COTS.Data.Repositories
             Init();
         }
 
-        public async Task<List<string>> GetCharactersListByAccountId(int id)
+        public IEnumerable<string> GetCharactersListByAccountId(int id)
         {
             using (var db = new COTSContext())
             {
-                var characters = new List<string>();
-                await db.Player.Where(c => c.AccountId.Equals(id)).ForEachAsync(c => 
-                {
-                    characters.Add(c.Name);
-                });
-
-                return characters;
+                return FindBy(x => x.AccountId.Equals(id)).Select(x => x.Name);
             }
         }
-
 
         public void Init()
         {
