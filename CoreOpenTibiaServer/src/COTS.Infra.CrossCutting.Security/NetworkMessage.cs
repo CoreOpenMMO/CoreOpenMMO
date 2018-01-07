@@ -43,15 +43,6 @@ namespace COTS.Infra.CrossCutting.Security
             get { return _key; }
             set { _key = value; }
         }
-
-
-        private Socket _handler;
-
-        public Socket Handler
-        {
-            get { return _handler; }
-            protected set { _handler = value; }
-        }
         
         /// <summary>
         /// Maximum buffer size of empty instance
@@ -66,30 +57,19 @@ namespace COTS.Infra.CrossCutting.Security
         public NetworkMessage()
         {
             _length = 0;
-            _position = 0;
+            _position = 6;
             _buffer = new byte[Constants.NetworkMessageSizeMax];
+            _key = new uint[4];
         }
-
-        /// <summary>
-        /// Creates empty ByteStream 
-        /// </summary>
-        public NetworkMessage(Socket handler)
-        {
-            _length = 0;
-            _position = 0;
-            _buffer = new byte[Constants.NetworkMessageSizeMax];
-            _handler = handler;
-        }
-
+        
         /// <summary>
         /// Fills whole content of the given byte array to ByteStream 
         /// </summary>
-        public NetworkMessage(byte[] buffer, Socket handler)
+        public NetworkMessage(byte[] buffer)
         {
             _length = buffer.Length;
             _position = 6;
             _buffer = buffer;
-            _handler = handler;
             _key = new uint[4];
         }
 

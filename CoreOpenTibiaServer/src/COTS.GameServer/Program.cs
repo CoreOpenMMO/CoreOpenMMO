@@ -2,7 +2,6 @@
 using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
 using System;
-using System.Threading.Tasks;
 using COTS.GameServer.Network;
 using Microsoft.Extensions.DependencyInjection;
 using COTS.Infra.CrossCutting.Ioc;
@@ -47,6 +46,7 @@ namespace COTS.GameServer {
         {
             _serviceProvider.GetService<LuaManager>().Run();
             _serviceProvider.GetService<ProtocolLogin>().StartListening();
+            _serviceProvider.GetService<ProtocolGame>().StartListening();
 
             //var clientConnectionManager = commandLineArguments.GetClientConnectionManager();
             //Task.Run(() => clientConnectionManager.StartListening());
@@ -59,7 +59,9 @@ namespace COTS.GameServer {
         public static void ConfigureLocalServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<LuaManager>();
+            serviceCollection.AddTransient<ConnectionManager>();
             serviceCollection.AddTransient<ProtocolLogin>();
+            serviceCollection.AddTransient<ProtocolGame>();
         }
     }
 }
