@@ -3,6 +3,7 @@ using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
 using System;
 using COTS.GameServer.Network;
+using COTS.GameServer.Network.Protocols;
 using Microsoft.Extensions.DependencyInjection;
 using COTS.Infra.CrossCutting.Ioc;
 using NetworkMessage = COTS.Infra.CrossCutting.Network.NetworkMessage;

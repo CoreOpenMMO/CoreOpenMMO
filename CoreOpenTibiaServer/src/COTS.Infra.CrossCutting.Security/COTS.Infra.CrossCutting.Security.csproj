@@ -8,4 +8,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="editorconfig" Version="0.12.1" />
+  </ItemGroup>
+
 </Project>
