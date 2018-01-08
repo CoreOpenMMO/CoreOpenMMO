@@ -148,10 +148,7 @@ namespace COTS.GameServer.World {
                 .Select(c => ConvertingParsingNode(serializedWorldData, c))
                 .ToArray();
 
-            var immutableChildren = ReadOnlyArray<WorldNode>.WrapCollection(childen);
-
-            Debug.Assert(propsSegment != null);
-            Debug.Assert(childen != null);
+            var immutableChildren = ReadOnlyArray<WorldNode>.WrapCollection(childen);            
 
             var worldNode = new WorldNode(
                 props: propsSegment,

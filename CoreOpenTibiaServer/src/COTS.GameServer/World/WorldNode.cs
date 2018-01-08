@@ -10,8 +10,6 @@ namespace COTS.GameServer.World {
             ArraySegment<byte> props,
             ReadOnlyArray<WorldNode> children
             ) {
-            if (props == null)
-                throw new ArgumentNullException(nameof(props));
             if (children == null)
                 throw new ArgumentNullException(nameof(children));
 
