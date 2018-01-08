@@ -26,6 +26,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="World\ImmutableWorld.cs" />
+    <Compile Remove="World\ImmutableWorldLoader.Methods.cs" />
+    <Compile Remove="World\ImmutableWorldLoader.ParsingNode.cs" />
+    <Compile Remove="World\ImmutableWorldNode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="World\Deprecated\ImmutableWorld.cs" />
+    <None Include="World\Deprecated\ImmutableWorldLoader.Methods.cs" />
+    <None Include="World\Deprecated\ImmutableWorldLoader.ParsingNode.cs" />
+    <None Include="World\Deprecated\ImmutableWorldNode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.1.1-beta" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />

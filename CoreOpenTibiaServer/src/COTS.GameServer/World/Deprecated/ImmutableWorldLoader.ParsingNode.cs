@@ -2,7 +2,7 @@
 
 namespace COTS.GameServer.World {
 
-    public static partial class WorldLoader {
+    public static partial class ImmutableWorldLoader {
 
         private sealed class ParsingWorldNode {
 

@@ -2,13 +2,13 @@
 
 namespace COTS.GameServer.World {
 
-    public sealed class WorldNode {
+    public sealed class ImmutableWorldNode {
         public readonly ArraySegment<byte> Props;
-        public readonly ReadOnlyArray<WorldNode> Children;
+        public readonly ReadOnlyArray<ImmutableWorldNode> Children;
 
-        public WorldNode(
+        public ImmutableWorldNode(
             ArraySegment<byte> props,
-            ReadOnlyArray<WorldNode> children
+            ReadOnlyArray<ImmutableWorldNode> children
             ) {
             if (children == null)
                 throw new ArgumentNullException(nameof(children));

@@ -6,6 +6,7 @@ using COTS.Infra.CrossCutting.Ioc;
 using COTS.Infra.CrossCutting.Network;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,13 @@ namespace COTS.GameServer {
 
         private static void Main(string[] args) {
             var worldBytes = File.ReadAllBytes(@"T:\Downloads\global.otbm");
-            var nodes = WorldLoader.ParseWorld(worldBytes);
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var mutableWorld = MutableWorldLoader.ParseWorld(worldBytes);
+            sw.Stop();
+            Console.WriteLine("Time to parse world: " + sw.ElapsedMilliseconds);
+
             Console.WriteLine("Done!!");
             Console.ReadLine();
 

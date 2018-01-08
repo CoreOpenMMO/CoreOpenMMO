@@ -2,11 +2,11 @@
 
 namespace COTS.GameServer.World {
 
-    public sealed class World {
+    public sealed class ImmutableWorld {
         public const ushort MapMaximumLayers = 15;
-        public readonly WorldNode Root;
+        public readonly ImmutableWorldNode Root;
 
-        public World(WorldNode root) {
+        public ImmutableWorld(ImmutableWorldNode root) {
             if (root == null)
                 throw new ArgumentNullException(nameof(root));
 
