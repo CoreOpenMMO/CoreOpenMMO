@@ -17,8 +17,7 @@ namespace COTS.GameServer {
 
         private static void Main(string[] args) {
             var worldBytes = File.ReadAllBytes(@"T:\Downloads\global.otbm");
-            var nodes = WorldLoader.ParseTree(worldBytes);
-            Console.WriteLine("Highest depth: " + WorldLoader.highestDepth);
+            var nodes = WorldLoader.ParseWorld(worldBytes);
             Console.WriteLine("Done!!");
             Console.ReadLine();
 

@@ -1,19 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace COTS.GameServer.World {
 
     public sealed class WorldNode {
+        public readonly ArraySegment<byte> Props;
+        public readonly ReadOnlyArray<WorldNode> Children;
 
-        public enum NodeMarker : byte {
-            Escape = 0xFD,
-            Start = 0XFE,
-            End = 0xFF
+        public WorldNode(
+            ArraySegment<byte> props,
+            ReadOnlyArray<WorldNode> children
+            ) {
+            if (props == null)
+                throw new ArgumentNullException(nameof(props));
+            if (children == null)
+                throw new ArgumentNullException(nameof(children));
+
+            Props = props;
+            Children = children;
         }
-
-        public readonly List<WorldNode> Children = new List<WorldNode>();
-        public byte Type;
-
-        public int PropsBegin;
-        public int PropsEnd;
     }
 }
