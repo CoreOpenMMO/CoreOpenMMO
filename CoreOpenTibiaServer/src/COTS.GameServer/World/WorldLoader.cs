@@ -25,8 +25,11 @@ namespace COTS.GameServer.World {
                 throw new MalformedWorldException();
 
             using (var stream = new MemoryStream(serializedWorldData)) {
-                var parsedTree = ParseTree(stream);
-                var world = new World(parsedTree);
+                var rootNode = ParseTree(stream);
+                var world = new World(
+                    root: rootNode,
+                    serializedWorldData: serializedWorldData);
+
                 return world;
             }
         }
