@@ -4,7 +4,7 @@ using System.IO;
 
 namespace COTS.GameServer.World {
 
-    public static class MutableWorldLoader {
+    public static class WorldLoader {
 
         /// <summary>
         /// Array of 'ascii bytes' ['O', 'T', 'B', 'M'] or ['\0', '\0', '\0', '\0']
@@ -18,7 +18,7 @@ namespace COTS.GameServer.World {
 
         private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
-        public static MutableWorld ParseWorld(byte[] serializedWorldData) {
+        public static World ParseWorld(byte[] serializedWorldData) {
             if (serializedWorldData == null)
                 throw new ArgumentNullException(nameof(serializedWorldData));
             if (serializedWorldData.Length < MinimumWorldSize)
@@ -26,24 +26,24 @@ namespace COTS.GameServer.World {
 
             using (var stream = new MemoryStream(serializedWorldData)) {
                 var parsedTree = ParseTree(stream);
-                var world = new MutableWorld(parsedTree);
+                var world = new World(parsedTree);
                 return world;
             }
         }
 
-        private static MutableWorldNode ParseTree(MemoryStream stream) {
+        private static WorldNode ParseTree(MemoryStream stream) {
             // Skipping the first 4 bytes coz they are used to store a... identifier?
             stream.Seek(IdentifierLength, SeekOrigin.Begin);
 
-            var firstMarker = (MutableWorldNode.NodeMarker)stream.ReadByte();
-            if (firstMarker != MutableWorldNode.NodeMarker.Start)
+            var firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
+            if (firstMarker != WorldNode.NodeMarker.Start)
                 throw new MalformedWorldException();
 
             var guessedMaximumNodeDepth = 128;
-            var nodeStack = new Stack<MutableWorldNode>(capacity: guessedMaximumNodeDepth);
+            var nodeStack = new Stack<WorldNode>(capacity: guessedMaximumNodeDepth);
 
             var rootNodeType = (byte)stream.ReadByte();
-            var rootNode = new MutableWorldNode() {
+            var rootNode = new WorldNode() {
                 Type = rootNodeType,
                 PropsBegin = (int)stream.Position + 1
             };
@@ -58,7 +58,7 @@ namespace COTS.GameServer.World {
 
         private static void ParseTreeAfterRootNodeStart(
             MemoryStream stream,
-            Stack<MutableWorldNode> nodeStack
+            Stack<WorldNode> nodeStack
             ) {
             while (true) {
                 var currentInt = stream.ReadByte();
@@ -66,17 +66,17 @@ namespace COTS.GameServer.World {
                     return;
 
                 var currentByte = (byte)currentInt;
-                var currentMark = (MutableWorldNode.NodeMarker)currentByte;
+                var currentMark = (WorldNode.NodeMarker)currentByte;
                 switch (currentMark) {
-                    case MutableWorldNode.NodeMarker.Start:
+                    case WorldNode.NodeMarker.Start:
                     ProcessNodeStart(stream, nodeStack);
                     break;
 
-                    case MutableWorldNode.NodeMarker.End:
+                    case WorldNode.NodeMarker.End:
                     ProcessNodeEnd(stream, nodeStack);
                     break;
 
-                    case MutableWorldNode.NodeMarker.Escape:
+                    case WorldNode.NodeMarker.Escape:
                     ProcessNodeEscape(stream);
                     break;
 
@@ -88,7 +88,7 @@ namespace COTS.GameServer.World {
             }
         }
 
-        private static void ProcessNodeStart(MemoryStream stream, Stack<MutableWorldNode> nodeStack) {
+        private static void ProcessNodeStart(MemoryStream stream, Stack<WorldNode> nodeStack) {
             if (!nodeStack.TryPeek(out var currentNode))
                 throw new MalformedWorldException();
 
@@ -99,16 +99,16 @@ namespace COTS.GameServer.World {
             if (childType == -1)
                 throw new MalformedWorldException();
 
-            var child = new MutableWorldNode {
+            var child = new WorldNode {
                 Type = (byte)childType,
-                PropsBegin = (int)stream.Position + sizeof(MutableWorldNode.NodeMarker)
+                PropsBegin = (int)stream.Position + sizeof(WorldNode.NodeMarker)
             };
 
             currentNode.Children.Add(child);
             nodeStack.Push(child);
         }
 
-        private static void ProcessNodeEnd(MemoryStream stream, Stack<MutableWorldNode> nodeStack) {
+        private static void ProcessNodeEnd(MemoryStream stream, Stack<WorldNode> nodeStack) {
             if (!nodeStack.TryPeek(out var currentNode))
                 throw new MalformedWorldException();
 

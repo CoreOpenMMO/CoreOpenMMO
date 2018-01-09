@@ -21,7 +21,7 @@ namespace COTS.GameServer {
 
             var sw = new Stopwatch();
             sw.Start();
-            var mutableWorld = MutableWorldLoader.ParseWorld(worldBytes);
+            var mutableWorld = WorldLoader.ParseWorld(worldBytes);
             sw.Stop();
             Console.WriteLine("Time to parse world: " + sw.ElapsedMilliseconds);
 
