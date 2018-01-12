@@ -10,7 +10,7 @@ namespace COTS.GameServer {
     /// </summary>
     public sealed class ByteArrayReadStream {
         private readonly byte[] _array;
-        private int _position;
+        public int Position { get; private set; }
 
         public ByteArrayReadStream(byte[] array, int position = 0) {
             if (array == null)
@@ -19,36 +19,38 @@ namespace COTS.GameServer {
                 throw new ArgumentOutOfRangeException(nameof(position));
 
             this._array = array;
-            this._position = position;
+            this.Position = position;
         }
 
+        public bool IsOver => Position >= _array.Length;
+
         public int BytesLeftToRead() {
-            return _array.Length - _position;
+            return _array.Length - Position;
         }
 
         public byte ReadByte() {
-            var data = _array[_position];
-            _position += sizeof(byte);
+            var data = _array[Position];
+            Position += sizeof(byte);
 
             return data;
         }
 
         public UInt16 ReadUInt16() {
-            var data = BitConverter.ToUInt16(_array, _position);
-            _position += sizeof(UInt16);
+            var data = BitConverter.ToUInt16(_array, Position);
+            Position += sizeof(UInt16);
 
             return data;
         }
 
         public UInt32 ReadUint32() {
-            var data = BitConverter.ToUInt32(_array, _position);
-            _position += sizeof(UInt32);
+            var data = BitConverter.ToUInt32(_array, Position);
+            Position += sizeof(UInt32);
 
             return data;
         }
 
         public void Skip(int byteCount = 1) {
-            _position += byteCount;
+            Position += byteCount;
         }
     }
 }
