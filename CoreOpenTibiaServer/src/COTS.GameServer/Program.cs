@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
-using COTS.GameServer.World;
+using COTS.GameServer.World.Loading;
 using COTS.Infra.CrossCutting.Ioc;
 using COTS.Infra.CrossCutting.Network;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +17,24 @@ namespace COTS.GameServer {
         private static ServiceProvider _serviceProvider;
 
         private static void Main(string[] args) {
-            var worldBytes = File.ReadAllBytes(@"T:\Downloads\global.otbm");
+            var worldBytes = File.ReadAllBytes(@"C:\Source\Otxserver-New-master\data\world\realmap.otbm");
 
             var sw = new Stopwatch();
             sw.Start();
-            var mutableWorld = WorldLoader.ParseWorld(worldBytes);
+            var world = WorldLoader.ParseWorld(worldBytes);
             sw.Stop();
             Console.WriteLine("Time to parse world: " + sw.ElapsedMilliseconds);
+
+            var rootHeader = world.GetWorldRootNodeHeader();
+            //var versionBytes = BitConverter.GetBytes(rootHeader.WorldEncodingVersion);
+            //Array.Reverse(versionBytes);
+            //var version = BitConverter.ToUInt32(versionBytes, 0);
+
+            Console.WriteLine($"World encoding: {rootHeader.WorldEncodingVersion}");
+            Console.WriteLine($"World width {rootHeader.WorldWidth}");
+            Console.WriteLine($"World height {rootHeader.WorldHeight}");
+            Console.WriteLine($"Item encoding major version {rootHeader.ItemEncodingMajorVersion}");
+            Console.WriteLine($"Item encoding minor version {rootHeader.ItemEncodingMinorVersion}");
 
             Console.WriteLine("Done!!");
             Console.ReadLine();

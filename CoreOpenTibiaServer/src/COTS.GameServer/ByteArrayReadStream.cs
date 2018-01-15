@@ -42,7 +42,7 @@ namespace COTS.GameServer {
             return data;
         }
 
-        public UInt32 ReadUint32() {
+        public UInt32 ReadUInt32() {
             var data = BitConverter.ToUInt32(_array, Position);
             Position += sizeof(UInt32);
 

@@ -1,14 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace COTS.GameServer.World {
+namespace COTS.GameServer.World.Loading {
 
     public sealed class WorldNode {
-
-        public enum NodeMarker : byte {
-            Escape = 0xFD,
-            Start = 0XFE,
-            End = 0xFF
-        }
 
         public readonly List<WorldNode> Children = new List<WorldNode>();
         public byte Type;

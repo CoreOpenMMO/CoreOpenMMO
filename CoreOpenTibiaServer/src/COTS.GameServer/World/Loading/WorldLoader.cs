@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace COTS.GameServer.World {
+namespace COTS.GameServer.World.Loading {
 
     public static class WorldLoader {
 
@@ -36,8 +36,8 @@ namespace COTS.GameServer.World {
             // Skipping the first 4 bytes coz they are used to store a... identifier?
             stream.Skip(IdentifierLength);
 
-            var firstMarker = (WorldNode.NodeMarker)stream.ReadByte();
-            if (firstMarker != WorldNode.NodeMarker.Start)
+            var firstMarker = (ReservedByte)stream.ReadByte();
+            if (firstMarker != ReservedByte.Start)
                 throw new MalformedWorldException();
 
             var guessedMaximumNodeDepth = 128;
@@ -46,7 +46,7 @@ namespace COTS.GameServer.World {
             var rootNodeType = (byte)stream.ReadByte();
             var rootNode = new WorldNode() {
                 Type = rootNodeType,
-                PropsBegin = (int)stream.Position + 1
+                PropsBegin = (int)stream.Position
             };
             nodeStack.Push(rootNode);
 
@@ -61,22 +61,18 @@ namespace COTS.GameServer.World {
             ByteArrayReadStream stream,
             Stack<WorldNode> nodeStack
             ) {
-            while (true) {
-                if (stream.IsOver)
-                    return;
-
-                var currentByte = stream.ReadByte();
-                var currentMark = (WorldNode.NodeMarker)currentByte;
+            while (!stream.IsOver) {
+                var currentMark = (ReservedByte)stream.ReadByte();
                 switch (currentMark) {
-                    case WorldNode.NodeMarker.Start:
+                    case ReservedByte.Start:
                     ProcessNodeStart(stream, nodeStack);
                     break;
 
-                    case WorldNode.NodeMarker.End:
+                    case ReservedByte.End:
                     ProcessNodeEnd(stream, nodeStack);
                     break;
 
-                    case WorldNode.NodeMarker.Escape:
+                    case ReservedByte.Escape:
                     ProcessNodeEscape(stream);
                     break;
 
@@ -101,7 +97,7 @@ namespace COTS.GameServer.World {
 
             var child = new WorldNode {
                 Type = childType,
-                PropsBegin = stream.Position + sizeof(WorldNode.NodeMarker)
+                PropsBegin = stream.Position + sizeof(ReservedByte)
             };
 
             currentNode.Children.Add(child);
