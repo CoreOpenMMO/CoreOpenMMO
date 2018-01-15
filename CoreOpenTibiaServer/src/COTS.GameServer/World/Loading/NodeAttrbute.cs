@@ -1,6 +1,6 @@
 ﻿namespace COTS.GameServer.World.Loading {
 
-    public enum NodeAttribute :byte {
+    public enum NodeAttribute : byte {
         WorldDescription = 1,                   // OTBM_ATTR_DESCRIPTION = 1,
         ExtensionFile = 2,                      // OTBM_ATTR_EXT_FILE = 2,
         TileFlags = 3,                          // OTBM_ATTR_TILE_FLAGS = 3,

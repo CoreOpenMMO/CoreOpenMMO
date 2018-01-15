@@ -2,27 +2,27 @@
 
 namespace COTS.GameServer.World.Loading {
 
-    public sealed class WorldSerializationReadStream {
+    public sealed class WorldParsingStream {
         public readonly ByteArrayReadStream UnderlayingStream;
 
-        public WorldSerializationReadStream(ByteArrayReadStream underlayingStream) {
-            if (underlayingStream == null)
-                throw new ArgumentNullException(nameof(underlayingStream));
+        public WorldParsingStream(ByteArrayReadStream rawStream) {
+            if (rawStream == null)
+                throw new ArgumentNullException(nameof(rawStream));
 
-            UnderlayingStream = underlayingStream;
+            UnderlayingStream = rawStream;
         }
 
         public bool IsOver {
             get {
                 return UnderlayingStream.IsOver ||
-                    (ReservedByte)UnderlayingStream.PeakByte() == ReservedByte.End;
+                    (MarkupByte)UnderlayingStream.PeakByte() == MarkupByte.End;
             }
         }
 
         public byte ReadByte() {
             var value = UnderlayingStream.ReadByte();
 
-            if ((ReservedByte)value != ReservedByte.Escape)
+            if ((MarkupByte)value != MarkupByte.Escape)
                 return value;
             else
                 return UnderlayingStream.ReadByte();
