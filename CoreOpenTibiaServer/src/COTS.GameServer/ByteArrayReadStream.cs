@@ -28,6 +28,10 @@ namespace COTS.GameServer {
             return _array.Length - Position;
         }
 
+        public byte PeakByte() {
+            return _array[Position];
+        }
+
         public byte ReadByte() {
             var data = _array[Position];
             Position += sizeof(byte);

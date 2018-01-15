@@ -12,6 +12,13 @@ namespace COTS.GameServer.World.Loading {
             UnderlayingStream = underlayingStream;
         }
 
+        public bool IsOver {
+            get {
+                return UnderlayingStream.IsOver ||
+                    (ReservedByte)UnderlayingStream.PeakByte() == ReservedByte.End;
+            }
+        }
+
         public byte ReadByte() {
             var value = UnderlayingStream.ReadByte();
 

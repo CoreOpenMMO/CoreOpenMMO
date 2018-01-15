@@ -1,7 +1,11 @@
-﻿using System;
+﻿namespace COTS.GameServer.World {
 
-namespace COTS.GameServer.World {
+    public sealed class MalformedWorldException : WorldLoadingException {
 
-    public sealed class MalformedWorldException : InvalidOperationException {
+        public MalformedWorldException()
+           : base() { }
+
+        public MalformedWorldException(string message)
+            : base(message) { }
     }
 }

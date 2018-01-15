@@ -37,8 +37,6 @@ namespace COTS.GameServer {
             Console.WriteLine($"Item encoding minor version {rootHeader.ItemEncodingMinorVersion}");
 
             Console.WriteLine("Done!!");
-            Console.ReadLine();
-
             return;
             //var startCount = 0;
             //var stopCount = 0;
