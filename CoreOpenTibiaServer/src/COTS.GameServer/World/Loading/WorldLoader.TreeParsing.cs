@@ -81,7 +81,7 @@ namespace COTS.GameServer.World.Loading {
 
             var child = new ParsingNode {
                 Type = (NodeType)childType,
-                PropsBegin = stream.Position + sizeof(MarkupByte)
+                PropsBegin = stream.Position//  + sizeof(MarkupByte)
             };
 
             currentNode.Children.Add(child);

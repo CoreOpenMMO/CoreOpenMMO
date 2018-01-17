@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -8,10 +9,7 @@ namespace COTS.GameServer.World.Loading {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var rawStream = new ByteArrayReadStream(
-                array: tree.Data,
-                position: tree.Root.PropsBegin);
-            var parsingStream = new WorldParsingStream(rawStream);
+            var parsingStream = new WorldParsingStream(tree, tree.Root);
 
             UInt32 worldEncodingVersion = parsingStream.ReadUInt32();
             UInt16 worldWidth = parsingStream.ReadUInt16();
@@ -38,12 +36,9 @@ namespace COTS.GameServer.World.Loading {
             if ((NodeType)worldDataNode.Type != NodeType.WorldData)
                 throw new MalformedWorldException();
 
-            var rawStream = new ByteArrayReadStream(
-                array: tree.Data,
-                position: worldDataNode.PropsBegin);
-            var parsingStream = new WorldParsingStream(rawStream);
+            var parsingStream = new WorldParsingStream(tree, worldDataNode);
 
-            string worldDescription = null;
+            var worldDescription = new List<string>();
             string spawnsFilename = null;
             string housesFilename = null;
 
@@ -51,11 +46,7 @@ namespace COTS.GameServer.World.Loading {
                 var attribute = (NodeAttribute)parsingStream.ReadByte();
                 switch (attribute) {
                     case NodeAttribute.WorldDescription:
-                    if (worldDescription != null) {
-                        throw new MalformedAttributesNodeException("Multiple world description attributes.");
-                    } else {
-                        worldDescription = parsingStream.ReadString();
-                    }
+                    worldDescription.Add(parsingStream.ReadString());
                     break;
 
                     case NodeAttribute.ExtensionFileForSpawns:
@@ -79,8 +70,12 @@ namespace COTS.GameServer.World.Loading {
                 }
             }
 
+            var formattedWorldDescription = string.Join(
+                separator: Environment.NewLine,
+                values: worldDescription);
+
             return new WorldAttributes(
-                description: worldDescription,
+                worldDescription: formattedWorldDescription,
                 spawnsFilename: spawnsFilename,
                 housesFilename: housesFilename);
         }

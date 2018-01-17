@@ -5,20 +5,25 @@ namespace COTS.GameServer.World.Loading {
 
     public struct WorldParsingStream {
         public readonly ByteArrayReadStream UnderlayingStream;
+        public readonly int BeginPosition;
+        public int CurrentPosition => UnderlayingStream.Position;
+        public readonly int EndPosition;
 
-        public WorldParsingStream(ByteArrayReadStream rawStream) {
-            if (rawStream == null)
-                throw new ArgumentNullException(nameof(rawStream));
+        public WorldParsingStream(ParsingTree tree, ParsingNode node) {
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
 
-            UnderlayingStream = rawStream;
+            this.UnderlayingStream = new ByteArrayReadStream(
+                array: tree.Data,
+                position: node.PropsBegin);
+
+            this.BeginPosition = node.PropsBegin;
+            this.EndPosition = node.PropsEnd;
         }
 
-        public bool IsOver {
-            get {
-                return UnderlayingStream.IsOver ||
-                    (MarkupByte)UnderlayingStream.PeakByte() == MarkupByte.End;
-            }
-        }
+        public bool IsOver => UnderlayingStream.IsOver || CurrentPosition >= EndPosition - 1;
 
         public byte ReadByte() {
             var value = UnderlayingStream.ReadByte();
