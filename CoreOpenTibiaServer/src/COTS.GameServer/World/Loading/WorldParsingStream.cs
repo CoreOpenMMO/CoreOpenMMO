@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Text;
 
 namespace COTS.GameServer.World.Loading {
 
-    public sealed class WorldParsingStream {
+    public struct WorldParsingStream {
         public readonly ByteArrayReadStream UnderlayingStream;
 
         public WorldParsingStream(ByteArrayReadStream rawStream) {
@@ -42,6 +43,17 @@ namespace COTS.GameServer.World.Loading {
                 serializedValue[i] = this.ReadByte();
 
             return BitConverter.ToUInt32(serializedValue, 0);
+        }
+
+        public string ReadString() {
+            var stringLength = ReadUInt16();
+            var stringData = new byte[stringLength];
+
+            for (int i = 0; i < stringLength; i++)
+                stringData[i] = ReadByte();
+
+            // When in C land, use C encoding...
+            return Encoding.ASCII.GetString(stringData);
         }
     }
 }

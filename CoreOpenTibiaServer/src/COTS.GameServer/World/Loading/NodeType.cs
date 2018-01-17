@@ -1,8 +1,9 @@
 ﻿namespace COTS.GameServer.World.Loading {
 
     public enum NodeType : byte {
+        NotSetYet = 0,
         RootVersion1 = 1,
-        MapData = 2,
+        WorldData = 2,
         ItemDefinition = 3,
         TileArea = 4,
         Tile = 5,

@@ -4,7 +4,7 @@ namespace COTS.GameServer.World.Loading {
 
     public static partial class WorldLoader {
 
-        public static World ParseWorld(byte[] serializedWorldData) {
+        public static ParsingTree ParseWorld(byte[] serializedWorldData) {
             if (serializedWorldData == null)
                 throw new ArgumentNullException(nameof(serializedWorldData));
             if (serializedWorldData.Length < MinimumWorldSize)
@@ -12,8 +12,7 @@ namespace COTS.GameServer.World.Loading {
 
             var stream = new ByteArrayReadStream(serializedWorldData);
             var rootNode = ParseTree(stream);
-
-            throw new NotImplementedException();
+            return new ParsingTree(serializedWorldData, rootNode);
         }
     }
 }

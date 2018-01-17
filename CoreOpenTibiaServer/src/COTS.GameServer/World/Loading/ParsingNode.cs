@@ -2,10 +2,9 @@
 
 namespace COTS.GameServer.World.Loading {
 
-    public sealed class WorldNode {
-
-        public readonly List<WorldNode> Children = new List<WorldNode>();
-        public byte Type;
+    public sealed class ParsingNode {
+        public readonly List<ParsingNode> Children = new List<ParsingNode>();
+        public NodeType Type;
         public int PropsBegin;
         public int PropsEnd;
     }

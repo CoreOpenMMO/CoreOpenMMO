@@ -16,7 +16,7 @@ namespace COTS.GameServer.World.Loading {
 
         private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
-        private static WorldNode ParseTree(ByteArrayReadStream stream) {
+        private static ParsingNode ParseTree(ByteArrayReadStream stream) {
             // Skipping the first 4 bytes coz they are used to store a... identifier?
             stream.Skip(IdentifierLength);
 
@@ -25,11 +25,11 @@ namespace COTS.GameServer.World.Loading {
                 throw new MalformedWorldException();
 
             var guessedMaximumNodeDepth = 128;
-            var nodeStack = new Stack<WorldNode>(capacity: guessedMaximumNodeDepth);
+            var nodeStack = new Stack<ParsingNode>(capacity: guessedMaximumNodeDepth);
 
             var rootNodeType = (byte)stream.ReadByte();
-            var rootNode = new WorldNode() {
-                Type = rootNodeType,
+            var rootNode = new ParsingNode() {
+                Type = (NodeType)rootNodeType,
                 PropsBegin = (int)stream.Position
             };
             nodeStack.Push(rootNode);
@@ -43,7 +43,7 @@ namespace COTS.GameServer.World.Loading {
 
         private static void ParseTreeAfterRootNodeStart(
             ByteArrayReadStream stream,
-            Stack<WorldNode> nodeStack
+            Stack<ParsingNode> nodeStack
             ) {
             while (!stream.IsOver) {
                 var currentMark = (MarkupByte)stream.ReadByte();
@@ -68,7 +68,7 @@ namespace COTS.GameServer.World.Loading {
             }
         }
 
-        private static void ProcessNodeStart(ByteArrayReadStream stream, Stack<WorldNode> nodeStack) {
+        private static void ProcessNodeStart(ByteArrayReadStream stream, Stack<ParsingNode> nodeStack) {
             if (!nodeStack.TryPeek(out var currentNode))
                 throw new MalformedWorldException();
 
@@ -79,8 +79,8 @@ namespace COTS.GameServer.World.Loading {
             if (stream.IsOver)
                 throw new MalformedWorldException();
 
-            var child = new WorldNode {
-                Type = childType,
+            var child = new ParsingNode {
+                Type = (NodeType)childType,
                 PropsBegin = stream.Position + sizeof(MarkupByte)
             };
 
@@ -88,7 +88,7 @@ namespace COTS.GameServer.World.Loading {
             nodeStack.Push(child);
         }
 
-        private static void ProcessNodeEnd(ByteArrayReadStream stream, Stack<WorldNode> nodeStack) {
+        private static void ProcessNodeEnd(ByteArrayReadStream stream, Stack<ParsingNode> nodeStack) {
             if (!nodeStack.TryPeek(out var currentNode))
                 throw new MalformedWorldException();
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.GameServer.World.Loading {
+namespace COTS.GameServer.World {
 
     public sealed class WorldAttributes {
         public readonly string Description;

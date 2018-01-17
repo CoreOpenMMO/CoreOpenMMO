@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.GameServer.World.Loading {
+namespace COTS.GameServer.World {
 
     public sealed class WorldHeader {
         public readonly UInt32 WorldEncodingVersion;
