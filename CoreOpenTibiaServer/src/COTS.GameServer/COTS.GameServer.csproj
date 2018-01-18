@@ -26,6 +26,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="World\Deprecated\ImmutableWorld.cs" />
+    <Compile Remove="World\Deprecated\ImmutableWorldLoader.Methods.cs" />
+    <Compile Remove="World\Deprecated\ImmutableWorldLoader.ParsingNode.cs" />
+    <Compile Remove="World\Deprecated\ImmutableWorldNode.cs" />
     <Compile Remove="World\ImmutableWorld.cs" />
     <Compile Remove="World\ImmutableWorldLoader.Methods.cs" />
     <Compile Remove="World\ImmutableWorldLoader.ParsingNode.cs" />

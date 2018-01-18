@@ -1,4 +1,4 @@
-﻿namespace COTS.GameServer.World {
+﻿namespace COTS.GameServer.World.Loading {
 
     public sealed class MalformedAttributesNodeException : WorldLoadingException {
 

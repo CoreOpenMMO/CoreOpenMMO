@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.GameServer.World {
+namespace COTS.GameServer.World.Loading {
 
     public class WorldLoadingException : Exception {
 
