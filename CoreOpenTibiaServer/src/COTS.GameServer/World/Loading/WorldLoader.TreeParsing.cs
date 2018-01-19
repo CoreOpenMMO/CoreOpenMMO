@@ -51,7 +51,7 @@ namespace COTS.GameServer.World.Loading {
 
                     case NodeAttribute.ExtensionFileForSpawns:
                     if (spawnsFilename != null) {
-                        throw new MalformedAttributesNodeException("Multiple filenames for world spawns.");
+                        throw new MalformedWorldAttributesNodeException("Multiple filenames for world spawns.");
                     } else {
                         spawnsFilename = parsingStream.ReadString();
                     }
@@ -59,14 +59,14 @@ namespace COTS.GameServer.World.Loading {
 
                     case NodeAttribute.ExtensionFileForHouses:
                     if (housesFilename != null) {
-                        throw new MalformedAttributesNodeException("Multiple filenames for world houses.");
+                        throw new MalformedWorldAttributesNodeException("Multiple filenames for world houses.");
                     } else {
                         housesFilename = parsingStream.ReadString();
                     }
                     break;
 
                     default:
-                    throw new MalformedAttributesNodeException("Unknown attribute found in world attributes note.");
+                    throw new MalformedWorldAttributesNodeException("Unknown attribute found in world attributes note.");
                 }
             }
 

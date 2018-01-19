@@ -19,7 +19,12 @@ namespace COTS.GameServer.World.Loading {
             var areaZ = stream.ReadByte();
 
             foreach (var tileNode in tileAreaNode.Children) {
-                ParseTileNode(parsingTree, tileNode, areaStartingX, areaStartingY);
+                ParseTileNode(
+                    parsingTree: parsingTree,
+                    tileNode: tileNode,
+                    areaStartingX: areaStartingX,
+                    areaStartingY: areaStartingY,
+                    areaZ: areaZ);
             }
 
             throw new NotImplementedException();
@@ -29,24 +34,67 @@ namespace COTS.GameServer.World.Loading {
             ParsingTree parsingTree,
             ParsingNode tileNode,
             UInt16 areaStartingX,
-            UInt16 areaStartingY
+            UInt16 areaStartingY,
+            Byte areaZ
             ) {
             if (tileNode.Type != NodeType.NormalTile && tileNode.Type != NodeType.HouseTile)
                 throw new MalformedTileAreaNodeException();
 
             var stream = new WorldParsingStream(parsingTree, tileNode);
 
-            var xCoordinateOffset = stream.ReadByte();
-            var yCoordinateOffset = stream.ReadByte();
-            var tileXCoordinate = (UInt16)(areaStartingX + xCoordinateOffset);
-            var tileYCoordiante = (UInt16)(areaStartingY + yCoordinateOffset);
+            var xOffset = stream.ReadByte();
+            var yOffset = stream.ReadByte();
+            var tileX = (UInt16)(areaStartingX + xOffset);
+            var tileY = (UInt16)(areaStartingY + yOffset);
 
+            Tile tile = null;
+            TileFlags tileFlags = TileFlags.None;
+            var isHouse = false;
+
+            // Handling the HouseTile case
             if (tileNode.Type == NodeType.HouseTile) {
                 UInt32 houseId = stream.ReadUInt32();
-                throw new NotImplementedException();
+                var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
+                tile = new HouseTile(
+                    x: tileX,
+                    y: tileY,
+                    z: areaZ,
+                    house: house);
+                house.AddTile((HouseTile)tile);
+
+                isHouse = true;
+            }
+
+            // Parsing the tile attributes
+            while (!stream.IsOver) {
+                var nodeAttribute = (NodeAttribute)stream.ReadByte();
+                switch (nodeAttribute) {
+                    case NodeAttribute.TileFlags:
+                    var otbmFlags = stream.ReadUInt32();
+                    tileFlags = UpdateTileFlags(otbmFlags, tileFlags);
+                    break;
+
+                    case NodeAttribute.Item:
+
+                    break;
+
+                    default:
+                    throw new MalformedTileAreaNodeException();
+                }
             }
 
             throw new NotImplementedException();
+        }
+
+        private static TileFlags UpdateTileFlags(UInt32 otbmFlags, TileFlags tileFlags) {
+            if ((otbmFlags & (uint)OTBMTileFlag.ProtectionZone) != 0)
+                return tileFlags | TileFlags.ProtectionZone;
+            else if ((otbmFlags & (uint)OTBMTileFlag.NoPvpZone) != 0)
+                return tileFlags | TileFlags.NoPvpZone;
+            else if ((otbmFlags & (uint)OTBMTileFlag.PvpZone) != 0)
+                return tileFlags | TileFlags.PvpZone;
+
+            throw new MalformedTileNodeException();
         }
     }
 }

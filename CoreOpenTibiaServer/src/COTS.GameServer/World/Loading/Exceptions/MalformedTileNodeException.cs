@@ -1,11 +1,11 @@
 ﻿namespace COTS.GameServer.World.Loading {
 
-    public sealed class MalformedTileAreaNodeException : WorldLoadingException {
+    public sealed class MalformedTileNodeException : WorldLoadingException {
 
-        public MalformedTileAreaNodeException()
+        public MalformedTileNodeException()
             : base() { }
 
-        public MalformedTileAreaNodeException(string message)
+        public MalformedTileNodeException(string message)
             : base(message) { }
     }
 }

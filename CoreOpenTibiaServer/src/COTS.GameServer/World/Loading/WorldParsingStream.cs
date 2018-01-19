@@ -3,6 +3,10 @@ using System.Text;
 
 namespace COTS.GameServer.World.Loading {
 
+    /// <remarks>
+    /// !! This is a mutable struct !!
+    /// Be careful when passing it to methods!
+    /// </remarks>
     public struct WorldParsingStream {
         public readonly ByteArrayReadStream UnderlayingStream;
         public readonly int BeginPosition;
