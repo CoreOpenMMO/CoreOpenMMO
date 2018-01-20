@@ -40,6 +40,7 @@ namespace COTS.GameServer.World.Loading {
             if (tileNode.Type != NodeType.NormalTile && tileNode.Type != NodeType.HouseTile)
                 throw new MalformedTileAreaNodeException();
 
+            var houseManager = HouseManager.Instance;
             var stream = new WorldParsingStream(parsingTree, tileNode);
 
             var xOffset = stream.ReadByte();
@@ -54,7 +55,7 @@ namespace COTS.GameServer.World.Loading {
             // Handling the HouseTile case
             if (tileNode.Type == NodeType.HouseTile) {
                 UInt32 houseId = stream.ReadUInt32();
-                var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
+                var house = houseManager.CreateHouseOrGetReference(houseId);
                 tile = new HouseTile(
                     x: tileX,
                     y: tileY,
@@ -87,14 +88,21 @@ namespace COTS.GameServer.World.Loading {
         }
 
         private static TileFlags UpdateTileFlags(UInt32 otbmFlags, TileFlags tileFlags) {
-            if ((otbmFlags & (uint)OTBMTileFlag.ProtectionZone) != 0)
-                return tileFlags | TileFlags.ProtectionZone;
-            else if ((otbmFlags & (uint)OTBMTileFlag.NoPvpZone) != 0)
-                return tileFlags | TileFlags.NoPvpZone;
-            else if ((otbmFlags & (uint)OTBMTileFlag.PvpZone) != 0)
-                return tileFlags | TileFlags.PvpZone;
+            var updatedFlags = tileFlags;
 
-            throw new MalformedTileNodeException();
+            // Mutually exclusive flags
+            if ((otbmFlags & (uint)OTBMTileFlag.ProtectionZone) != 0)
+                updatedFlags |= TileFlags.ProtectionZone;
+            else if ((otbmFlags & (uint)OTBMTileFlag.NoPvpZone) != 0)
+                updatedFlags |= TileFlags.NoPvpZone;
+            else if ((otbmFlags & (uint)OTBMTileFlag.PvpZone) != 0)
+                updatedFlags |= TileFlags.PvpZone;
+
+            // Just another flag
+            if ((otbmFlags & (uint)OTBMTileFlag.NoLogout) != 0)
+                updatedFlags |=  TileFlags.NoLogout;
+
+            return updatedFlags;
         }
     }
 }
