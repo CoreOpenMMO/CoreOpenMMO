@@ -1,6 +1,6 @@
-﻿namespace COTS.GameServer.World {
+﻿namespace COTS.GameServer {
 
-    public sealed class Items {
+    public sealed class ItemManager {
 
         public static class Encoding {
             public const uint SupportedMajorVersion = 3;

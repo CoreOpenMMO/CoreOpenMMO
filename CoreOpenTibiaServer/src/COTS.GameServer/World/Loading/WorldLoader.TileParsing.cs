@@ -49,6 +49,7 @@ namespace COTS.GameServer.World.Loading {
             var tileY = (UInt16)(areaStartingY + yOffset);
 
             Tile tile = null;
+            Item item = null;
             TileFlags tileFlags = TileFlags.None;
             var isHouse = false;
 
@@ -76,6 +77,8 @@ namespace COTS.GameServer.World.Loading {
                     break;
 
                     case NodeAttribute.Item:
+                    var itemId = stream.ReadUInt16();
+                    item = Item.CreateFromId(itemId);
 
                     break;
 
