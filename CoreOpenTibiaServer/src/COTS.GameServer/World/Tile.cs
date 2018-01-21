@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace COTS.GameServer.World {
 
@@ -14,6 +15,10 @@ namespace COTS.GameServer.World {
             this.X = x;
             this.Y = y;
             this.Z = z;
+        }
+
+        internal void AddInternalThing(Item item) {
+            throw new NotImplementedException();
         }
     }
 }

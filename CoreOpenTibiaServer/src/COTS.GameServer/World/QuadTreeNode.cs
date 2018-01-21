@@ -3,7 +3,7 @@
     public class QuadTreeNode {
         public readonly QuadTreeNode[] Children = new QuadTreeNode[4];
 
-        private const ushort IndexingHackeryAndValue = 0b_1000_0000_0000_0000;
+        private const ushort IndexingHackeryAndValue = 0b1000_0000_0000_0000;
         private const ushort XShiftRightInitialValue = 15;
         private const ushort YShifyRightInitialValue = 14;
 

@@ -50,6 +50,7 @@ namespace COTS.GameServer.World.Loading {
 
             Tile tile = null;
             Item item = null;
+            Item groundItem = null;
             TileFlags tileFlags = TileFlags.None;
             var isHouse = false;
 
@@ -70,23 +71,50 @@ namespace COTS.GameServer.World.Loading {
             // Parsing the tile attributes
             while (!stream.IsOver) {
                 var nodeAttribute = (NodeAttribute)stream.ReadByte();
-                switch (nodeAttribute) {
-                    case NodeAttribute.TileFlags:
+
+                if (nodeAttribute == NodeAttribute.TileFlags) {
                     var otbmFlags = stream.ReadUInt32();
                     tileFlags = UpdateTileFlags(otbmFlags, tileFlags);
-                    break;
+                    continue;
+                }
 
-                    case NodeAttribute.Item:
+                if (nodeAttribute == NodeAttribute.Item) {
                     var itemId = stream.ReadUInt16();
                     item = Item.CreateFromId(itemId);
 
-                    break;
+                    if (isHouse && item.IsMoveable)
+                        throw new MoveableItemInHouseException();
 
-                    default:
-                    throw new MalformedTileAreaNodeException();
+                    if (tile != null) {
+                        tile.AddInternalThing(item);
+                        item.StartDecaying();
+                        item.LoadedFromMap = true;
+                    } else if (item.IsGroundTile) {
+                        groundItem = item;
+                    } else {
+                        tile = CreateTile(
+                            ground: groundItem,
+                            item: item,
+                            x: tileX,
+                            y: tileY, 
+                            z: areaZ);
+
+                        tile.AddInternalThing(item);
+                        item.StartDecaying();
+                        item.LoadedFromMap = true;
+                    }
+
+                    continue;
                 }
+
+                // At this point, we are only expecting tile flags or items
+                throw new MalformedTileAreaNodeException();
             }
 
+            throw new NotImplementedException();
+        }
+
+        private static Tile CreateTile(Item ground, Item item, ushort x, ushort y, byte z) {
             throw new NotImplementedException();
         }
 
@@ -103,7 +131,7 @@ namespace COTS.GameServer.World.Loading {
 
             // Just another flag
             if ((otbmFlags & (uint)OTBMTileFlag.NoLogout) != 0)
-                updatedFlags |=  TileFlags.NoLogout;
+                updatedFlags |= TileFlags.NoLogout;
 
             return updatedFlags;
         }
