@@ -11,6 +11,8 @@ namespace COTS.GameServer.World {
         public readonly Stack<Item> Items = new Stack<Item>();
         public readonly Stack<PlayerCharacter> PlayerCharacters = new Stack<PlayerCharacter>();
 
+        public TileFlags Flags;
+
         public Tile(ushort x, ushort y, byte z) {
             this.X = x;
             this.Y = y;

@@ -8,8 +8,8 @@ namespace COTS.GameServer {
         public ushort ItemId;
         internal bool IsMoveable;
         internal bool IsGroundTile;
-        private ushort Type;
-        private ushort Count;
+        public ushort Type;
+        public ushort Count;
 
         public Item() {
         }
