@@ -16,21 +16,24 @@
         public QuadTreeNode()
             : this(isLeaf: false) { }
 
-        public QuadTreeLeafNode GetLeaf(uint x, uint y) {
+        public bool TryGetLeaf(uint x, uint y, out QuadTreeLeafNode leaf) {
             if (IsLeaf) {
-                return this as QuadTreeLeafNode;
+                leaf = (QuadTreeLeafNode)this;
+                return true;
             }
 
             var node = Children[ComputeChildrenIndex(x, y)];
-            if (node == null)
-                return null;
-            else
-                return node.GetLeaf(x << 1, y << 1);
+            if(node != null) 
+                return node.TryGetLeaf(x << 1, y << 1, out leaf);
+
+            // Node not created yet
+            leaf = null;
+            return false;
         }
 
-        public QuadTreeLeafNode CreateLeaf(uint x, uint y, uint level) {
+        public QuadTreeLeafNode CreateLeafOrGetReference(uint x, uint y, uint level) {
             if (IsLeaf)
-                return this as QuadTreeLeafNode;
+                return (QuadTreeLeafNode)this;
 
             var childIndex = ComputeChildrenIndex(x, y);
 
@@ -45,10 +48,9 @@
                 // Child is already not null, no need to do anything
             }
 
-            // Add comment to explain the *2 and -1
-            return Children[childIndex].CreateLeaf(x * 2, y * 2, level - 1);
+            return Children[childIndex].CreateLeafOrGetReference(x << 1, y << 1, level - 1);
         }
-        
+
         private static uint ComputeChildrenIndex(uint x, uint y) {
             // I know, right?
             return

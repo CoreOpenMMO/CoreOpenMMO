@@ -18,7 +18,7 @@
         public const ushort FloorMask = FloorSize - 1;
 
         /// <summary>
-        /// Warning: <see cref="Matrix{T}"/> are mutable and it's initial values are null.
+        /// Warning: <see cref="Matrix{T}"/> are mutable and their initial values are null.
         /// </summary>
         public readonly Matrix<Tile> Tiles = new Matrix<Tile>(FloorSize, FloorSize);
     }
