@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -18,8 +17,9 @@ namespace COTS.GameServer.World.Loading {
             var item = Item.CreateFromId(itemId);
         }
 
-        private static IEnumerable<ItemAttribute> DeserializeATtribute(ref WorldParsingStream stream) {
-            throw new NotImplementedException();
+        private static List<ItemAttribute> DeserializeAttribute(ref WorldParsingStream stream) {
+#warning Implement this
+            return new List<ItemAttribute>();
         }
     }
 }
