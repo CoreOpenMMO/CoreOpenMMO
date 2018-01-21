@@ -5,6 +5,9 @@
     /// This is here so CodeMade doesn't reorganize this document
     /// </Auto-Generated>
     /// </summary>
+    /// <remarks>
+    /// This is a port of the enum in const.h, line 435.
+    /// </remarks>
     public enum ItemType : ushort
     {
         BrowseField = 460,                  // ITEM_BROWSEFIELD = 460, // for internal use
