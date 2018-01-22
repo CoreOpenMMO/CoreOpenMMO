@@ -12,7 +12,8 @@ namespace COTS.GameServer {
 
         private static void Main(string[] args) {
             // var worldBytes = File.ReadAllBytes(@"C:\Source\Otxserver-New-master\data\world\realmap.otbm");
-            var worldBytes = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
+            //var worldBytes = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
+            var worldBytes = File.ReadAllBytes(@"/home/carlos/forgottenserver/data/world/forgotten.otbm");
 
             var sw = new Stopwatch();
             sw.Start();
