@@ -6,7 +6,7 @@ namespace COTS.GameServer.World.Loading {
 
     public static partial class WorldLoader {
 
-        public static Tile ParseTileAreaNode(ParsingTree parsingTree, ParsingNode tileAreaNode) {
+        public static void ParseTileAreaNode(ParsingTree parsingTree, ParsingNode tileAreaNode) {
             if (parsingTree == null)
                 throw new ArgumentNullException(nameof(parsingTree));
             if (tileAreaNode == null)
@@ -28,8 +28,6 @@ namespace COTS.GameServer.World.Loading {
                     areaStartingY: areaStartingY,
                     areaZ: areaZ);
             }
-
-            throw new NotImplementedException();
         }
 
         private static void ParseTileNode(
@@ -42,21 +40,22 @@ namespace COTS.GameServer.World.Loading {
             if (tileNode.Type != NodeType.NormalTile && tileNode.Type != NodeType.HouseTile)
                 throw new MalformedTileAreaNodeException("Unknow tile area node type.");
 
-            var nodeStream = new WorldParsingStream(parsingTree, tileNode); // Create a bool method to getStream to check that this is Ok
+            var nodeStream = new WorldParsingStream(parsingTree, tileNode);
 
-            var tileX = areaStartingX + nodeStream.ReadUInt16();
-            var tileY = areaStartingY + nodeStream.ReadUInt16();
+            var tileX = areaStartingX + nodeStream.ReadByte();
+            var tileY = areaStartingY + nodeStream.ReadByte();
 
             Tile tile = null;
             if(tileNode.Type == NodeType.HouseTile)
-                tile = ParseHouseTile(ref nodeStream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this
+                tile = ParseHouseTile(ref nodeStream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
 
             var tileFlags = ParseTileAttributes(ref parsingTree,ref nodeStream, ref tile, tileNode);
+            tile.Flags.AddFlags(tileFlags);
         }
         
         // Maybe it should be bool. Passing house by reference
         private static Tile ParseHouseTile(ref WorldParsingStream stream, UInt16 tileX, UInt16 tileY, byte tileZ) {
-            var houseId = stream.ReadUInt16();
+            var houseId = stream.ReadUInt32();
             House house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
 
             var tile = new HouseTile(tileX, tileY, tileZ, house);
@@ -78,7 +77,7 @@ namespace COTS.GameServer.World.Loading {
                         ParseTileItem(ref stream, ref tile, tileNode.Type == NodeType.HouseTile);
                         break;
                     default:
-                        throw new MalformedTileNodeException("Unknow node attribute");
+                        throw new MalformedTileNodeException("Unknow node attribute " + nameof(nodeAttribute) + " of type " + nodeAttribute);
                 }
             }
 
@@ -95,16 +94,18 @@ namespace COTS.GameServer.World.Loading {
         }
 
         private static TileFlags ParseTileFlags(ref WorldParsingStream stream) {
-            TileFlags flags = (TileFlags)stream.ReadUInt32();
+            TileFlags flags = (TileFlags) stream.ReadUInt32();
+            TileFlags tileFlags = TileFlags.None;
 
-            TileFlags tileFlags = new TileFlags();
-            // Finish This. Avoid casts. Maybe better flag structure
             if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags) OTBMTileFlag.NoLogout))
                 TileFlagsExtensions.AddFlags(tileFlags, (TileFlags) OTBMTileFlag.NoLogout);
 
-            // Maybe this is the right way. But if above works, it's better
-            //if ((otbmFlags & (uint)OTBMTileFlag.NoLogout) != 0)
-                //updatedFlags |= TileFlags.NoLogout;
+            if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags) OTBMTileFlag.NoPvpZone))
+                TileFlagsExtensions.AddFlags(tileFlags, (TileFlags) OTBMTileFlag.NoPvpZone);
+            else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags) OTBMTileFlag.PvpZone))
+                TileFlagsExtensions.AddFlags(tileFlags, (TileFlags) OTBMTileFlag.PvpZone);
+            else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags) OTBMTileFlag.ProtectionZone))
+                TileFlagsExtensions.AddFlags(tileFlags, (TileFlags) OTBMTileFlag.ProtectionZone);
 
             return tileFlags;
         }
@@ -118,7 +119,7 @@ namespace COTS.GameServer.World.Loading {
             else {
                 // if item.count <= 0; item.count = 1. But if always create with count = 0 this should only be item.count = 1, ou create with count = 1
                 if (tile != null) {
-                    tile.AddInternalThing(null); // Item
+                    //tile.AddInternalThing(null); // Item
                     // item.StartDecaying();
                     // item.LoadedFromMap = true;
                 }
@@ -127,7 +128,7 @@ namespace COTS.GameServer.World.Loading {
                 }
                 else {
                     tile = new Tile(0,0,0); // XYZ
-                    tile.AddInternalThing(null); // Item
+                    //tile.AddInternalThing(null); // Item
                     // item.StartDecaying();
                     // item.LoadedFromMap = true;
                 }

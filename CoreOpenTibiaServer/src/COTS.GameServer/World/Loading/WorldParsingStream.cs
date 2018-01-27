@@ -64,5 +64,15 @@ namespace COTS.GameServer.World.Loading {
             // When in C land, use C encoding...
             return Encoding.ASCII.GetString(stringData);
         }
+
+        public bool Skip(int byteCount = 1) {
+            if (byteCount > EndPosition)
+                return false;
+
+            for(int i=0; i<byteCount; i++)
+                ReadByte();
+
+            return true;
+        }
     }
 }
