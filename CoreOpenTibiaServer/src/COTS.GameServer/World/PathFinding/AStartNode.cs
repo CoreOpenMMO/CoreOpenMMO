@@ -9,28 +9,28 @@ namespace COTS.GameServer.World.PathFinding {
 
         public AStartNode Parent;
 
-        public int G;
-        public readonly int H;
+        public int CostFromStart;
+        public readonly int EstimatedCostToGoal;
 
         public AStartNode(
             int x,
             int y,
             AStartNode parent,
-            int g,
-            int h
+            int costFromStart,
+            int estimatedCostToGoal
             ) {
             X = x;
             Y = y;
             Parent = parent;
-            G = g;
-            H = h;
+            CostFromStart = costFromStart;
+            EstimatedCostToGoal = estimatedCostToGoal;
 
             _hashCode = HashHelper.Start
                 .CombineHashCode(X)
                 .CombineHashCode(Y);
         }
 
-        public int Priority => G + H;
+        public int Priority => CostFromStart + EstimatedCostToGoal;
         public int QueueIndex;
 
         public override int GetHashCode() => _hashCode;

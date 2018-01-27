@@ -15,7 +15,7 @@ namespace COTS.GameServer.World.PathFinding {
             PathFound
         }
 
-        public static ComputePathResult TryComputePath(Position start, Position end, out List<PathCoordinate> path) {
+        public static ComputePathResult TryComputePath(in Position start, in Position end, out List<PathCoordinate> path) {
             // Trivial case
             if (start == end) {
                 path = null;
@@ -23,14 +23,15 @@ namespace COTS.GameServer.World.PathFinding {
             }
 
             // Initializing open and closed lists
+#warning Consider creating "object pool" to reduce GC pressure
             var openList = new PriorityQueue(MaximumNodes);
             var closedList = new HashSet<AStartNode>();
             openList.TryEnqueue(new AStartNode(
                             x: start.X,
                             y: start.Y,
                             parent: null,
-                            g: 0,
-                            h: Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y)
+                            costFromStart: 0,
+                            estimatedCostToGoal: PathLengthHeuristic.EstimateDistance(start, end)
                             ));
 
             while (openList.TryDequeue(out var currentNode)) {
@@ -39,7 +40,7 @@ namespace COTS.GameServer.World.PathFinding {
                     // we already fully explored this node (i.e.: if this node
                     // is in the closed list) because it's cheaper to do so.
                     if (IsGoal(sucessor, end)) {
-                        path = GeneratePath(sucessor);
+                        path = GenerateReversedPath(sucessor);
                         return ComputePathResult.PathFound;
                     }
 
@@ -73,21 +74,18 @@ namespace COTS.GameServer.World.PathFinding {
         }
 
         private static void UpdateNodeIfNecessary(PriorityQueue priorityQueue, AStartNode node, AStartNode potentialNewParent) {
-            int newGCost;
+            int newCostFromStart;
             if (node.X != potentialNewParent.X &&
                 node.Y != potentialNewParent.Y) {
-                newGCost = potentialNewParent.G + DiagonalWalkCost;
+                newCostFromStart = potentialNewParent.CostFromStart + DiagonalWalkCost;
             } else {
-                newGCost = potentialNewParent.G + NormalWalkCost;
+                newCostFromStart = potentialNewParent.CostFromStart + NormalWalkCost;
             }
 
-            if (newGCost >= node.G) {
-                // New cost is not an improvement
-                return;
+            if (newCostFromStart < node.CostFromStart) {
+                priorityQueue.UpdateNodePriority(node, newCostFromStart);
+                node.Parent = potentialNewParent;
             }
-
-            priorityQueue.UpdateNodeGCost(node, newGCost);
-            node.Parent = potentialNewParent;
         }
 
         private static bool IsGoal(AStartNode s, in Position end) {
@@ -100,9 +98,10 @@ namespace COTS.GameServer.World.PathFinding {
             throw new NotImplementedException();
         }
 
-        private static List<PathCoordinate> GeneratePath(AStartNode end) {
+        private static List<PathCoordinate> GenerateReversedPath(AStartNode end) {
+#warning Consider creating a "pool of lists" to reduce GC pressure
             // We "over-allocate" memory to prevent resizing the list
-            var maximumPathLength = end.G * end.G;
+            var maximumPathLength = end.CostFromStart * end.CostFromStart;
             var path = new List<PathCoordinate>(maximumPathLength);
 
             var currentNode = end;
@@ -111,7 +110,6 @@ namespace COTS.GameServer.World.PathFinding {
                 currentNode = currentNode.Parent;
             }
 
-            path.Reverse();
             return path;
         }
     }

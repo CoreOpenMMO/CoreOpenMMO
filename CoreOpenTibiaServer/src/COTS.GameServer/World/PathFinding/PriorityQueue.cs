@@ -278,7 +278,7 @@ namespace COTS.GameServer.World.PathFinding {
         /// O(log n)
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void UpdateNodeGCost(AStartNode node, int newGCost) {
+        public void UpdateNodePriority(AStartNode node, int newGCost) {
 #if DEBUG
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -286,7 +286,7 @@ namespace COTS.GameServer.World.PathFinding {
                 throw new InvalidOperationException("Cannot call UpdatePriority() on a node which is not enqueued: " + node);
 #endif
 
-            node.G = newGCost;
+            node.CostFromStart = newGCost;
             OnNodeUpdated(node);
         }
 
