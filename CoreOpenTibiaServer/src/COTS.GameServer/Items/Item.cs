@@ -21,7 +21,7 @@ namespace COTS.GameServer.Items
                 //ItemManager.GetInstance().PushItem(this);
         }
 
-        public bool IsMoveable() => ItemManager.GetInstance().GetSharedItem(_id).isMoveable; // Should look for sharedItem with id
+        public bool IsMoveable() => false; // Should look for sharedItem with id
 
         // TODO: Attributes. Maybe not here because. Why a mailbox will have attributes??
     }

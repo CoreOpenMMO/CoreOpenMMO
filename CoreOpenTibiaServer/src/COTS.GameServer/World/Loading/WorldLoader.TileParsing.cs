@@ -50,7 +50,8 @@ namespace COTS.GameServer.World.Loading {
                 tile = ParseHouseTile(ref nodeStream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
 
             var tileFlags = ParseTileAttributes(ref parsingTree,ref nodeStream, ref tile, tileNode);
-            tile.Flags.AddFlags(tileFlags);
+            if (tile != null)
+                tile.Flags.AddFlags(tileFlags);
         }
         
         // Maybe it should be bool. Passing house by reference

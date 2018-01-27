@@ -4,7 +4,7 @@ namespace COTS.GameServer
 {
     public static class FileManager
     {
-        public enum FileType{ITEMS_OTB, MAP};
+        public enum FileType{ITEMS_OTB, ITEMS_XML, MAP};
         public enum Dir{DATA, ITEMS, MAP};
 
         public static string baseDir = Directory.GetParent(
@@ -34,6 +34,8 @@ namespace COTS.GameServer
             {
                 case FileType.ITEMS_OTB:
                     return GetDirectory(Dir.ITEMS) + "Items.otb";
+                case FileType.ITEMS_XML:
+                    return GetDirectory(Dir.ITEMS) + "Items.xml";
                 case FileType.MAP:
                     return GetDirectory(Dir.MAP) + "MapName.otbm"; // Should get from Config file or argline
             }

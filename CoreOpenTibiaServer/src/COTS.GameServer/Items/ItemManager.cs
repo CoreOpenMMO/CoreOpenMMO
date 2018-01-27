@@ -69,16 +69,16 @@ namespace COTS.GameServer.Items
 
         public int GetSharedItemCount() => _sharedItems != null ? _sharedItems.Count : 0;
 
-        // Create a LOAD function to call loadOtb and loadXml and set loaded = true
-
-        //TODO:
-        // Look at link from discord chat conversation and implement better things. Also use of Explicit and line number information
-        public void LoadFromXML(string path) // For now lets use XML
+        public void LoadItems()
         {
-            if (!isLoaded)
-                throw new MalformedWorldException(); // Just for now
+            LoadFromOTB(FileManager.GetFilePath(FileManager.FileType.ITEMS_OTB));
+            LoadFromXML(FileManager.GetFilePath(FileManager.FileType.ITEMS_XML));
+            _loaded = true;
+        }
 
-            XElement rootElement = XElement.Load(@"/home/carlos/forgottenserver/data/items/items-min.xml", LoadOptions.SetLineInfo);
+        private void LoadFromXML(string path) // For now lets use XML
+        {
+            XElement rootElement = XElement.Load(path, LoadOptions.SetLineInfo);
             if (rootElement.Name != "items")
                 throw new MalformedWorldException(); // Just for now
 
@@ -220,18 +220,9 @@ namespace COTS.GameServer.Items
                 showParseWarning(attr, "Byte");
         }
 
-        public void first100() // Delete, just for test purposes
+        private void LoadFromOTB(string path)
         {
-            for(int i = 0; i <= 100; i++)
-            {
-                SharedItem it = _sharedItems[i];
-                Console.WriteLine(it.id + ":" + it.article + ":" +  it.name + ":" + it.description);
-            }
-        }
-
-        public void LoadFromOTB(string path)
-        {
-            byte[] data = FileManager.ReadFileToByteArray(@"/home/carlos/forgottenserver/data/items/items.otb");
+            byte[] data = FileManager.ReadFileToByteArray(path);
             var parsingTree = WorldLoader.ParseWorld(data);
 
             var rootNode = parsingTree.Root;
@@ -246,7 +237,6 @@ namespace COTS.GameServer.Items
                 ParseItemNode(ref itemStream);
             }
             _sharedItems.TrimExcess();
-            _loaded = true;
         }
 
         private void ParseOTBVersion(ref WorldParsingStream stream)

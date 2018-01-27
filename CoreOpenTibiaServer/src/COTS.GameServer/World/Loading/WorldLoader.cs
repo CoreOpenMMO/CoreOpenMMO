@@ -30,8 +30,8 @@ namespace COTS.GameServer.World.Loading {
                         WorldLoader.ParseTileAreaNode(mapTree, mapDataNode);
                         break;
 
-                    default:
-                        throw new NotImplementedException();
+                    //default:
+                        //throw new NotImplementedException();
                 }
             }
         }
