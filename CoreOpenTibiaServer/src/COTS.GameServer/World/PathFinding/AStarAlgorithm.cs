@@ -87,6 +87,7 @@ namespace COTS.GameServer.World.PathFinding {
             }
 
             priorityQueue.UpdateNodeGCost(node, newGCost);
+            node.Parent = potentialNewParent;
         }
 
         private static bool IsGoal(AStartNode s, in Position end) {
