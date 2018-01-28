@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using COTS.GameServer.OTBParsing;
 
@@ -12,11 +12,11 @@ namespace COTS.GameServer.World.Loading {
 
             var parsingStream = new ParsingStream(tree, tree.Root);
 
-            UInt32 worldEncodingVersion = parsingStream.ReadUInt32();
-            UInt16 worldWidth = parsingStream.ReadUInt16();
-            UInt16 worldHeight = parsingStream.ReadUInt16();
-            UInt32 itemEncodingMajorVersion = parsingStream.ReadUInt32();
-            UInt32 itemEncodingMinorVersion = parsingStream.ReadUInt32();
+            var worldEncodingVersion = parsingStream.ReadUInt32();
+            var worldWidth = parsingStream.ReadUInt16();
+            var worldHeight = parsingStream.ReadUInt16();
+            var itemEncodingMajorVersion = parsingStream.ReadUInt32();
+            var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 
             return new WorldHeader(
                 worldEncodingVersion: worldEncodingVersion,

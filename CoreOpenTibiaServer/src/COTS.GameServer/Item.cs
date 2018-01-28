@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace COTS.GameServer {
 
@@ -15,8 +15,8 @@ namespace COTS.GameServer {
         }
 
         private Item(ushort type, ushort count) {
-            this.Type = type;
-            this.Count = count;
+            Type = type;
+            Count = count;
         }
 
         public bool IsDepot { get; private set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace COTS.GameServer {
 
@@ -18,8 +18,8 @@ namespace COTS.GameServer {
             if (position < 0 || position > array.Length)
                 throw new ArgumentOutOfRangeException(nameof(position));
 
-            this._array = array;
-            this.Position = position;
+            _array = array;
+            Position = position;
         }
 
         public bool IsOver => Position >= _array.Length;

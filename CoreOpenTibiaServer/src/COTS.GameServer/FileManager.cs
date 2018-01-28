@@ -7,7 +7,7 @@ namespace COTS.GameServer
         public enum FileType{ITEMS_OTB, ITEMS_XML, MAP};
         public enum Dir{DATA, ITEMS, MAP};
 
-        public static string baseDir = Directory.GetParent(
+        public static string BaseDirectory = Directory.GetParent(
             Directory.GetParent(
                 Directory.GetCurrentDirectory()
             ).ToString()
@@ -18,7 +18,7 @@ namespace COTS.GameServer
             switch (dir)
             {
                 case Dir.DATA:
-                    return baseDir + "Data/"; // Should get from Config file or argline
+                    return BaseDirectory + "Data/"; // Should get from Config file or argline
                 case Dir.ITEMS:
                     return GetDirectory(Dir.DATA) + "Items/";
                 case Dir.MAP:
