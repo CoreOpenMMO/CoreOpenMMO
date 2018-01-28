@@ -1,51 +1,52 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using COTS.Domain.Interfaces.Services;
 
-namespace COTS.GameServer.Network.Protocols
-{
-    public class ProtocolGame
-    {
+namespace COTS.GameServer.Network.Protocols {
+    public class GameProtocol {
         private readonly IPlayerService _playerService;
         private readonly IAccountService _accountService;
         private readonly TcpListener _gameListener;
 
-        public ProtocolGame(IPlayerService playerService, IAccountService accountService)
-        {
+        public GameProtocol(IPlayerService playerService, IAccountService accountService) {
             _playerService = playerService;
             _accountService = accountService;
-            _gameListener = new TcpListener(IPAddress.Any, 7172);
+            _gameListener = new TcpListener(localaddr: IPAddress.Any, port: 7172);
+
+            Console.WriteLine("Game server online!");
         }
 
-        public void StartListening()
+        public void Listen() {
+            /*while (true) {
+                TcpClient connection = _gameListener.AcceptTcpClient();
+                Task.Run(() => HandleNewConnection(connection));
+            }*/
+        }
+
+        private void HandleNewConnection(TcpClient connection) {
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+
+            Console.WriteLine($"Server accepted new connection: {connection.Client.RemoteEndPoint.ToString()}");
+            new Thread(() => {
+
+            }).Start();
+        }
+
+
+        public void HandlePendingRequest() {
+
+        }
+        /*private void GameListenerCallback(IAsyncResult ar)
         {
-            try
-            {
-                _gameListener.Start();
-                _gameListener.BeginAcceptSocket(GameListenerCallback, _gameListener);
-                Console.WriteLine("Game server online!");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
+            var connection = new ConnectionManager(_playerService, _accountService);
+            connection.GameListenerCallback(ar);
 
-        private void GameListenerCallback(IAsyncResult ar)
-        {
-            try
-            {
-                var connection = new ConnectionManager(_playerService, _accountService);
-                connection.GameListenerCallback(ar);
-
-                _gameListener.BeginAcceptSocket(GameListenerCallback, _gameListener);
-                Console.WriteLine("New client connected to game server.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+            _gameListener.BeginAcceptSocket(GameListenerCallback, _gameListener);
+            Console.WriteLine("New client connected to game server.");
+        }*/
     }
 }

@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{689BBF33-A884-4522-9600-07569F3F2B77}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{8EA82C56-87E1-4F87-98F7-4B44814151DB}"
 EndProject
@@ -27,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.GameServer.Tests", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Infra.CrossCutting.Network.Tests", "src\COTS.Infra.CrossCutting.Network.Tests\COTS.Infra.CrossCutting.Network.Tests.csproj", "{F2A167D2-DEA2-4C05-9CAF-DC5743EC70FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COTS.Infra.CrossCutting.Ioc", "src\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj", "{D0A7AA40-8CBF-4F63-B9E5-A6DA358B4CB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Infra.CrossCutting.Ioc", "src\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj", "{D0A7AA40-8CBF-4F63-B9E5-A6DA358B4CB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

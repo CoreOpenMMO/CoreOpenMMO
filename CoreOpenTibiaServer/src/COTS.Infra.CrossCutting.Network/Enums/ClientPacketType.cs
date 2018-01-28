@@ -1,4 +1,4 @@
-﻿namespace COTS.Infra.CrossCutting.Security.Enums
+﻿namespace COTS.Infra.CrossCutting.Network.Enums
 {
     public enum ClientPacketType : byte
     {

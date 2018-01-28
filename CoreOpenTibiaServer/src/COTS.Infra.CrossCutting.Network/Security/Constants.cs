@@ -1,4 +1,4 @@
-﻿namespace COTS.Infra.CrossCutting.Security
+﻿namespace COTS.Infra.CrossCutting.Network.Security
 {
     /// <summary>
     /// Some constant-values.

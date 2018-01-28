@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.Infra.CrossCutting.Security
+namespace COTS.Infra.CrossCutting.Network.Security
 {
     public class Rsa
     {

@@ -1,7 +1,8 @@
 ﻿using System;
-using COTS.Infra.CrossCutting.Security.Enums;
+using COTS.Infra.CrossCutting.Network.Enums;
+using COTS.Infra.CrossCutting.Network.Security;
 
-namespace COTS.Infra.CrossCutting.Security
+namespace COTS.Infra.CrossCutting.Network 
 {
     public class OutputMessage : NetworkMessage
     {

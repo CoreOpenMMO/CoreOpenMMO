@@ -10,9 +10,9 @@ namespace COTS.Data.Repositories
 
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
-        public AccountRepository(COTSContext context)
-            : base(context) =>
-                Init();
+        public AccountRepository(COTSContext context) : base(context) {
+            Init();
+        }
 
         public async Task<Account> GetAccountByLogin(string username, string password)
         {
@@ -30,8 +30,8 @@ namespace COTS.Data.Repositories
                 {
                     db.Account.Add(new Account()
                     {
-                        Password = "1",
-                        UserName = "1"
+                        Password = "",
+                        UserName = "123"
                     });
                     db.Account.Add(new Account()
                     {

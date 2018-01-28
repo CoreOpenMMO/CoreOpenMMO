@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using COTS.Infra.CrossCutting.Network.Security;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

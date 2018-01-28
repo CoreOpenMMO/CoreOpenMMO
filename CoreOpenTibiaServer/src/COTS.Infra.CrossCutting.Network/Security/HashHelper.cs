@@ -1,4 +1,4 @@
-﻿namespace COTS.Infra.CrossCutting.Network
+﻿namespace COTS.Infra.CrossCutting.Network.Security
 {
     public static class HashHelper
     {

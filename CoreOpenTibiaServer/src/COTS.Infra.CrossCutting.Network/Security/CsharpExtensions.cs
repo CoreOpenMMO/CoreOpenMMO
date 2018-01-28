@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace COTS.Infra.CrossCutting.Security
+namespace COTS.Infra.CrossCutting.Network.Security
 {
     public static class CsharpExtensions
     {

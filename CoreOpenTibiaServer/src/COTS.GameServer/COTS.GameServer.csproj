@@ -22,10 +22,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.2</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.1.1-beta" />
+    <PackageReference Include="CommandLineParser" Version="2.2.0" />
     <PackageReference Include="editorconfig" Version="0.12.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
@@ -33,6 +34,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="NLog" Version="4.4.12" />
   </ItemGroup>
 
   <ItemGroup>

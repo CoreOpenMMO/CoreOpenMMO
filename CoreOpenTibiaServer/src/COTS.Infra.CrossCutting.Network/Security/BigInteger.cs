@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTS.Infra.CrossCutting.Security
+namespace COTS.Infra.CrossCutting.Network.Security 
 {
     /**
      * Copyright (c) 2002 Chew Keong TAN
