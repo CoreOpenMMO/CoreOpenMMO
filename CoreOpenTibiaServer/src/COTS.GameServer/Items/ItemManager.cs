@@ -22,13 +22,13 @@ namespace COTS.GameServer.Items {
 
         private bool _loaded = false;
 
-        public bool isLoaded {
+        public bool IsLoaded {
             get { return _loaded; }
         }
 
-        private UInt32 majorVersion = 0;
-        private UInt32 minorVersion = 0;
-        private UInt32 buildVersion = 0;
+        private UInt32 _majorVersion = 0;
+        private UInt32 _minorVersion = 0;
+        private UInt32 _buildVersion = 0;
 
         private List<Item> _items;
         private List<SharedItem> _sharedItems;
@@ -75,7 +75,7 @@ namespace COTS.GameServer.Items {
 
         private void LoadFromXML(string path) // For now lets use XML
         {
-            XElement rootElement = XElement.Load(path, LoadOptions.SetLineInfo);
+            var rootElement = XElement.Load(path, LoadOptions.SetLineInfo);
             if (rootElement.Name != "items")
                 throw new MalformedWorldException(); // Just for now
 
@@ -87,7 +87,7 @@ namespace COTS.GameServer.Items {
                 if (element.Name != "item" || (firstAttr.Name != "id" && !multiple))
                     continue;
 
-                int[] iValues = new int[2]; // Maybe change this
+                var iValues = new int[2]; // Maybe change this
                 if (!int.TryParse(firstAttr.Value, out iValues[0])
                     || (multiple && !int.TryParse(secondAttr.Value, out iValues[1])))
                     continue;
@@ -101,11 +101,11 @@ namespace COTS.GameServer.Items {
                 foreach (var item in items) {
                     foreach (var attribute in element.Attributes()) {
                         if (attribute.Name == "name")
-                            item.name = attribute.Value;
+                            item.Name = attribute.Value;
                         else if (attribute.Name == "article")
-                            item.article = attribute.Value;
+                            item.Article = attribute.Value;
                         else if (attribute.Name == "plural")
-                            item.pluralName = attribute.Value;
+                            item.PluralName = attribute.Value;
                     }
 
                     foreach (var child in element.Elements()) {
@@ -119,162 +119,162 @@ namespace COTS.GameServer.Items {
 
                         switch (key.Value) {// Maybe use key.Value.asLower and compare this way. Simple and better to peoples. Why force this?
                             case "description":
-                            item.description = value.Value;
+                            item.Description = value.Value;
                             break;
 
                             case "type":
-                            item.type = value.Value;
+                            item.Type = value.Value;
                             break;
 
                             case "floorchange":
                             case "floorChange":
-                            item.floorChange = value.Value;
+                            item.FloorChange = value.Value;
                             break;
 
                             case "effect":
-                            item.effect = value.Value;
+                            item.Effect = value.Value;
                             break;
 
                             case "field":
-                            item.field = value.Value;
+                            item.Field = value.Value;
                             break;
 
                             case "fluidsource":
                             case "fluidSource":
-                            item.fluidSource = value.Value;
+                            item.FluidSource = value.Value;
                             break;
 
                             case "weaponType":
-                            item.weaponType = value.Value;
+                            item.WeaponType = value.Value;
                             break;
 
                             case "shootType":
-                            item.shootType = value.Value;
+                            item.ShootType = value.Value;
                             break;
 
                             case "ammoType":
-                            item.ammoType = value.Value;
+                            item.AmmoType = value.Value;
                             break;
 
                             case "partnerDirection":
-                            item.partnerDirection = value.Value;
+                            item.PartnerDirection = value.Value;
                             break;
 
                             case "corpseType":
-                            item.corpseType = value.Value;
+                            item.CorpseType = value.Value;
                             break;
 
                             case "slotType":
-                            item.slotType = value.Value;
+                            item.SlotType = value.Value;
                             break;
 
                             case "containerSize":
-                            ParseByte(ref item.containerSize, value);
+                            ParseByte(ref item.ContainerSize, value);
                             break;
                             // TODO: Continue and do the rest use the parse methods too
                             case "decayTo":
-                            ParseUShort(ref item.decaytTo, value);
+                            ParseUShort(ref item.DecaytTo, value);
                             break;
 
                             case "rotateTo":
-                            ParseUShort(ref item.rotateTo, value);
+                            ParseUShort(ref item.RotateTo, value);
                             break;
 
                             case "destroyTo":
-                            ParseUShort(ref item.destroyTo, value);
+                            ParseUShort(ref item.DestroyTo, value);
                             break;
 
                             case "writeOnceItemId":
-                            ushort.TryParse(value.Value, out item.writeOnceItemId);
+                            ushort.TryParse(value.Value, out item.WriteOnceItemId);
                             break;
 
                             case "maleSleeper":
-                            ushort.TryParse(value.Value, out item.maleSleeperId);
+                            ushort.TryParse(value.Value, out item.MaleSleeperId);
                             break;
 
                             case "femaleSleeper":
-                            ushort.TryParse(value.Value, out item.femaleSleeperId);
+                            ushort.TryParse(value.Value, out item.FemaleSleeperId);
                             break;
 
                             case "maxTextLen":
                             case "maxTextLength":
-                            ushort.TryParse(value.Value, out item.maxTextLength);
+                            ushort.TryParse(value.Value, out item.MaxTextLength);
                             break;
 
                             case "attack":
-                            ushort.TryParse(value.Value, out item.attack);
+                            ushort.TryParse(value.Value, out item.Attack);
                             break;
 
                             case "defense":
-                            ushort.TryParse(value.Value, out item.defense);
+                            ushort.TryParse(value.Value, out item.Defense);
                             break;
 
                             case "maxHitChance":
-                            ushort.TryParse(value.Value, out item.maxHitChance);
+                            ushort.TryParse(value.Value, out item.MaxHitChance);
                             break;
 
                             case "range":
-                            ushort.TryParse(value.Value, out item.range);
+                            ushort.TryParse(value.Value, out item.Range);
                             break;
 
                             case "leveldoor":
                             case "levelDoor":
-                            ushort.TryParse(value.Value, out item.levelDoor);
+                            ushort.TryParse(value.Value, out item.LevelDoor);
                             break;
 
                             case "weight":
-                            uint.TryParse(value.Value, out item.weight);
+                            uint.TryParse(value.Value, out item.Weight);
                             break;
 
                             case "duration":
-                            uint.TryParse(value.Value, out item.duration);
+                            uint.TryParse(value.Value, out item.Duration);
                             break;
 
                             case "damage":
-                            uint.TryParse(value.Value, out item.damage);
+                            uint.TryParse(value.Value, out item.Damage);
                             break;
 
                             case "damageTicks":
-                            uint.TryParse(value.Value, out item.damageTicks);
+                            uint.TryParse(value.Value, out item.DamageTicks);
                             break;
 
                             case "damageCount":
-                            uint.TryParse(value.Value, out item.damageCount);
+                            uint.TryParse(value.Value, out item.DamageCount);
                             break;
 
                             case "damageStart":
-                            uint.TryParse(value.Value, out item.damageStart);
+                            uint.TryParse(value.Value, out item.DamageStart);
                             break;
 
                             case "writeable":
-                            bool.TryParse(value.Value, out item.isWriteable);
+                            bool.TryParse(value.Value, out item.IsWriteable);
                             break;
 
                             case "replaceable":
-                            bool.TryParse(value.Value, out item.isRepleaceable);
+                            bool.TryParse(value.Value, out item.IsRepleaceable);
                             break;
 
                             case "allowDistRead":
-                            bool.TryParse(value.Value, out item.allowDistRead);
+                            bool.TryParse(value.Value, out item.AllowDistRead);
                             break;
 
                             case "allowpickupable":
                             case "allowPickupable":
-                            bool.TryParse(value.Value, out item.allowPickupable);
+                            bool.TryParse(value.Value, out item.AllowPickupable);
                             break;
 
                             case "blocking":
                             case "blockSolid":
-                            bool.TryParse(value.Value, out item.blockSolid);
+                            bool.TryParse(value.Value, out item.BlockSolid);
                             break;
 
                             case "blockprojectile":
                             case "blockProjectile":
-                            bool.TryParse(value.Value, out item.blockProjectile);
+                            bool.TryParse(value.Value, out item.BlockProjectile);
                             break;
 
                             case "walkStack":
-                            bool.TryParse(value.Value, out item.walkStack);
+                            bool.TryParse(value.Value, out item.WalkStack);
                             break;
                             /// MAYBE CREATE A SetBool method to tryParse and output a warning if can't.Pass out and value
                             default:
@@ -282,12 +282,12 @@ namespace COTS.GameServer.Items {
                             continue; // in future use a log to output as warning
                         }
                     }
-                    _sharedItems[item.id - 100] = item;
+                    _sharedItems[item.Id - 100] = item;
                 }
             }
         }
 
-        private void showParseWarning(XAttribute attr, String type) {
+        private void ShowParseWarning(XAttribute attr, String type) {
             var lineInfo = (IXmlLineInfo)attr;
             var info = "";
             if (lineInfo.HasLineInfo())
@@ -301,26 +301,26 @@ namespace COTS.GameServer.Items {
             if (attr.Value == "0" || attr.Value == "1")
                 value = (attr.Value == "1" ? true : false);
             else if (!bool.TryParse(attr.Value, out value))
-                showParseWarning(attr, "Boolean");
+                ShowParseWarning(attr, "Boolean");
         }
 
         private void ParseUInt(ref uint value, XAttribute attr) {
             if (!uint.TryParse(attr.Value, out value))
-                showParseWarning(attr, "UInt32");
+                ShowParseWarning(attr, "UInt32");
         }
 
         private void ParseUShort(ref ushort value, XAttribute attr) {
             if (!ushort.TryParse(attr.Value, out value))
-                showParseWarning(attr, "UInt16");
+                ShowParseWarning(attr, "UInt16");
         }
 
         private void ParseByte(ref byte value, XAttribute attr) {
             if (!byte.TryParse(attr.Value, out value))
-                showParseWarning(attr, "Byte");
+                ShowParseWarning(attr, "Byte");
         }
 
         private void LoadFromOTB(string path) {
-            byte[] data = FileManager.ReadFileToByteArray(path);
+            var data = FileManager.ReadFileToByteArray(path);
             var parsingTree = WorldLoader.ParseWorld(data);
 
             var rootNode = parsingTree.Root;
@@ -344,16 +344,16 @@ namespace COTS.GameServer.Items {
                 if (dataSize != 140) // VersionInfo : 4 UInt32(4bytes) = 12 + 128 * 1 byte = 140
                     throw new MalformedWorldException(); // Lets use this for now
 
-                majorVersion = stream.ReadUInt32(); // Otb version
-                minorVersion = stream.ReadUInt32(); // Client version
-                buildVersion = stream.ReadUInt32(); // Build version
+                _majorVersion = stream.ReadUInt32(); // Otb version
+                _minorVersion = stream.ReadUInt32(); // Client version
+                _buildVersion = stream.ReadUInt32(); // Build version
                 stream.UnderlayingStream.Skip(128); // Skip CSD version
             }
         }
 
         private void ParseItemNode(ref ParsingStream stream) {
             var flags = (SharedItemFlags)stream.ReadUInt32();
-            SharedItem item = new SharedItem(flags);
+            var item = new SharedItem(flags);
 
             while (!stream.IsOver) {
                 var attr = (OTBAttributes)stream.ReadByte();
@@ -364,10 +364,10 @@ namespace COTS.GameServer.Items {
                     if (dataSize != sizeof(UInt16))
                         throw new MalformedItemNodeException();
 
-                    item.id = stream.ReadUInt16();
+                    item.Id = stream.ReadUInt16();
 
-                    if (item.id > 30000 && item.id < 30100)
-                        item.id -= 30000; // Correct ID in wrong range I guess
+                    if (item.Id > 30000 && item.Id < 30100)
+                        item.Id -= 30000; // Correct ID in wrong range I guess
 
                     break;
 
@@ -375,36 +375,36 @@ namespace COTS.GameServer.Items {
                     if (dataSize != sizeof(UInt16))
                         throw new MalformedItemNodeException();
 
-                    item.clientId = stream.ReadUInt16();
+                    item.ClientId = stream.ReadUInt16();
                     break;
 
                     case OTBAttributes.ITEM_SPEED:
                     if (dataSize != sizeof(UInt16))
                         throw new MalformedItemNodeException();
 
-                    item.speed = stream.ReadUInt16();
+                    item.Speed = stream.ReadUInt16();
                     break;
 
                     case OTBAttributes.ITEM_LIGHT2:
                     if (dataSize != 2 * sizeof(UInt16)) // 2 UInt16 = 4 bytes
                         throw new MalformedItemNodeException();
 
-                    item.lightLevel = (Byte)stream.ReadUInt16(); // Read UInt16
-                    item.lightColor = (Byte)stream.ReadUInt16(); // But range is only to 255
+                    item.LightLevel = (Byte)stream.ReadUInt16(); // Read UInt16
+                    item.LightColor = (Byte)stream.ReadUInt16(); // But range is only to 255
                     break;
 
                     case OTBAttributes.ITEM_TOPORDER:
                     if (dataSize != sizeof(Byte))
                         throw new MalformedItemNodeException();
 
-                    item.alwaysOnTopOrder = stream.ReadByte();
+                    item.AlwaysOnTopOrder = stream.ReadByte();
                     break;
 
                     case OTBAttributes.ITEM_WAREID:
                     if (dataSize != sizeof(UInt16))
                         throw new MalformedItemNodeException();
 
-                    item.wareId = stream.ReadUInt16();
+                    item.WareId = stream.ReadUInt16();
                     break;
 
                     default:
@@ -413,10 +413,10 @@ namespace COTS.GameServer.Items {
                 }
             }
 
-            if (item.id > _sharedItems.Capacity + 100 || item.id < 100)
+            if (item.Id > _sharedItems.Capacity + 100 || item.Id < 100)
                 throw new IndexOutOfRangeException();
 
-            _sharedItems.Insert(item.id - 100, item);
+            _sharedItems.Insert(item.Id - 100, item);
         }
     }
 }

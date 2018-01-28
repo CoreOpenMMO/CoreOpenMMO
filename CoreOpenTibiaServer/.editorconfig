@@ -13,6 +13,14 @@ dotnet_naming_symbols.type_definition_symbols.applicable_kinds          	= class
 dotnet_naming_symbols.type_definition_symbols.applicable_accessibilities	= *
 dotnet_naming_style.type_definition_style.capitalization					= pascal_case
 
+# Methods
+dotnet_naming_rule.method_definition.symbols 								= method_definition_symbols
+dotnet_naming_rule.method_definition.style									= method_definition_style
+dotnet_naming_rule.method_definition.severity								= error
+dotnet_naming_symbols.method_definition_symbols.applicable_kinds          	= method
+dotnet_naming_symbols.method_definition_symbols.applicable_accessibilities	= *
+dotnet_naming_style.method_definition_style.capitalization					= pascal_case
+
 # Public accessibility
 dotnet_naming_rule.public.symbols 									= public_symbols
 dotnet_naming_rule.public.style										= public_style

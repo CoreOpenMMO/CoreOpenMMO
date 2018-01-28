@@ -1,127 +1,127 @@
 namespace COTS.GameServer.Items {
 
     public class SharedItem {
-        public SharedItemFlags flags;
+        public SharedItemFlags Flags;
 
-        public ushort id;
-        public ushort clientId;
-        public ushort wareId;
-        public ushort speed = 0;
+        public ushort Id;
+        public ushort ClientId;
+        public ushort WareId;
+        public ushort Speed = 0;
 
-        public byte lightLevel = 0;
-        public byte lightColor = 0;
-        public byte alwaysOnTopOrder = 0;
+        public byte LightLevel = 0;
+        public byte LightColor = 0;
+        public byte AlwaysOnTopOrder = 0;
 
-        public SharedItemAbilities abilities;
+        public SharedItemAbilities Abilities;
 
-        public string name;
-        public string article;
-        public string pluralName;
-        public string description;
-        public string type; // Maybe not string. But for now ok
-        public string floorChange; // Maybe not string. But for now ok
-        public string effect; // Maybe not string. But for now ok
-        public string field; // Maybe not string. But for now ok
-        public string fluidSource; // Maybe not string. But for now ok
-        public string weaponType; // Weapons HERE??? // Maybe not string. But for now ok
-        public string shootType; // Weapons HERE??? // Maybe not string. But for now ok
-        public string ammoType; // Weapons HERE??? // Maybe not string. But for now ok
-        public string partnerDirection; // Maybe not string. But for now ok
-        public string corpseType; // Maybe not string. But for now ok
-        public string slotType; // Maybe not string. But for now ok
+        public string Name;
+        public string Article;
+        public string PluralName;
+        public string Description;
+        public string Type; // Maybe not string. But for now ok
+        public string FloorChange; // Maybe not string. But for now ok
+        public string Effect; // Maybe not string. But for now ok
+        public string Field; // Maybe not string. But for now ok
+        public string FluidSource; // Maybe not string. But for now ok
+        public string WeaponType; // Weapons HERE??? // Maybe not string. But for now ok
+        public string ShootType; // Weapons HERE??? // Maybe not string. But for now ok
+        public string AmmoType; // Weapons HERE??? // Maybe not string. But for now ok
+        public string PartnerDirection; // Maybe not string. But for now ok
+        public string CorpseType; // Maybe not string. But for now ok
+        public string SlotType; // Maybe not string. But for now ok
 
-        public byte containerSize = 0; // 255 should be a good max to containzer size
+        public byte ContainerSize = 0; // 255 should be a good max to containzer size
 
-        public ushort decaytTo = 0;
-        public ushort rotateTo = 0;
-        public ushort destroyTo = 0;
-        public ushort writeOnceItemId = 0;
-        public ushort maleSleeperId = 0;
-        public ushort femaleSleeperId = 0;
-        public ushort maxTextLength = 0;
-        public ushort attack = 0; // Weapons HERE???
-        public ushort defense = 0; // Weapons HERE???
-        public ushort maxHitChance = 0; // Weapons HERE???
-        public ushort range = 0; // Weapons HERE???
-        public ushort levelDoor = 0; // Whats? But Okay. // ushort should be okay if level <= 65k
+        public ushort DecaytTo = 0;
+        public ushort RotateTo = 0;
+        public ushort DestroyTo = 0;
+        public ushort WriteOnceItemId = 0;
+        public ushort MaleSleeperId = 0;
+        public ushort FemaleSleeperId = 0;
+        public ushort MaxTextLength = 0;
+        public ushort Attack = 0; // Weapons HERE???
+        public ushort Defense = 0; // Weapons HERE???
+        public ushort MaxHitChance = 0; // Weapons HERE???
+        public ushort Range = 0; // Weapons HERE???
+        public ushort LevelDoor = 0; // Whats? But Okay. // ushort should be okay if level <= 65k
 
-        public uint weight = 0; // Maybe not so much
-        public uint duration = 0; // In ms, ushort is not big enough AAAAAAAAAAA. Maybe divide by 10 and make as seconds
-        public uint damage = 0;
-        public uint damageTicks = 0;
-        public uint damageCount = 0; // 65k should be enough. Change it to ushort
-        public uint damageStart = 0; // Not sure what is. Maybe 65k is enough too
+        public uint Weight = 0; // Maybe not so much
+        public uint Duration = 0; // In ms, ushort Is not big enough AAAAAAAAAAA. Maybe divide by 10 and make as seconds
+        public uint Damage = 0;
+        public uint DamageTicks = 0;
+        public uint DamageCount = 0; // 65k should be enough. Change it to ushort
+        public uint DamageStart = 0; // Not sure what Is. Maybe 65k Is enough too
 
-        public bool isUseable = false; // default true?
-        public bool isPickupable = false; // default true?
-        public bool isMoveable = false; // default true?
-        public bool isStackable = false; // default true?
-        public bool isVertical = false; // default true?
-        public bool isHorizontal = false; // default true?
-        public bool isHangable = false;
-        public bool isWriteable = false;
-        public bool isRepleaceable = false; // Maybe the default is true
-        public bool isRotatable = false;
-        public bool isAnimation = false;
-        public bool isReadable = false;
-        public bool hasHeight = false; // Maybe hasElevation
-        public bool allowDistRead = false;
-        public bool allowPickupable = false;
-        public bool blockSolid = false;
-        public bool blockProjectile = false;
-        public bool blockPathFind = false;
-        public bool walkStack = true;
-        public bool alwaysOnTop = true;
-        public bool lookTrough = false;
-        public bool forceUse = false;
+        public bool IsUseable = false; // default true?
+        public bool IsPickupable = false; // default true?
+        public bool IsMoveable = false; // default true?
+        public bool IsStackable = false; // default true?
+        public bool IsVertical = false; // default true?
+        public bool IsHorizontal = false; // default true?
+        public bool IsHangable = false;
+        public bool IsWriteable = false;
+        public bool IsRepleaceable = false; // Maybe the default Is true
+        public bool IsRotatable = false;
+        public bool IsAnimation = false;
+        public bool IsReadable = false;
+        public bool HasHeight = false; // Maybe hasElevation
+        public bool AllowDistRead = false;
+        public bool AllowPickupable = false;
+        public bool BlockSolid = false;
+        public bool BlockProjectile = false;
+        public bool BlockPathFind = false;
+        public bool WalkStack = true;
+        public bool AlwaysOnTop = true;
+        public bool LookTrough = false;
+        public bool ForceUse = false;
 
         public SharedItem(SharedItemFlags flags = 0) {
-            this.flags = flags;
-            initFlags();
-            abilities.reset();
+            Flags = flags;
+			InitFlags();
+            Abilities.Reset();
         }
 
-        private bool hasFlag(SharedItemFlags flag) {
-            return (flags & flag) != 0;
+        private bool HasFlag(SharedItemFlags flag) {
+            return (Flags & flag) != 0;
         }
 
-        private void initFlags() {
-            isUseable = hasFlag(SharedItemFlags.USEABLE);
-            isPickupable = hasFlag(SharedItemFlags.PICKUPABLE);
-            isMoveable = hasFlag(SharedItemFlags.MOVEABLE);
-            isStackable = hasFlag(SharedItemFlags.STACKABLE);
-            isVertical = hasFlag(SharedItemFlags.VERTICAL);
-            isHorizontal = hasFlag(SharedItemFlags.HORIZONTAL);
-            isHangable = hasFlag(SharedItemFlags.HANGABLE);
-            isRotatable = hasFlag(SharedItemFlags.ROTATABLE);
-            isAnimation = hasFlag(SharedItemFlags.ANIMATION);
-            isReadable = hasFlag(SharedItemFlags.READABLE);
+        private void InitFlags() {
+            IsUseable = HasFlag(SharedItemFlags.USEABLE);
+            IsPickupable = HasFlag(SharedItemFlags.PICKUPABLE);
+            IsMoveable = HasFlag(SharedItemFlags.MOVEABLE);
+            IsStackable = HasFlag(SharedItemFlags.STACKABLE);
+            IsVertical = HasFlag(SharedItemFlags.VERTICAL);
+            IsHorizontal = HasFlag(SharedItemFlags.HORIZONTAL);
+            IsHangable = HasFlag(SharedItemFlags.HANGABLE);
+            IsRotatable = HasFlag(SharedItemFlags.ROTATABLE);
+            IsAnimation = HasFlag(SharedItemFlags.ANIMATION);
+            IsReadable = HasFlag(SharedItemFlags.READABLE);
 
-            hasHeight = hasFlag(SharedItemFlags.HAS_HEIGHT);
+            HasHeight = HasFlag(SharedItemFlags.HAS_HEIGHT);
 
-            allowDistRead = hasFlag(SharedItemFlags.ALLOWDISTREAD);
-            alwaysOnTop = hasFlag(SharedItemFlags.ALWAYSONTOP);
-            blockSolid = hasFlag(SharedItemFlags.BLOCK_SOLID);
-            blockProjectile = hasFlag(SharedItemFlags.BLOCK_PROJECTILE);
-            blockPathFind = hasFlag(SharedItemFlags.BLOCK_PATHFIND);
-            forceUse = hasFlag(SharedItemFlags.FORCEUSE);
-            lookTrough = hasFlag(SharedItemFlags.LOOKTHROUGH);
+            AllowDistRead = HasFlag(SharedItemFlags.ALLOWDISTREAD);
+            AlwaysOnTop = HasFlag(SharedItemFlags.ALWAYSONTOP);
+            BlockSolid = HasFlag(SharedItemFlags.BLOCK_SOLID);
+            BlockProjectile = HasFlag(SharedItemFlags.BLOCK_PROJECTILE);
+            BlockPathFind = HasFlag(SharedItemFlags.BLOCK_PATHFIND);
+            ForceUse = HasFlag(SharedItemFlags.FORCEUSE);
+            LookTrough = HasFlag(SharedItemFlags.LOOKTHROUGH);
         }
     }
 
     public struct SharedItemAbilities {
-        public uint healthGain;
-        public uint healthTicks;
-        public uint manaGain;
-        public uint manaTicks;
+        public uint HealthGain;
+        public uint HealthTicks;
+        public uint ManaGain;
+        public uint ManaTicks;
 
-        public bool manaShield;
-        public bool preventDrop;
-        public bool preventLoss;
+        public bool ManaShield;
+        public bool PreventDrop;
+        public bool PreventLoss;
 
-        public void reset() {
-            healthGain = healthTicks = manaGain = manaTicks = 0;
-            manaShield = preventDrop = preventLoss = false;
+        public void Reset() {
+            HealthGain = HealthTicks = ManaGain = ManaTicks = 0;
+            ManaShield = PreventDrop = PreventLoss = false;
         }
     }
 
