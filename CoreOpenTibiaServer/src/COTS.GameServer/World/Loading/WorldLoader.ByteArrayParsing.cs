@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using COTS.GameServer.OTBParsing;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -30,7 +31,7 @@ namespace COTS.GameServer.World.Loading {
             var rootNodeType = (byte)stream.ReadByte();
             var rootNode = new ParsingNode() {
                 Type = (NodeType)rootNodeType,
-                PropsBegin = (int)stream.Position
+                DataBegin = (int)stream.Position
             };
             nodeStack.Push(rootNode);
 
@@ -73,7 +74,7 @@ namespace COTS.GameServer.World.Loading {
                 throw new MalformedWorldException();
 
             if (currentNode.Children.Count == 0)
-                currentNode.PropsEnd = stream.Position;
+                currentNode.DataEnd = stream.Position;
 
             var childType = stream.ReadByte();
             if (stream.IsOver)
@@ -81,7 +82,7 @@ namespace COTS.GameServer.World.Loading {
 
             var child = new ParsingNode {
                 Type = (NodeType)childType,
-                PropsBegin = stream.Position//  + sizeof(MarkupByte)
+                DataBegin = stream.Position//  + sizeof(MarkupByte)
             };
 
             currentNode.Children.Add(child);
@@ -93,7 +94,7 @@ namespace COTS.GameServer.World.Loading {
                 throw new MalformedWorldException();
 
             if (currentNode.Children.Count == 0)
-                currentNode.PropsEnd = stream.Position;
+                currentNode.DataEnd = stream.Position;
 
             nodeStack.Pop();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using COTS.GameServer.OTBParsing;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -9,7 +10,7 @@ namespace COTS.GameServer.World.Loading {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var parsingStream = new WorldParsingStream(tree, tree.Root);
+            var parsingStream = new ParsingStream(tree, tree.Root);
 
             UInt32 worldEncodingVersion = parsingStream.ReadUInt32();
             UInt16 worldWidth = parsingStream.ReadUInt16();
@@ -36,7 +37,7 @@ namespace COTS.GameServer.World.Loading {
             if ((NodeType)worldDataNode.Type != NodeType.WorldData)
                 throw new MalformedWorldException();
 
-            var parsingStream = new WorldParsingStream(tree, worldDataNode);
+            var parsingStream = new ParsingStream(tree, worldDataNode);
 
             var worldDescription = new List<string>();
             string spawnsFilename = null;

@@ -1,7 +1,6 @@
-namespace COTS.GameServer.Items
-{
-    public enum OTBAttributes : byte
-    {
+namespace COTS.GameServer.Items {
+
+    public enum OTBAttributes : byte {
         ROOT_VERSION = 0x01,
         ITEM_SERVERID = 0x10,
         ITEM_CLIENTID,
@@ -27,6 +26,7 @@ namespace COTS.GameServer.Items
 
         //1-byte aligned
         ITEM_DECAY2, //deprecated
+
         ITEM_WEAPON2, //deprecated
         ITEM_AMU2, //deprecated
         ITEM_ARMOR2, //deprecated

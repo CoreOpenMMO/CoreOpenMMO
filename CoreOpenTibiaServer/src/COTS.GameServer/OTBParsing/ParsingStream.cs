@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Text;
 
-namespace COTS.GameServer.World.Loading {
+namespace COTS.GameServer.OTBParsing {
 
     /// <remarks>
     /// !! This is a mutable struct !!
     /// Be careful when passing it to methods!
     /// </remarks>
-    public struct WorldParsingStream {
+    public struct ParsingStream {
         public readonly ByteArrayReadStream UnderlayingStream;
         public readonly int BeginPosition;
         public int CurrentPosition => UnderlayingStream.Position;
         public readonly int EndPosition;
 
-        public WorldParsingStream(ParsingTree tree, ParsingNode node) {
+        public ParsingStream(ParsingTree tree, ParsingNode node) {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
             if (node == null)
@@ -21,10 +21,10 @@ namespace COTS.GameServer.World.Loading {
 
             this.UnderlayingStream = new ByteArrayReadStream(
                 array: tree.Data,
-                position: node.PropsBegin);
+                position: node.DataBegin);
 
-            this.BeginPosition = node.PropsBegin;
-            this.EndPosition = node.PropsEnd;
+            this.BeginPosition = node.DataBegin;
+            this.EndPosition = node.DataEnd;
         }
 
         public bool IsOver => UnderlayingStream.IsOver || CurrentPosition >= EndPosition - 1;
@@ -65,14 +65,9 @@ namespace COTS.GameServer.World.Loading {
             return Encoding.ASCII.GetString(stringData);
         }
 
-        public bool Skip(int byteCount = 1) {
-            if (byteCount > EndPosition)
-                return false;
-
-            for(int i=0; i<byteCount; i++)
+        public void Skip(int byteCount = 1) {
+            for (int i = 0; i < byteCount; i++)
                 ReadByte();
-
-            return true;
         }
     }
 }

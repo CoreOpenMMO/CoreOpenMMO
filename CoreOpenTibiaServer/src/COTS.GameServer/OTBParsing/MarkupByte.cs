@@ -1,4 +1,4 @@
-﻿namespace COTS.GameServer.World.Loading {
+﻿namespace COTS.GameServer.OTBParsing {
 
     public enum MarkupByte : byte {
         Escape = 0xFD,

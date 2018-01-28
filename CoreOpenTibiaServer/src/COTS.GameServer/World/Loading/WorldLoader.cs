@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using COTS.GameServer.OTBParsing;
+using System;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -23,15 +23,14 @@ namespace COTS.GameServer.World.Loading {
             if (mapNode == null)
                 throw new MalformedWorldException();
 
-            foreach (var mapDataNode in mapNode.Children)
-            {
-                switch(mapDataNode.Type) {
-                    case NodeType.TileArea :
-                        WorldLoader.ParseTileAreaNode(mapTree, mapDataNode);
-                        break;
+            foreach (var mapDataNode in mapNode.Children) {
+                switch (mapDataNode.Type) {
+                    case NodeType.TileArea:
+                    WorldLoader.ParseTileAreaNode(mapTree, mapDataNode);
+                    break;
 
                     //default:
-                        //throw new NotImplementedException();
+                    //throw new NotImplementedException();
                 }
             }
         }

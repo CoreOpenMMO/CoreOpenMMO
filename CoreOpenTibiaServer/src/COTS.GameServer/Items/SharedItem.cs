@@ -1,7 +1,6 @@
-namespace COTS.GameServer.Items
-{
-    public class SharedItem
-    {
+namespace COTS.GameServer.Items {
+
+    public class SharedItem {
         public SharedItemFlags flags;
 
         public ushort id;
@@ -76,63 +75,57 @@ namespace COTS.GameServer.Items
         public bool lookTrough = false;
         public bool forceUse = false;
 
-        public SharedItem(SharedItemFlags flags = 0)
-        {
+        public SharedItem(SharedItemFlags flags = 0) {
             this.flags = flags;
             initFlags();
             abilities.reset();
         }
 
-        private bool hasFlag(SharedItemFlags flag)
-        {
+        private bool hasFlag(SharedItemFlags flag) {
             return (flags & flag) != 0;
         }
 
-        private void initFlags()
-        {
-            isUseable       = hasFlag(SharedItemFlags.USEABLE);
-            isPickupable    = hasFlag(SharedItemFlags.PICKUPABLE);
-            isMoveable      = hasFlag(SharedItemFlags.MOVEABLE);
-            isStackable     = hasFlag(SharedItemFlags.STACKABLE);
-            isVertical      = hasFlag(SharedItemFlags.VERTICAL);
-            isHorizontal    = hasFlag(SharedItemFlags.HORIZONTAL);
-            isHangable      = hasFlag(SharedItemFlags.HANGABLE);
-            isRotatable     = hasFlag(SharedItemFlags.ROTATABLE);
-            isAnimation     = hasFlag(SharedItemFlags.ANIMATION);
-            isReadable      = hasFlag(SharedItemFlags.READABLE);
+        private void initFlags() {
+            isUseable = hasFlag(SharedItemFlags.USEABLE);
+            isPickupable = hasFlag(SharedItemFlags.PICKUPABLE);
+            isMoveable = hasFlag(SharedItemFlags.MOVEABLE);
+            isStackable = hasFlag(SharedItemFlags.STACKABLE);
+            isVertical = hasFlag(SharedItemFlags.VERTICAL);
+            isHorizontal = hasFlag(SharedItemFlags.HORIZONTAL);
+            isHangable = hasFlag(SharedItemFlags.HANGABLE);
+            isRotatable = hasFlag(SharedItemFlags.ROTATABLE);
+            isAnimation = hasFlag(SharedItemFlags.ANIMATION);
+            isReadable = hasFlag(SharedItemFlags.READABLE);
 
-            hasHeight       = hasFlag(SharedItemFlags.HAS_HEIGHT);
+            hasHeight = hasFlag(SharedItemFlags.HAS_HEIGHT);
 
-            allowDistRead   = hasFlag(SharedItemFlags.ALLOWDISTREAD);
-            alwaysOnTop     = hasFlag(SharedItemFlags.ALWAYSONTOP);
-            blockSolid      = hasFlag(SharedItemFlags.BLOCK_SOLID);
+            allowDistRead = hasFlag(SharedItemFlags.ALLOWDISTREAD);
+            alwaysOnTop = hasFlag(SharedItemFlags.ALWAYSONTOP);
+            blockSolid = hasFlag(SharedItemFlags.BLOCK_SOLID);
             blockProjectile = hasFlag(SharedItemFlags.BLOCK_PROJECTILE);
-            blockPathFind   = hasFlag(SharedItemFlags.BLOCK_PATHFIND);
-            forceUse        = hasFlag(SharedItemFlags.FORCEUSE);
-            lookTrough      = hasFlag(SharedItemFlags.LOOKTHROUGH);
+            blockPathFind = hasFlag(SharedItemFlags.BLOCK_PATHFIND);
+            forceUse = hasFlag(SharedItemFlags.FORCEUSE);
+            lookTrough = hasFlag(SharedItemFlags.LOOKTHROUGH);
         }
     }
 
-    public struct SharedItemAbilities
-    {
+    public struct SharedItemAbilities {
         public uint healthGain;
-	    public uint healthTicks;
-	    public uint manaGain;
-	    public uint manaTicks;
+        public uint healthTicks;
+        public uint manaGain;
+        public uint manaTicks;
 
         public bool manaShield;
         public bool preventDrop;
         public bool preventLoss;
 
-        public void reset()
-        {
+        public void reset() {
             healthGain = healthTicks = manaGain = manaTicks = 0;
             manaShield = preventDrop = preventLoss = false;
         }
     }
 
-    public enum SharedItemFlags : uint
-    {
+    public enum SharedItemFlags : uint {
         BLOCK_SOLID = 1 << 0,
         BLOCK_PROJECTILE = 1 << 1,
         BLOCK_PATHFIND = 1 << 2,
