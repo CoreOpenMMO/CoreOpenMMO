@@ -39,27 +39,24 @@ namespace COTS.GameServer.World.Loading {
             if (tileNode.Type != NodeType.NormalTile && tileNode.Type != NodeType.HouseTile)
                 throw new MalformedTileAreaNodeException("Unknow tile area node type.");
 
-            var nodeStream = new ParsingStream(parsingTree, tileNode);
+            var stream = new ParsingStream(parsingTree, tileNode);
 
-            var tileX = areaStartingX + nodeStream.ReadByte();
-            var tileY = areaStartingY + nodeStream.ReadByte();
+            var tileX = areaStartingX + stream.ReadByte();
+            var tileY = areaStartingY + stream.ReadByte();
 
             Tile tile = null;
             if (tileNode.Type == NodeType.HouseTile)
-                tile = ParseHouseTile(ref nodeStream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
+                tile = ParseHouseTile(ref stream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
 
-            var tileFlags = ParseTileAttributes(ref parsingTree, ref nodeStream, ref tile, tileNode);
+            var tileFlags = ParseTileAttributes(ref parsingTree, ref stream, ref tile, tileNode);
             if (tile != null)
                 tile.Flags.AddFlags(tileFlags);
         }
-
-        // Maybe it should be bool. Passing house by reference
+        
         private static Tile ParseHouseTile(ref ParsingStream stream, UInt16 tileX, UInt16 tileY, byte tileZ) {
             var houseId = stream.ReadUInt32();
             House house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
-
-            var tile = new HouseTile(tileX, tileY, tileZ, house);
-            house.AddTile(tile);
+            var tile = HouseTile.CreateTileAndAddItToHouse(tileX, tileY, tileZ, house);
 
             return tile;
         }
