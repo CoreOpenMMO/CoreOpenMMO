@@ -5,7 +5,7 @@ namespace COTS.GameServer {
     /// <summary>
     /// Represents a 3D point with integer coordinates.
     /// </summary>
-    public  struct Position : IEquatable<Position> {
+    public readonly struct Position : IEquatable<Position> {
 
         /// <summary>
         /// The x coordinate of this instance.

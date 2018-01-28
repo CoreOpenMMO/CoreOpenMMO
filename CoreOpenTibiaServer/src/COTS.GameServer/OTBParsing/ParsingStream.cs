@@ -12,6 +12,8 @@ namespace COTS.GameServer.OTBParsing {
         public readonly int BeginPosition;
         public int CurrentPosition => UnderlayingStream.Position;
         public readonly int EndPosition;
+        
+        private byte[] _parsingBuffer;
 
         public ParsingStream(ParsingTree tree, ParsingNode node) {
             if (tree == null)
@@ -25,6 +27,10 @@ namespace COTS.GameServer.OTBParsing {
 
             this.BeginPosition = node.DataBegin;
             this.EndPosition = node.DataEnd;
+
+            // The buffer must be at least as big as the largest non-string
+            // object we can parse. Currently it's a uint32.
+            this._parsingBuffer = new byte[sizeof(UInt32)];
         }
 
         public bool IsOver => UnderlayingStream.IsOver || CurrentPosition >= EndPosition - 1;
@@ -39,30 +45,31 @@ namespace COTS.GameServer.OTBParsing {
         }
 
         public UInt16 ReadUInt16() {
-            var serializedValue = new byte[sizeof(UInt16)];
-            for (int i = 0; i < serializedValue.Length; i++)
-                serializedValue[i] = this.ReadByte();
+            for (int i = 0; i < sizeof(UInt16); i++)
+                _parsingBuffer[i] = this.ReadByte();
 
-            return BitConverter.ToUInt16(serializedValue, 0);
+            return BitConverter.ToUInt16(_parsingBuffer, 0);
         }
 
         public UInt32 ReadUInt32() {
-            var serializedValue = new byte[sizeof(UInt32)];
-            for (int i = 0; i < serializedValue.Length; i++)
-                serializedValue[i] = this.ReadByte();
+            for (int i = 0; i < sizeof(UInt32); i++)
+                _parsingBuffer[i] = this.ReadByte();
 
-            return BitConverter.ToUInt32(serializedValue, 0);
+            return BitConverter.ToUInt32(_parsingBuffer, 0);
         }
 
         public string ReadString() {
             var stringLength = ReadUInt16();
-            var stringData = new byte[stringLength];
+
+            // "Resize" our buffer, iff necessary
+            if (stringLength > _parsingBuffer.Length)
+                _parsingBuffer = new byte[stringLength];
 
             for (int i = 0; i < stringLength; i++)
-                stringData[i] = ReadByte();
+                _parsingBuffer[i] = ReadByte();
 
             // When in C land, use C encoding...
-            return Encoding.ASCII.GetString(stringData);
+            return Encoding.ASCII.GetString(_parsingBuffer);
         }
 
         public void Skip(int byteCount = 1) {
