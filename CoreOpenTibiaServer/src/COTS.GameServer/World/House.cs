@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace COTS.GameServer.World {
@@ -11,7 +11,7 @@ namespace COTS.GameServer.World {
         public readonly List<HouseTile> Tiles = new List<HouseTile>();
 
         public House(UInt32 id) {
-            this.Id = id;
+            Id = id;
         }
 
         public void AddTile(HouseTile tile) {
