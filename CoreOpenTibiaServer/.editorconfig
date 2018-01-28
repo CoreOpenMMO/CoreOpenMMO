@@ -1,0 +1,91 @@
+root                                                                     = true
+
+[*.cs]
+#--------------------------------------------------------------------------------------------#
+# Naming Conventions
+#--------------------------------------------------------------------------------------------#
+
+# Public stuff
+dotnet_naming_rule.public_stuff_casing.symbols 							= public_stuff_symbol
+dotnet_naming_symbols.public_stuff_symbol.applicable_kinds              = *
+dotnet_naming_symbols.public_stuff_symbol.applicable_accessibilities	= public
+dotnet_naming_rule.public_stuff_casing.style							= public_stuff_style
+dotnet_naming_style.public_stuff_style.capitalization					= camel_case
+dotnet_naming_rule.public_stuff_style.severity							= error
+
+# Private stuff
+
+
+#--------------------------------------------------------------------------------------------# 
+# Coding conventions
+#--------------------------------------------------------------------------------------------#
+
+# Basic EditorConfig
+indent_style 															= tab
+insert_final_newline 													= false
+charset 																= utf-8
+end_of_line																= lf
+
+# Requests "this." and "Me." when applicable
+dotnet_style_qualification_for_field                                    = false : suggestion
+dotnet_style_qualification_for_property                                 = true : suggestion
+dotnet_style_qualification_for_method                                   = true : warning
+dotnet_style_qualification_for_event                                    = true : warning
+
+# Prefer "var" everywhere
+csharp_style_var_for_built_in_types                                     = true : suggestion
+csharp_style_var_when_type_is_apparent                                  = true : suggestion
+csharp_style_var_elsewhere                                              = false : suggestion
+
+# Prefer method-like constructs to have a block body
+csharp_style_expression_bodied_methods                                  = when_on_single_line : warning
+csharp_style_expression_bodied_constructors                             = false : error
+csharp_style_expression_bodied_operators                                = when_on_single_line : warning
+csharp_style_expression_bodied_properties                               = false : error
+csharp_style_expression_bodied_properties                               = false : error
+csharp_style_expression_bodied_operators                                = when_on_single_line : suggestion
+
+# Prefer property-like constructs to have an expression-body
+csharp_style_expression_bodied_properties                               = true : none
+csharp_style_expression_bodied_indexers                                 = true : none
+csharp_style_expression_bodied_accessors                                = true : none
+
+# Spacing
+csharp_space_after_cast                                                 = true : warning
+csharp_space_after_colon_in_inheritance_clause                          = true : error
+csharp_space_after_comma                                                = true : error
+csharp_space_after_dot                                                  = false : error
+csharp_space_after_keywords_in_control_flow_statements                  = true : error
+csharp_space_after_semicolon_in_for_statement                           = true : error
+csharp_space_around_binary_operators                                    = before_and_after : error
+csharp_space_around_declaration_statements                              = do_not_ignore : error
+csharp_space_before_colon_in_inheritance_clause                         = true : error
+csharp_space_before_comma                                               = false : error
+csharp_space_before_dot                                                 = false : error
+csharp_space_before_open_square_brackets                                = false : error
+csharp_space_before_semicolon_in_for_statement                          = false : error
+csharp_space_between_empty_square_brackets                              = false : error
+csharp_space_between_method_call_empty_parameter_list_parentheses       = false : error
+csharp_space_between_method_call_name_and_opening_parenthesis           = false : error
+csharp_space_between_method_call_parameter_list_parentheses             = false : error
+csharp_space_between_method_declaration_empty_parameter_list_parentheses= false : error
+csharp_space_between_method_declaration_name_and_open_parenthesis       = false : error
+csharp_space_between_method_declaration_parameter_list_parentheses      = false : error
+csharp_space_between_parentheses                                        = false : error
+csharp_space_between_square_brackets                                    = false : error
+
+# New line
+csharp_new_line_before_open_brace                                       = none : error
+csharp_new_line_before_else                                             = none : error
+csharp_new_line_before_catch                                            = none : error
+csharp_new_line_before_finally                                          = none : error
+csharp_new_line_before_members_in_object_initializers                   = true : error
+csharp_new_line_before_members_in_anonymous_types                       = true : error
+csharp_new_line_within_query_expression_clauses                         = true : error
+
+# Indentation
+csharp_indent_block_contents                                            = true : error
+csharp_indent_braces                                                    = false : error
+csharp_indent_case_contents                                             = true : error
+csharp_indent_switch_labels                                             = true : error
+csharp_indent_labels                                                    = flush_left : error
