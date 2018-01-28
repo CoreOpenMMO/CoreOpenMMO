@@ -5,22 +5,29 @@ root                                                                     = true
 # Naming Conventions
 #--------------------------------------------------------------------------------------------#
 
-# Public stuff
-dotnet_naming_rule.public_stuff_casing.symbols 							= public_stuff_symbol
-dotnet_naming_rule.public_stuff_casing.style							= public_stuff_style
-dotnet_naming_rule.public_stuff_casing.severity							= error
-dotnet_naming_symbols.public_stuff_symbol.applicable_kinds              = *
-dotnet_naming_symbols.public_stuff_symbol.applicable_accessibilities	= public
-dotnet_naming_style.public_stuff_style.capitalization					= pascal_case
+# Public accessibility
+dotnet_naming_rule.public.symbols 										= public_symbols
+dotnet_naming_rule.public.style											= public_style
+dotnet_naming_rule.public.severity										= error
+dotnet_naming_symbols.public_symbols.applicable_kinds              		= *
+dotnet_naming_symbols.public_symbols.applicable_accessibilities			= public
+dotnet_naming_style.public_style.capitalization							= pascal_case
 
-# Private stuff
-dotnet_naming_rule.private_stuff.symbols 								= private_stuff_symbol
-dotnet_naming_rule.private_stuff.style									= private_stuff_style
-dotnet_naming_rule.private_stuff_casing.severity						= error
-dotnet_naming_symbols.private_stuff_symbol.applicable_kinds             = *
-dotnet_naming_symbols.private_stuff_symbol.applicable_accessibilities	= internal or friend, private, protected, protected_internal, protected_friend
-dotnet_naming_style.private_stuff_style.capitalization					= camel_case
-dotnet_naming_style.private_stuff_style.required_prefix					= _
+# Not-public accessibility
+dotnet_naming_rule.private.symbols 										= private_symbols
+dotnet_naming_rule.private.style										= private_style
+dotnet_naming_rule.private.severity										= error
+dotnet_naming_symbols.private_symbols.applicable_kinds             		= *
+dotnet_naming_symbols.private_symbols.applicable_accessibilities		= internal or friend, private, protected, protected_internal, protected_friend
+dotnet_naming_style.private_style.capitalization						= camel_case
+dotnet_naming_style.private_style.required_prefix						= _
+
+# Parameters
+dotnet_naming_rule.parameter_rule.symbols 								= parameter_symbols
+dotnet_naming_rule.parameter_rule.style									= parameter_style
+dotnet_naming_rule.parameter_rule.severity								= error
+dotnet_naming_symbols.parameter_symbols.applicable_kinds             	= *
+dotnet_naming_style.parameter_style.capitalization						= camel_case
 
 
 #--------------------------------------------------------------------------------------------# 
