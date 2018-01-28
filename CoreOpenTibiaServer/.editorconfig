@@ -5,29 +5,37 @@ root                                                                     = true
 # Naming Conventions
 #--------------------------------------------------------------------------------------------#
 
+# Type definitions
+dotnet_naming_rule.type_definition.symbols 									= type_definition_symbols
+dotnet_naming_rule.type_definition.style									= type_definition_style
+dotnet_naming_rule.type_definition.severity									= error
+dotnet_naming_symbols.type_definition_symbols.applicable_kinds          	= class, struct, interface, enum
+dotnet_naming_symbols.type_definition_symbols.applicable_accessibilities	= *
+dotnet_naming_style.type_definition_style.capitalization					= pascal_case
+
 # Public accessibility
-dotnet_naming_rule.public.symbols 										= public_symbols
-dotnet_naming_rule.public.style											= public_style
-dotnet_naming_rule.public.severity										= error
-dotnet_naming_symbols.public_symbols.applicable_kinds              		= *
-dotnet_naming_symbols.public_symbols.applicable_accessibilities			= public
-dotnet_naming_style.public_style.capitalization							= pascal_case
+dotnet_naming_rule.public.symbols 									= public_symbols
+dotnet_naming_rule.public.style										= public_style
+dotnet_naming_rule.public.severity									= error
+dotnet_naming_symbols.public_symbols.applicable_kinds              	= *
+dotnet_naming_symbols.public_symbols.applicable_accessibilities		= public
+dotnet_naming_style.public_style.capitalization						= pascal_case
 
 # Not-public accessibility
-dotnet_naming_rule.private.symbols 										= private_symbols
-dotnet_naming_rule.private.style										= private_style
-dotnet_naming_rule.private.severity										= error
-dotnet_naming_symbols.private_symbols.applicable_kinds             		= *
-dotnet_naming_symbols.private_symbols.applicable_accessibilities		= internal or friend, private, protected, protected_internal, protected_friend
-dotnet_naming_style.private_style.capitalization						= camel_case
-dotnet_naming_style.private_style.required_prefix						= _
+dotnet_naming_rule.private.symbols 									= private_symbols
+dotnet_naming_rule.private.style									= private_style
+dotnet_naming_rule.private.severity									= error
+dotnet_naming_symbols.private_symbols.applicable_kinds             	= *
+dotnet_naming_symbols.private_symbols.applicable_accessibilities	= internal or friend, private, protected, protected_internal, protected_friend
+dotnet_naming_style.private_style.capitalization					= camel_case
+dotnet_naming_style.private_style.required_prefix					= _
 
 # Parameters
-dotnet_naming_rule.parameter_rule.symbols 								= parameter_symbols
-dotnet_naming_rule.parameter_rule.style									= parameter_style
-dotnet_naming_rule.parameter_rule.severity								= error
-dotnet_naming_symbols.parameter_symbols.applicable_kinds             	= *
-dotnet_naming_style.parameter_style.capitalization						= camel_case
+dotnet_naming_rule.parameter_rule.symbols 							= parameter_symbols
+dotnet_naming_rule.parameter_rule.style								= parameter_style
+dotnet_naming_rule.parameter_rule.severity							= error
+dotnet_naming_symbols.parameter_symbols.applicable_kinds            = *
+dotnet_naming_style.parameter_style.capitalization					= camel_case
 
 
 #--------------------------------------------------------------------------------------------# 
