@@ -11,7 +11,7 @@ namespace COTS.GameServer.OTBParsing {
 		public readonly ByteArrayReadStream UnderlayingStream;
 		public readonly int BeginPosition;
 		public int CurrentPosition => UnderlayingStream.Position;
-		public readonly int test;
+		public readonly int EndPosition;
 
 		private byte[] _parsingBuffer;
 
@@ -21,19 +21,19 @@ namespace COTS.GameServer.OTBParsing {
 			if (node == null)
 				throw new ArgumentNullException(nameof(node));
 
-			this.UnderlayingStream = new ByteArrayReadStream(
+			UnderlayingStream = new ByteArrayReadStream(
 				array: tree.Data,
 				position: node.DataBegin);
 
-			this.BeginPosition = node.DataBegin;
-			this.test = node.DataEnd;
+			BeginPosition = node.DataBegin;
+			EndPosition = node.DataEnd;
 
 			// The buffer must be at least as big as the largest non-string
 			// object we can parse. Currently it's a uint32.
-			this._parsingBuffer = new byte[sizeof(UInt32)];
+			_parsingBuffer = new byte[sizeof(UInt32)];
 		}
 
-		public bool IsOver => UnderlayingStream.IsOver || CurrentPosition >= test - 1;
+		public bool IsOver => UnderlayingStream.IsOver || CurrentPosition >= EndPosition - 1;
 
 		public byte ReadByte() {
 			var value = UnderlayingStream.ReadByte();
@@ -45,15 +45,15 @@ namespace COTS.GameServer.OTBParsing {
 		}
 
 		public UInt16 ReadUInt16() {
-			for (int i = 0; i < sizeof(UInt16); i++)
-				_parsingBuffer[i] = this.ReadByte();
+			for (var i = 0; i < sizeof(UInt16); i++)
+				_parsingBuffer[i] = ReadByte();
 
 			return BitConverter.ToUInt16(_parsingBuffer, 0);
 		}
 
 		public UInt32 ReadUInt32() {
-			for (int i = 0; i < sizeof(UInt32); i++)
-				_parsingBuffer[i] = this.ReadByte();
+			for (var i = 0; i < sizeof(UInt32); i++)
+				_parsingBuffer[i] = ReadByte();
 
 			return BitConverter.ToUInt32(_parsingBuffer, 0);
 		}
@@ -65,7 +65,7 @@ namespace COTS.GameServer.OTBParsing {
 			if (stringLength > _parsingBuffer.Length)
 				_parsingBuffer = new byte[stringLength];
 
-			for (int i = 0; i < stringLength; i++)
+			for (var i = 0; i < stringLength; i++)
 				_parsingBuffer[i] = ReadByte();
 
 			// When in C land, use C encoding...
@@ -73,7 +73,7 @@ namespace COTS.GameServer.OTBParsing {
 		}
 
 		public void Skip(int byteCount = 1) {
-			for (int i = 0; i < byteCount; i++)
+			for (var i = 0; i < byteCount; i++)
 				ReadByte();
 		}
 	}
