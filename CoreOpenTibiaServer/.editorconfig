@@ -53,16 +53,16 @@ dotnet_naming_rule.parameter_rule.severity					= error
 dotnet_naming_symbols.parameter_symbols.applicable_kinds	= *
 dotnet_naming_style.parameter_style.capitalization			= camel_case
 
-
-#--------------------------------------------------------------------------------------------# 
+#-------------------------------------------------------------------------------# 
 # Coding conventions
-#--------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------#
 
-# Basic EditorConfig
-indent_style 			= tab
-insert_final_newline 	= false
-charset 				= utf-8
-end_of_line				= lf
+# Require accessibility modifier
+dotnet_style_require_accessibility_modifiers 	= true : error
+csharp_preferred_modifier_order					= public, private, protected, internal, static, extern, new, virtual, sealed, abstract, override, readonly, unsafe, volatile, async:none
+
+#Inlined variable declarations
+csharp_style_inlined_variable_declaration	= true : error
 
 # Requests "this." and "Me." when applicable
 dotnet_style_qualification_for_field		= false : error
@@ -71,9 +71,9 @@ dotnet_style_qualification_for_method		= false : error
 dotnet_style_qualification_for_event		= false : error
 
 # Prefer "var" everywhere
-csharp_style_var_for_built_in_types			= false : none
+# csharp_style_var_for_built_in_types			= false : none
 csharp_style_var_when_type_is_apparent		= true : error
-csharp_style_var_elsewhere					= true : error
+# csharp_style_var_elsewhere					= true : error
 
 # Prefer method-like constructs to have a block body
 csharp_style_expression_bodied_method			= when_on_single_line : error
@@ -127,3 +127,9 @@ csharp_indent_braces			= false : error
 csharp_indent_case_contents		= true : error
 csharp_indent_switch_labels		= true : error
 csharp_indent_labels			= flush_left : error
+
+# Basic EditorConfig
+indent_style 			= tab
+insert_final_newline 	= false
+charset 				= utf-8
+end_of_line				= lf
