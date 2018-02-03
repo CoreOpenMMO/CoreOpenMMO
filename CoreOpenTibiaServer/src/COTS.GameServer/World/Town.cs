@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace COTS.GameServer.World {
 	public sealed class Town : IEquatable<Town> {
