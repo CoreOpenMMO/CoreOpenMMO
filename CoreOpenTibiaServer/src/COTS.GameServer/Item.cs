@@ -6,8 +6,8 @@ namespace COTS.GameServer {
         public ItemGroup Group;
         public bool Stackable;
         public ushort ItemId;
-        internal bool IsMoveable;
-        internal bool IsGroundTile;
+        internal bool _isMoveable;
+        internal bool _isGroundTile;
         public ushort Type;
         public ushort Count;
 

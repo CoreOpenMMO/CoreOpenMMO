@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace COTS.GameServer.World {
@@ -14,9 +14,9 @@ namespace COTS.GameServer.World {
         public TileFlags Flags;
 
         public Tile(ushort x, ushort y, byte z) {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+			X = x;
+			Y = y;
+			Z = z;
         }
 
         public void AddInternalThing(Item item) {
