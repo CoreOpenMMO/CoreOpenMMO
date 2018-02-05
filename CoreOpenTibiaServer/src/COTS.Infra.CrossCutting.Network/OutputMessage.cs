@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using COTS.Infra.CrossCutting.Network.Enums;
 using COTS.Infra.CrossCutting.Network.Security;
 
@@ -55,7 +55,7 @@ namespace COTS.Infra.CrossCutting.Network
         {
             if (addChecksum)
             {
-                AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length));
+                AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length-6));
             }
 
             AddHeaderUInt16((ushort)Length);

@@ -1,104 +1,91 @@
-# EditorConfig is awesome: http://EditorConfig.org
-# C# References https://docs.microsoft.com/en/visualstudio/ide/editorconfig-code-style-settings-reference
-# .Net References https://docs.microsoft.com/en/visualstudio/ide/editorconfig-naming-conventions
-
-root = true
+root                                                                     = true
 
 [*.cs]
-#------------------------------------------ Naming ------------------------------------------#
-# Symbols Rules
-## Definition
-#- methods_are_camel_case
-dotnet_naming_rule.methods_are_camel_case.symbols = methods_symbol
-#- constant_fields_should_be_pascal_case
-dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols = constant_fields
-#- camel_case_for_private_internal_fields
-dotnet_naming_rule.camel_case_for_private_internal_fields.symbols = private_internal_fields
-## Configuration
-dotnet_naming_symbols.methods_symbol.applicable_kinds = methods
-dotnet_naming_symbols.constant_fields.applicable_kinds = struct,enum,property,field,event,parameter
-dotnet_naming_symbols.private_internal_fields.applicable_kinds = struct,enum,property,field,event,parameter
-
-# Style Rules
-## Definition
-dotnet_naming_rule.methods_are_camel_case.style = methods_camel_case_style
-dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_style
-dotnet_naming_rule.camel_case_for_private_internal_fields.style = camel_case_underscore_style
-## Configuration
-#- methods_camel_case_style
-dotnet_naming_style.methods_camel_case_style.capitalization = camel_case
-#- pascal_case_style
-dotnet_naming_style.pascal_case_style.capitalization = camel_case
-#- camel_case_underscore_style
-dotnet_naming_style.camel_case_underscore_style.required_prefix = _
-dotnet_naming_style.camel_case_underscore_style.capitalization = pascal_case
-
-# Severity Rules
-dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = warning
-dotnet_naming_rule.camel_case_for_private_internal_fields.severity = warning
-dotnet_naming_rule.methods_camel_case_style.severity = warning
+#--------------------------------------------------------------------------------------------#
+# Naming Conventions
 #--------------------------------------------------------------------------------------------#
 
+# Public stuff
+dotnet_naming_rule.public_stuff_casing.symbols 							= public_stuff_symbol
+dotnet_naming_rule.public_stuff_casing.style							= public_stuff_style
+dotnet_naming_rule.public_stuff_casing.severity							= error
+dotnet_naming_symbols.public_stuff_symbol.applicable_kinds              = *
+dotnet_naming_symbols.public_stuff_symbol.applicable_accessibilities	= public
+dotnet_naming_style.public_stuff_style.capitalization					= pascal_case
+
+# Private stuff
+
+
+#--------------------------------------------------------------------------------------------# 
+# Coding conventions
+#--------------------------------------------------------------------------------------------#
+
+# Basic EditorConfig
+indent_style															= tab
+insert_final_newline 													= false
+charset 																= utf-8
+end_of_line																= lf
+
 # Requests "this." and "Me." when applicable
-dotnet_style_qualification_for_field = false:suggestion
-dotnet_style_qualification_for_property = true:suggestion
-dotnet_style_qualification_for_method = true:warning
-dotnet_style_qualification_for_event = true:warning
+dotnet_style_qualification_for_field                                    = false : error
+dotnet_style_qualification_for_property                                 = false : error
+dotnet_style_qualification_for_method                                   = false : error
+dotnet_style_qualification_for_event                                    = false : error
 
 # Prefer "var" everywhere
-csharp_style_var_for_built_in_types = true:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = false:suggestion
+#csharp_style_var_for_built_in_types                                     = true : error
+csharp_style_var_when_type_is_apparent                                  = true : error
+#csharp_style_var_elsewhere                                              = false : error
 
 # Prefer method-like constructs to have a block body
-csharp_style_expression_bodied_methods = when_on_single_line:warning
-csharp_style_expression_bodied_constructors = false:error
-csharp_style_expression_bodied_operators = when_on_single_line:warning
-csharp_style_expression_bodied_properties = false:error
-csharp_style_expression_bodied_properties = false:error
-csharp_style_expression_bodied_operators = when_on_single_line:suggestion
+csharp_style_expression_bodied_methods                                  = when_on_single_line : error
+csharp_style_expression_bodied_constructors                             = false : error
+csharp_style_expression_bodied_operators                                = when_on_single_line : error
+csharp_style_expression_bodied_properties                               = false : error
+csharp_style_expression_bodied_properties                               = false : error
+csharp_style_expression_bodied_operators                                = when_on_single_line : error
 
 # Prefer property-like constructs to have an expression-body
-csharp_style_expression_bodied_properties = true:none
-csharp_style_expression_bodied_indexers = true:none
-csharp_style_expression_bodied_accessors = true:none
+csharp_style_expression_bodied_properties                               = true : none
+csharp_style_expression_bodied_indexers                                 = true : none
+csharp_style_expression_bodied_accessors                                = true : none
 
 # Spacing
-csharp_space_after_cast = true:warning
-csharp_space_after_colon_in_inheritance_clause = true:error
-csharp_space_after_comma = true:error
-csharp_space_after_dot = false:error
-csharp_space_after_keywords_in_control_flow_statements = true:error
-csharp_space_after_semicolon_in_for_statement = true:error
-csharp_space_around_binary_operators = before_and_after:error
-csharp_space_around_declaration_statements = do_not_ignore:error
-csharp_space_before_colon_in_inheritance_clause = true:error
-csharp_space_before_comma = false:error
-csharp_space_before_dot = false:error
-csharp_space_before_open_square_brackets = false:error
-csharp_space_before_semicolon_in_for_statement = false:error
-csharp_space_between_empty_square_brackets = false:error
-csharp_space_between_method_call_empty_parameter_list_parentheses = false:error
-csharp_space_between_method_call_name_and_opening_parenthesis = false:error
-csharp_space_between_method_call_parameter_list_parentheses = false:error
-csharp_space_between_method_declaration_empty_parameter_list_parentheses = false:error
-csharp_space_between_method_declaration_name_and_open_parenthesis = false:error
-csharp_space_between_method_declaration_parameter_list_parentheses = false:error
-csharp_space_between_parentheses = false:error
-csharp_space_between_square_brackets = false:error
+csharp_space_after_cast                                                 = true : error
+csharp_space_after_colon_in_inheritance_clause                          = true : error
+csharp_space_after_comma                                                = true : error
+csharp_space_after_dot                                                  = false : error
+csharp_space_after_keywords_in_control_flow_statements                  = true : error
+csharp_space_after_semicolon_in_for_statement                           = true : error
+csharp_space_around_binary_operators                                    = before_and_after : error
+csharp_space_around_declaration_statements                              = do_not_ignore : error
+csharp_space_before_colon_in_inheritance_clause                         = true : error
+csharp_space_before_comma                                               = false : error
+csharp_space_before_dot                                                 = false : error
+csharp_space_before_open_square_brackets                                = false : error
+csharp_space_before_semicolon_in_for_statement                          = false : error
+csharp_space_between_empty_square_brackets                              = false : error
+csharp_space_between_method_call_empty_parameter_list_parentheses       = false : error
+csharp_space_between_method_call_name_and_opening_parenthesis           = false : error
+csharp_space_between_method_call_parameter_list_parentheses             = false : error
+csharp_space_between_method_declaration_empty_parameter_list_parentheses= false : error
+csharp_space_between_method_declaration_name_and_open_parenthesis       = false : error
+csharp_space_between_method_declaration_parameter_list_parentheses      = false : error
+csharp_space_between_parentheses                                        = false : error
+csharp_space_between_square_brackets                                    = false : error
 
 # New line
-csharp_new_line_before_open_brace = none:error
-csharp_new_line_before_else = none:error
-csharp_new_line_before_catch = none:error
-csharp_new_line_before_finally = none:error
-csharp_new_line_before_members_in_object_initializers = true:error
-csharp_new_line_before_members_in_anonymous_types = true:error
-csharp_new_line_within_query_expression_clauses = true:error
+csharp_new_line_before_open_brace                                       = none : error
+csharp_new_line_before_else                                             = none : error
+csharp_new_line_before_catch                                            = none : error
+csharp_new_line_before_finally                                          = none : error
+csharp_new_line_before_members_in_object_initializers                   = true : error
+csharp_new_line_before_members_in_anonymous_types                       = true : error
+csharp_new_line_within_query_expression_clauses                         = true : error
 
 # Indentation
-csharp_indent_block_contents = true:warning
-csharp_indent_braces = false:warning
-csharp_indent_case_contents = true:warning
-csharp_indent_switch_labels = true:warning
-csharp_indent_labels = flush_left:warning
+csharp_indent_block_contents                                            = true : error
+csharp_indent_braces                                                    = false : error
+csharp_indent_case_contents                                             = true : error
+csharp_indent_switch_labels                                             = true : error
+csharp_indent_labels                                                    = flush_left : error

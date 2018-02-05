@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Net.Sockets;
@@ -231,10 +231,10 @@ namespace COTS.Infra.CrossCutting.Network
             return BitConverter.ToUInt32(GetBytes(4), 0);
         }
 
-        /// <summary>
-        /// Returns next 2 bytes as short integer  
-        /// </summary>
-        public short GetInt16() {
+		/// <summary>
+		/// Returns next 2 bytes as short integer  
+		/// </summary>
+		public short GetInt16() {
             return BitConverter.ToInt16(GetBytes(2), 0);
         }
 
@@ -577,7 +577,21 @@ namespace COTS.Infra.CrossCutting.Network
             AddBytes(BitConverter.GetBytes(value.Value.Ticks));
         }
 
-        public bool RsaDecrypt() {
+        public void OverwriteBytes(int pos, byte[] newBytes) {
+            if (pos + newBytes.Length > _buffer.Length) {
+                throw new Exception("NetworkMessage out of bounds access while overwriting bytes.");
+            }
+
+            for (var i=0; i< newBytes.Length; i++) {
+                _buffer[pos + i] = newBytes[i];
+            }
+        }
+		
+		public uint GetUInt32FromIndex(int startIndex) {
+			return BitConverter.ToUInt32(_buffer, startIndex);
+		}
+
+		public bool RsaDecrypt() {
             if (_length - _position < 128)
                 return false;
 
