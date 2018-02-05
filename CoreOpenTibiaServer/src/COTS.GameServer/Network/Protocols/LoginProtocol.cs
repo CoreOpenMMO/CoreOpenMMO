@@ -246,39 +246,48 @@ namespace COTS.GameServer.Network.Protocols {
 
             //SendMessage(output);
             output.WriteMessageLength();
-			XTea.EncryptXtea(ref output, message.Key);
+			//XTea.EncryptXtea(ref output, message.Key);
 
-			//output.AddPaddingBytes(x);
-			/*AQUI var initSize = output.Length-output.HeaderPosition;
-			var extraBufferSize = initSize % 8 == 0 ? 0 : 8 - (initSize % 8);
+			var pad = output.Length % 8 == 0 ? 0 : 8 - (output.Length % 8);
+			output.AddPaddingBytes(pad);
 
-			for (var i = 0; i < extraBufferSize; i++) {
-				output.Buffer[output.Length + i] = (byte)ServerPacketType.PaddingByte;
-			}
-			output.Length += extraBufferSize;
-			output.Position += extraBufferSize;*/
+			var headerless = new byte[output.Length];
+			Array.Copy(output.Buffer, 6, headerless, 0, output.Length);
 
-			//var headerless = new Span<byte>(output.Buffer, output.HeaderPosition, output.Length + extraBufferSize); /*output.Buffer*/
-			/*output.Buffer =*/
-			//XTea.XteaEncrypt(headerless, message.Key);
-			/*AQUI var headerless = new ArraySegment<byte>(output.Buffer, 6, initSize + extraBufferSize);
-			var encrypted = XTea.XteaEncrypt(headerless.ToArray(), message.Key);*/
+			var encryptedMessage = XTea.XteaEncrypt(headerless, output.Key);
+			Array.Copy(encryptedMessage, 0, output.Buffer, 6, encryptedMessage.Length);
 
-			 //(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length);
-			 //AQUI Array.Copy(encrypted, 0, output.Buffer, output.HeaderPosition, encrypted.Length);
-			 /*for (var i = 0; i < output.HeaderPosition; i++) {
-				 tmp[i] = output.Buffer[i];
-			 }*/
-
-			 //Array.Copy(tmp, 0, output.Buffer, output.HeaderPosition, tmp.Length);
-			 output.AddCryptoHeader(true);
-
+			output.AddCryptoHeader(true);
 			_currentConnection.stream.Write(output.Buffer, 0, output.Length);
 			//_currentConnection.stream.Write(output.Buffer, 0, output.Length);
 			//message.BeginWrite(output.Buffer, 0, output.Length, null, null);
 		}
     }
 }
+
+//output.AddPaddingBytes(x);
+/*AQUI var initSize = output.Length-output.HeaderPosition;
+var extraBufferSize = initSize % 8 == 0 ? 0 : 8 - (initSize % 8);
+
+for (var i = 0; i < extraBufferSize; i++) {
+	output.Buffer[output.Length + i] = (byte)ServerPacketType.PaddingByte;
+}
+output.Length += extraBufferSize;
+output.Position += extraBufferSize;*/
+
+//var headerless = new Span<byte>(output.Buffer, output.HeaderPosition, output.Length + extraBufferSize); /*output.Buffer*/
+/*output.Buffer =*/
+//XTea.XteaEncrypt(headerless, message.Key);
+/*AQUI var headerless = new ArraySegment<byte>(output.Buffer, 6, initSize + extraBufferSize);
+var encrypted = XTea.XteaEncrypt(headerless.ToArray(), message.Key);*/
+
+//(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length);
+//AQUI Array.Copy(encrypted, 0, output.Buffer, output.HeaderPosition, encrypted.Length);
+/*for (var i = 0; i < output.HeaderPosition; i++) {
+	tmp[i] = output.Buffer[i];
+}*/
+
+//Array.Copy(tmp, 0, output.Buffer, output.HeaderPosition, tmp.Length);
 
 /*private void LoginListenerCallback(IAsyncResult ar)
 {

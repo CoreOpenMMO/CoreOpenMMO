@@ -4,20 +4,21 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace COTS.Infra.CrossCutting.Network.Security {
-	[StructLayout(LayoutKind.Explicit, Pack = 2)]
-	public class BufferRepresentation {
+	[StructLayout(LayoutKind.Explicit, Pack = 8)]
+	public struct BufferRepresentation {
 
 		[FieldOffset(0)]
 		public int NumberOfBytes;
 		[FieldOffset(8)]
 		private byte[] byteBuffer;
 		[FieldOffset(8)]
-		private uint[] intBuffer;
+		private uint[] uintBuffer;
 
 		public BufferRepresentation(byte[] bufferToBoundTo) {
 			if ((bufferToBoundTo.Length % 4) != 0) {
 				throw new ArgumentException("The byte buffer to bound must be 4 bytes aligned");
 			}
+			uintBuffer = null;
 			byteBuffer = bufferToBoundTo;
 			NumberOfBytes = 0;
 		}
@@ -34,8 +35,8 @@ namespace COTS.Infra.CrossCutting.Network.Security {
 			get { return byteBuffer; }
 		}
 		
-		public uint[] IntBuffer {
-			get { return intBuffer; }
+		public uint[] UIntBuffer {
+			get { return uintBuffer; }
 			set { }
 		}
 		
@@ -50,7 +51,7 @@ namespace COTS.Infra.CrossCutting.Network.Security {
 			}
 		}
 
-		public int IntBufferCount {
+		public int UIntBufferCount {
 			get { return NumberOfBytes / 4; }
 			set {
 				NumberOfBytes = CheckValidityCount("IntBufferCount", value, 4);

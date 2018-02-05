@@ -55,7 +55,7 @@ namespace COTS.Infra.CrossCutting.Network
         {
             if (addChecksum)
             {
-                AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length-6));
+                AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length));
             }
 
             AddHeaderUInt16((ushort)Length);

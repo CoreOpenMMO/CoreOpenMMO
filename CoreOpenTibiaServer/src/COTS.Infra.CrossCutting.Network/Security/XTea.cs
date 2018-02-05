@@ -63,9 +63,11 @@ namespace COTS.Infra.CrossCutting.Network.Security
 		}*/
 
 		public static byte[] XteaEncrypt(byte[] msg, uint[] key) {
-			if (key == null) {
-				throw new Exception("Trying to Encrypt with XTEA without a key.");
-			}
+			if (key.Length < 4)
+				throw new Exception("Trying to Encrypt with XTEA with an invalid key.");
+
+			if (msg.Length % 8 != 0)
+				throw new Exception("Trying to Encrypt a message that is not multiple of 8 bytes with XTEA.");
 
 			key[0] = 3442030272;
 			key[1] = 2364789040;
@@ -79,59 +81,41 @@ namespace COTS.Infra.CrossCutting.Network.Security
 			for (var pos = 0; pos < msg.Length / 4; pos += 2, x_sum = 0) {
 				//Run rounds of XTea
 				for (var count = _rounds; count > 0; count--) {
-					temporary = intbuffer.IntBuffer[pos + 1];
-					intbuffer.IntBuffer[pos] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum & 3];
+					if (count == 32) {
+						Console.WriteLine("Iteration POS: " + pos);
+						Console.WriteLine("Pos: " + intbuffer.UIntBuffer[pos]);
+						Console.WriteLine("Pos+1: " + intbuffer.UIntBuffer[pos+1]);
+					}
+
+					temporary = intbuffer.UIntBuffer[pos + 1];
+					intbuffer.UIntBuffer[pos] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum & 3];
 
 					x_sum += _delta;
 
-					temporary = intbuffer.IntBuffer[pos];
-					intbuffer.IntBuffer[pos+1] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
+					if (count == 32) {
+						Console.WriteLine("PosSum_Pos: " + intbuffer.UIntBuffer[pos]);
+						Console.WriteLine("PosSum_Pos+1: " + intbuffer.UIntBuffer[pos + 1]);
+					}
+
+					temporary = intbuffer.UIntBuffer[pos];
+					intbuffer.UIntBuffer[pos+1] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
 				}
 				Console.WriteLine("=D");
 			}
 
 			//Array.Copy(msgCryptografada, msg, headerSize);
-
 			return intbuffer.ByteBuffer;
 		}
 
-		public static unsafe bool EncryptXtea(ref OutputMessage msg, uint[] key) {
-			if (key == null)
-				return false;
-
-			var pad = msg.Length % 8;
-			if (pad > 0) {
-				msg.AddPaddingBytes(8 - pad);
-			}
-
-			fixed (byte* bufferPtr = msg.Buffer) {
-				uint* words = (uint*)(bufferPtr + msg.HeaderPosition);
-
-				for (int pos = 0; pos < msg.Length / 4; pos += 2) {
-					uint x_sum = 0, x_delta = 0x9e3779b9, x_count = 32;
-
-					while (x_count-- > 0) {
-						words[pos] += (words[pos + 1] << 4 ^ words[pos + 1] >> 5) + words[pos + 1] ^ x_sum
-							+ key[x_sum & 3];
-						x_sum += x_delta;
-						words[pos + 1] += (words[pos] << 4 ^ words[pos] >> 5) + words[pos] ^ x_sum
-							+ key[x_sum >> 11 & 3];
-					}
-				}
-			}
-
-			return true;
-		}
-
-		/*public static unsafe bool EncryptXtea(ref OutputMessage msg, uint[] key)
+		public static unsafe bool EncryptXtea(ref OutputMessage msg, uint[] key)
         {
             if (key == null)
                 return false;
 
-			/*key[0] = 3442030272;
+			key[0] = 3442030272;
 			key[1] = 2364789040;
 			key[2] = 1503299581;
-			key[3] = 3670909886;*
+			key[3] = 3670909886;
 
 			uint x_sum = 0;
 			uint x_count = 0;
@@ -140,12 +124,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
 			uint current = 0;
 			uint currentPlusOne = 0;
 
-			var pad = msg.Length % 8;
+			/*var pad = msg.Length % 8;
             if (pad > 0) {
                 msg.AddPaddingBytes(8 - pad);
-            }
+            }*/
 
-			fixed (byte* bufferPtr = msg.Buffer) {
+			/*fixed (byte* bufferPtr = msg.Buffer) {
 				uint* words = (uint*)(bufferPtr + msg.HeaderPosition);
 
 				for (int pos = 0; pos < msg.Length / 4; pos += 2) {
@@ -158,12 +142,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
 					}
 					Console.WriteLine("=D");
 				}
-			}
+			}*/
 
 			//byte[] headerLess = msg.Buffer.Skip(6).ToArray();
 			//var intbuffer = new BufferRepresentation(headerLess);
 
-			/*for (var pos = 0; pos < msg.Length / 4; pos += 2, x_sum = 0) {
+			for (var pos = 0; pos < msg.Length / 4; pos += 2, x_sum = 0) {
 				//Run rounds of XTea
 				for (var count = _rounds; count > 0; count--) {
 					indexCurr = msg.HeaderPosition + (pos * sizeof(uint));
@@ -171,6 +155,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
 					current = msg.GetUInt32FromIndex(indexCurr);
 					currentPlusOne = msg.GetUInt32FromIndex(indexCurrPlusOne);
+
+					if (count == 32) {
+						Console.WriteLine("Iteration POS: " + pos);
+						Console.WriteLine("Pos: " + current);
+						Console.WriteLine("Pos+1: " + currentPlusOne);
+					}
 
 					msg.OverwriteBytes(indexCurr,
 						BitConverter.GetBytes(
@@ -186,6 +176,11 @@ namespace COTS.Infra.CrossCutting.Network.Security
 					current = msg.GetUInt32FromIndex(indexCurr);
 					currentPlusOne = msg.GetUInt32FromIndex(indexCurrPlusOne);
 
+					if (count == 32) {
+						Console.WriteLine("PosSum_Pos: " + current);
+						Console.WriteLine("PosSum_Pos+1: " + currentPlusOne);
+					}
+
 					msg.OverwriteBytes(indexCurrPlusOne,
 						BitConverter.GetBytes(
 							currentPlusOne +
@@ -196,10 +191,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
 					);
 				}
 				Console.WriteLine("=D");
-			}*
+			}
 
 			return true;
-        }*/
+        }
 
         /// <summary>
         /// Same as method above for Decrypt, but uses NetworkMessage.
