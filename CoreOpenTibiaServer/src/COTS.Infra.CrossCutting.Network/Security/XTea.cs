@@ -69,10 +69,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
 			if (msg.Length % 8 != 0)
 				throw new Exception("Trying to Encrypt a message that is not multiple of 8 bytes with XTEA.");
 
-			key[0] = 3442030272;
+			/*key[0] = 3442030272;
 			key[1] = 2364789040;
 			key[2] = 1503299581;
-			key[3] = 3670909886;
+			key[3] = 3670909886;*/
 
 			uint x_sum = 0;
 			uint x_count = 0;
@@ -81,26 +81,14 @@ namespace COTS.Infra.CrossCutting.Network.Security
 			for (var pos = 0; pos < msg.Length / 4; pos += 2, x_sum = 0) {
 				//Run rounds of XTea
 				for (var count = _rounds; count > 0; count--) {
-					if (count == 32) {
-						Console.WriteLine("Iteration POS: " + pos);
-						Console.WriteLine("Pos: " + intbuffer.UIntBuffer[pos]);
-						Console.WriteLine("Pos+1: " + intbuffer.UIntBuffer[pos+1]);
-					}
-
 					temporary = intbuffer.UIntBuffer[pos + 1];
 					intbuffer.UIntBuffer[pos] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum & 3];
 
 					x_sum += _delta;
 
-					if (count == 32) {
-						Console.WriteLine("PosSum_Pos: " + intbuffer.UIntBuffer[pos]);
-						Console.WriteLine("PosSum_Pos+1: " + intbuffer.UIntBuffer[pos + 1]);
-					}
-
 					temporary = intbuffer.UIntBuffer[pos];
-					intbuffer.UIntBuffer[pos+1] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
+					intbuffer.UIntBuffer[pos + 1] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
 				}
-				Console.WriteLine("=D");
 			}
 
 			//Array.Copy(msgCryptografada, msg, headerSize);
@@ -124,10 +112,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
 			uint current = 0;
 			uint currentPlusOne = 0;
 
-			/*var pad = msg.Length % 8;
+			var pad = msg.Length % 8;
             if (pad > 0) {
                 msg.AddPaddingBytes(8 - pad);
-            }*/
+            }
 
 			/*fixed (byte* bufferPtr = msg.Buffer) {
 				uint* words = (uint*)(bufferPtr + msg.HeaderPosition);

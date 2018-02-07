@@ -158,7 +158,7 @@ namespace COTS.GameServer.Network.Protocols {
                                 $"PremiumDays: {account.PremiumDays} \n");
 
             var output = new OutputMessage();
-            var ticks = DateTime.Now.Ticks / 30;
+			var ticks = 21217867608090199; //DateTime.Now.Ticks / 30;
 
             var token = "";
 
@@ -254,7 +254,7 @@ namespace COTS.GameServer.Network.Protocols {
 			var headerless = new byte[output.Length];
 			Array.Copy(output.Buffer, 6, headerless, 0, output.Length);
 
-			var encryptedMessage = XTea.XteaEncrypt(headerless, output.Key);
+			var encryptedMessage = XTea.XteaEncrypt(headerless, message.Key);
 			Array.Copy(encryptedMessage, 0, output.Buffer, 6, encryptedMessage.Length);
 
 			output.AddCryptoHeader(true);
