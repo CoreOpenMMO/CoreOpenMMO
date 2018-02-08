@@ -136,7 +136,13 @@ namespace COTS.GameServer.Network.Protocols {
             message.Key[2] = message.GetUInt32();
             message.Key[3] = message.GetUInt32();
 
-            var username = message.GetString();
+			/* Fixed Keys for Test 
+			key[0] = 3442030272;
+			key[1] = 2364789040;
+			key[2] = 1503299581;
+			key[3] = 3670909886;*/
+
+			var username = message.GetString();
             var password = message.GetString();
 
             message.SkipBytes((message.Length - 128) - message.Position); //Jumping Offset
@@ -158,9 +164,11 @@ namespace COTS.GameServer.Network.Protocols {
                                 $"PremiumDays: {account.PremiumDays} \n");
 
             var output = new OutputMessage();
-			var ticks = 21217867608090199; //DateTime.Now.Ticks / 30;
+			var ticks = DateTime.Now.Ticks / 30;
+			/* Fixed TimeStamp for Test
+			var ticks = 21217867608090199;*/
 
-            var token = "";
+			var token = "";
 
             if (!string.IsNullOrEmpty(account.Password)) {
                 //    if (token.empty() || !(token == generateToken(account.key, ticks) || token == generateToken(account.key, ticks - 1) || token == generateToken(account.key, ticks + 1)))
@@ -246,54 +254,21 @@ namespace COTS.GameServer.Network.Protocols {
 
             //SendMessage(output);
             output.WriteMessageLength();
-			//XTea.EncryptXtea(ref output, message.Key);
 
+			/* Adds Padding */
 			var pad = output.Length % 8 == 0 ? 0 : 8 - (output.Length % 8);
 			output.AddPaddingBytes(pad);
 
+			/* Removes the Head */
 			var headerless = new byte[output.Length];
 			Array.Copy(output.Buffer, 6, headerless, 0, output.Length);
 
-			var encryptedMessage = XTea.XteaEncrypt(headerless, message.Key);
+			/* Encrypts the Message and Copies it back to Output.Buffer */
+			var encryptedMessage = XTea.EncryptXtea(headerless, message.Key);
 			Array.Copy(encryptedMessage, 0, output.Buffer, 6, encryptedMessage.Length);
 
 			output.AddCryptoHeader(true);
 			_currentConnection.stream.Write(output.Buffer, 0, output.Length);
-			//_currentConnection.stream.Write(output.Buffer, 0, output.Length);
-			//message.BeginWrite(output.Buffer, 0, output.Length, null, null);
 		}
     }
 }
-
-//output.AddPaddingBytes(x);
-/*AQUI var initSize = output.Length-output.HeaderPosition;
-var extraBufferSize = initSize % 8 == 0 ? 0 : 8 - (initSize % 8);
-
-for (var i = 0; i < extraBufferSize; i++) {
-	output.Buffer[output.Length + i] = (byte)ServerPacketType.PaddingByte;
-}
-output.Length += extraBufferSize;
-output.Position += extraBufferSize;*/
-
-//var headerless = new Span<byte>(output.Buffer, output.HeaderPosition, output.Length + extraBufferSize); /*output.Buffer*/
-/*output.Buffer =*/
-//XTea.XteaEncrypt(headerless, message.Key);
-/*AQUI var headerless = new ArraySegment<byte>(output.Buffer, 6, initSize + extraBufferSize);
-var encrypted = XTea.XteaEncrypt(headerless.ToArray(), message.Key);*/
-
-//(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length);
-//AQUI Array.Copy(encrypted, 0, output.Buffer, output.HeaderPosition, encrypted.Length);
-/*for (var i = 0; i < output.HeaderPosition; i++) {
-	tmp[i] = output.Buffer[i];
-}*/
-
-//Array.Copy(tmp, 0, output.Buffer, output.HeaderPosition, tmp.Length);
-
-/*private void LoginListenerCallback(IAsyncResult ar)
-{
-    var connection = new ConnectionManager(_playerService, _accountService);
-    connection.LoginListenerCallback(ar);
-
-    _loginListener.BeginAcceptSocket(LoginListenerCallback, _loginListener);
-    Console.WriteLine("New client connected to login server.");
-}*/

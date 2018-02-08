@@ -12,13 +12,21 @@ namespace COTS.GameServer.Tests {
 			public byte[] Buffer;
 			public int HeaderPosition;
 			public int Length;
+			public uint[] Key;
 			public const int Rounds = 32;
 			public const uint Delta = 0x9e3779b9;
+			public const uint BackedSum = 0xC6EF3720;
 
 			public _FakeCryptMessage(byte[] msg, int headpos) {
 				Buffer = msg;
 				HeaderPosition = headpos;
 				Length = msg.Length;
+				Key = new uint[4];
+
+				Key[0] = 3442030272;
+				Key[1] = 2364789040;
+				Key[2] = 1503299581;
+				Key[3] = 3670909886;
 			}
 
 			public uint GetUInt32FromIndex(int startIndex) {
@@ -221,21 +229,26 @@ namespace COTS.GameServer.Tests {
 		#endregion
 
 		[TestMethod]
-        public void XTeaEncryption_Equals_Slow_Functional_Version() {
-			var key = new uint[4];
+        public void XTeaEncryption_Validation() {
+			var fakeMessage = _PreMadeMessage(128);
+			var message = new _FakeCryptMessage(fakeMessage, 0);
 
-			key[0] = 3442030272;
-			key[1] = 2364789040;
-			key[2] = 1503299581;
-			key[3] = 3670909886;
+			/* Using Slow But Functional Method */
+			var slowCryptedMsg = _slowFunctionalEncrypt(ref message, message.Key);
+			var fastCryptedMsg = XTea.EncryptXtea(fakeMessage, message.Key);
 
-			var fakeMsg = _PreMadeMessage(128);
-
-			var slowMsg = new _FakeCryptMessage(fakeMsg, 0);
-			var slowCryptedMsg = _slowFunctionalEncrypt(ref slowMsg, key);
-
-			var fastCryptedMsg = XTea.XteaEncrypt(fakeMsg, key);
 			CollectionAssert.AreEqual(slowCryptedMsg, fastCryptedMsg);
+		}
+
+		[TestMethod]
+		public void XTeaDecryption_Validation() {
+			var fakeMessage = _PreMadeMessage(128);
+			var message = new _FakeCryptMessage(fakeMessage, 0);
+
+			var encryptedMsg = XTea.EncryptXtea(fakeMessage, message.Key);
+			var decryptedMsg = XTea.DecryptXtea(encryptedMsg, message.Key);
+
+			CollectionAssert.AreEqual(decryptedMsg, fakeMessage);
 		}
 	}
 }

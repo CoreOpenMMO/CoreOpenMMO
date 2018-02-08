@@ -602,7 +602,7 @@ namespace COTS.Infra.CrossCutting.Network
         public bool XteaDecrypt() {
             _key = new uint[4];
 
-            bool result = XTea.DecryptXtea(ref _buffer, ref _length, _position, _key);
+            bool result = XTea.OldDecryptXtea(ref _buffer, ref _length, _position, _key);
 
             ushort innerLength = GetUInt16();
             if (innerLength > Length - 8)
