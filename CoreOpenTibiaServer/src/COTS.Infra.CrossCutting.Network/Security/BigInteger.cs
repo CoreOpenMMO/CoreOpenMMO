@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace COTS.Infra.CrossCutting.Network.Security 
 {
@@ -35,7 +35,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         private const int maxLength = 70;
 
         private uint[] data = null;             // stores bytes from the Big Integer
-        public int dataLength;                 // number of actual chars used
+        public int DataLength;                 // number of actual chars used
 
 
         //***********************************************************************
@@ -45,7 +45,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         public BigInteger()
         {
             data = new uint[maxLength];
-            dataLength = 1;
+            DataLength = 1;
         }
 
 
@@ -61,12 +61,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
             // copy bytes from long to BigInteger without any assumption of
             // the length of the long datatype
 
-            dataLength = 0;
-            while (value != 0 && dataLength < maxLength)
+            DataLength = 0;
+            while (value != 0 && DataLength < maxLength)
             {
-                data[dataLength] = (uint)(value & 0xFFFFFFFF);
+                data[DataLength] = (uint)(value & 0xFFFFFFFF);
                 value >>= 32;
-                dataLength++;
+                DataLength++;
             }
 
             if (tempVal > 0)         // overflow check for +ve value
@@ -76,12 +76,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
             else if (tempVal < 0)    // underflow check for -ve value
             {
-                if (value != -1 || (data[dataLength - 1] & 0x80000000) == 0)
+                if (value != -1 || (data[DataLength - 1] & 0x80000000) == 0)
                     throw (new ArithmeticException("Negative underflow in constructor."));
             }
 
-            if (dataLength == 0)
-                dataLength = 1;
+            if (DataLength == 0)
+                DataLength = 1;
         }
 
 
@@ -96,19 +96,19 @@ namespace COTS.Infra.CrossCutting.Network.Security
             // copy bytes from ulong to BigInteger without any assumption of
             // the length of the ulong datatype
 
-            dataLength = 0;
-            while (value != 0 && dataLength < maxLength)
+            DataLength = 0;
+            while (value != 0 && DataLength < maxLength)
             {
-                data[dataLength] = (uint)(value & 0xFFFFFFFF);
+                data[DataLength] = (uint)(value & 0xFFFFFFFF);
                 value >>= 32;
-                dataLength++;
+                DataLength++;
             }
 
             if (value != 0 || (data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive overflow in constructor."));
 
-            if (dataLength == 0)
-                dataLength = 1;
+            if (DataLength == 0)
+                DataLength = 1;
         }
 
 
@@ -121,9 +121,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
         {
             data = new uint[maxLength];
 
-            dataLength = bi.dataLength;
+            DataLength = bi.DataLength;
 
-            for (int i = 0; i < dataLength; i++)
+            for (int i = 0; i < DataLength; i++)
                 data[i] = bi.data[i];
         }
 
@@ -155,8 +155,8 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public BigInteger(string value, int radix)
         {
-            BigInteger multiplier = new BigInteger(1);
-            BigInteger result = new BigInteger();
+            var multiplier = new BigInteger(1);
+            var result = new BigInteger();
             value = (value.ToUpper()).Trim();
             int limit = 0;
 
@@ -201,10 +201,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
 
             data = new uint[maxLength];
-            for (int i = 0; i < result.dataLength; i++)
+            for (int i = 0; i < result.DataLength; i++)
                 data[i] = result.data[i];
 
-            dataLength = result.dataLength;
+            DataLength = result.DataLength;
         }
 
 
@@ -227,14 +227,14 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public BigInteger(byte[] inData)
         {
-            dataLength = inData.Length >> 2;
+            DataLength = inData.Length >> 2;
 
             int leftOver = inData.Length & 0x3;
             if (leftOver != 0)         // length not multiples of 4
-                dataLength++;
+                DataLength++;
 
 
-            if (dataLength > maxLength)
+            if (DataLength > maxLength)
                 throw (new ArithmeticException("Byte overflow in constructor."));
 
             data = new uint[maxLength];
@@ -246,15 +246,15 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
 
             if (leftOver == 1)
-                data[dataLength - 1] = (uint)inData[0];
+                data[DataLength - 1] = (uint)inData[0];
             else if (leftOver == 2)
-                data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                data[DataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
             else if (leftOver == 3)
-                data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                data[DataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
-            while (dataLength > 1 && data[dataLength - 1] == 0)
-                dataLength--;
+            while (DataLength > 1 && data[DataLength - 1] == 0)
+                DataLength--;
 
             //Console.WriteLine("Len = " + dataLength);
         }
@@ -267,13 +267,13 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public BigInteger(byte[] inData, int inLen)
         {
-            dataLength = inLen >> 2;
+            DataLength = inLen >> 2;
 
             int leftOver = inLen & 0x3;
             if (leftOver != 0)         // length not multiples of 4
-                dataLength++;
+                DataLength++;
 
-            if (dataLength > maxLength || inLen > inData.Length)
+            if (DataLength > maxLength || inLen > inData.Length)
                 throw (new ArithmeticException("Byte overflow in constructor."));
 
 
@@ -286,18 +286,18 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
 
             if (leftOver == 1)
-                data[dataLength - 1] = (uint)inData[0];
+                data[DataLength - 1] = (uint)inData[0];
             else if (leftOver == 2)
-                data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                data[DataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
             else if (leftOver == 3)
-                data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                data[DataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
-            if (dataLength == 0)
-                dataLength = 1;
+            if (DataLength == 0)
+                DataLength = 1;
 
-            while (dataLength > 1 && data[dataLength - 1] == 0)
-                dataLength--;
+            while (DataLength > 1 && data[DataLength - 1] == 0)
+                DataLength--;
 
             //Console.WriteLine("Len = " + dataLength);
         }
@@ -309,18 +309,18 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public BigInteger(uint[] inData)
         {
-            dataLength = inData.Length;
+            DataLength = inData.Length;
 
-            if (dataLength > maxLength)
+            if (DataLength > maxLength)
                 throw (new ArithmeticException("Byte overflow in constructor."));
 
             data = new uint[maxLength];
 
-            for (int i = dataLength - 1, j = 0; i >= 0; i--, j++)
+            for (int i = DataLength - 1, j = 0; i >= 0; i--, j++)
                 data[j] = inData[i];
 
-            while (dataLength > 1 && data[dataLength - 1] == 0)
-                dataLength--;
+            while (DataLength > 1 && data[DataLength - 1] == 0)
+                DataLength--;
 
             //Console.WriteLine("Len = " + dataLength);
         }
@@ -358,26 +358,26 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator +(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
-            result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
             long carry = 0;
-            for (int i = 0; i < result.dataLength; i++)
+            for (int i = 0; i < result.DataLength; i++)
             {
                 long sum = (long)bi1.data[i] + (long)bi2.data[i] + carry;
                 carry = sum >> 32;
                 result.data[i] = (uint)(sum & 0xFFFFFFFF);
             }
 
-            if (carry != 0 && result.dataLength < maxLength)
+            if (carry != 0 && result.DataLength < maxLength)
             {
-                result.data[result.dataLength] = (uint)(carry);
-                result.dataLength++;
+                result.data[result.DataLength] = (uint)(carry);
+                result.DataLength++;
             }
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
 
             // overflow check
@@ -398,7 +398,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator ++(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             long val, carry = 1;
             int index = 0;
@@ -414,12 +414,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 index++;
             }
 
-            if (index > result.dataLength)
-                result.dataLength = index;
+            if (index > result.DataLength)
+                result.DataLength = index;
             else
             {
-                while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                    result.dataLength--;
+                while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                    result.DataLength--;
             }
 
             // overflow check
@@ -443,12 +443,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator -(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
-            result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
             long carryIn = 0;
-            for (int i = 0; i < result.dataLength; i++)
+            for (int i = 0; i < result.DataLength; i++)
             {
                 long diff;
 
@@ -464,14 +464,14 @@ namespace COTS.Infra.CrossCutting.Network.Security
             // roll over to negative
             if (carryIn != 0)
             {
-                for (int i = result.dataLength; i < maxLength; i++)
+                for (int i = result.DataLength; i < maxLength; i++)
                     result.data[i] = 0xFFFFFFFF;
-                result.dataLength = maxLength;
+                result.DataLength = maxLength;
             }
 
             // fixed in v1.03 to give correct datalength for a - (-b)
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             // overflow check
 
@@ -492,7 +492,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator --(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             long val;
             bool carryIn = true;
@@ -511,11 +511,11 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 index++;
             }
 
-            if (index > result.dataLength)
-                result.dataLength = index;
+            if (index > result.DataLength)
+                result.DataLength = index;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             // overflow check
             int lastPos = maxLength - 1;
@@ -556,17 +556,17 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
             catch (Exception) { }
 
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             // multiply the absolute values
             try
             {
-                for (int i = 0; i < bi1.dataLength; i++)
+                for (int i = 0; i < bi1.DataLength; i++)
                 {
                     if (bi1.data[i] == 0) continue;
 
                     ulong mcarry = 0;
-                    for (int j = 0, k = i; j < bi2.dataLength; j++, k++)
+                    for (int j = 0, k = i; j < bi2.DataLength; j++, k++)
                     {
                         // k = i + j
                         ulong val = ((ulong)bi1.data[i] * (ulong)bi2.data[j]) +
@@ -577,7 +577,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                     }
 
                     if (mcarry != 0)
-                        result.data[i + bi2.dataLength] = (uint)mcarry;
+                        result.data[i + bi2.DataLength] = (uint)mcarry;
                 }
             }
             catch (Exception)
@@ -586,12 +586,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
 
 
-            result.dataLength = bi1.dataLength + bi2.dataLength;
-            if (result.dataLength > maxLength)
-                result.dataLength = maxLength;
+            result.DataLength = bi1.DataLength + bi2.DataLength;
+            if (result.DataLength > maxLength)
+                result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             // overflow check (result is -ve)
             if ((result.data[lastPos] & 0x80000000) != 0)
@@ -601,12 +601,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
                     // handle the special case where multiplication produces
                     // a max negative number in 2's complement.
 
-                    if (result.dataLength == 1)
+                    if (result.DataLength == 1)
                         return result;
                     else
                     {
                         bool isMaxNeg = true;
-                        for (int i = 0; i < result.dataLength - 1 && isMaxNeg; i++)
+                        for (int i = 0; i < result.DataLength - 1 && isMaxNeg; i++)
                         {
                             if (result.data[i] != 0)
                                 isMaxNeg = false;
@@ -635,8 +635,8 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator <<(BigInteger bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
-            result.dataLength = shiftLeft(result.data, shiftVal);
+            var result = new BigInteger(bi1);
+            result.DataLength = shiftLeft(result.data, shiftVal);
 
             return result;
         }
@@ -689,25 +689,25 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator >>(BigInteger bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
-            result.dataLength = shiftRight(result.data, shiftVal);
+            var result = new BigInteger(bi1);
+            result.DataLength = shiftRight(result.data, shiftVal);
 
 
             if ((bi1.data[maxLength - 1] & 0x80000000) != 0) // negative
             {
-                for (int i = maxLength - 1; i >= result.dataLength; i--)
+                for (int i = maxLength - 1; i >= result.DataLength; i--)
                     result.data[i] = 0xFFFFFFFF;
 
                 uint mask = 0x80000000;
                 for (int i = 0; i < 32; i++)
                 {
-                    if ((result.data[result.dataLength - 1] & mask) != 0)
+                    if ((result.data[result.DataLength - 1] & mask) != 0)
                         break;
 
-                    result.data[result.dataLength - 1] |= mask;
+                    result.data[result.DataLength - 1] |= mask;
                     mask >>= 1;
                 }
-                result.dataLength = maxLength;
+                result.DataLength = maxLength;
             }
 
             return result;
@@ -761,15 +761,15 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator ~(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+			var result = new BigInteger(bi1);
 
             for (int i = 0; i < maxLength; i++)
                 result.data[i] = (uint)(~(bi1.data[i]));
 
-            result.dataLength = maxLength;
+            result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             return result;
         }
@@ -784,10 +784,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
             // handle neg of zero separately since it'll cause an overflow
             // if we proceed.
 
-            if (bi1.dataLength == 1 && bi1.data[0] == 0)
+            if (bi1.DataLength == 1 && bi1.data[0] == 0)
                 return (new BigInteger());
 
-            BigInteger result = new BigInteger(bi1);
+			var result = new BigInteger(bi1);
 
             // 1's complement
             for (int i = 0; i < maxLength; i++)
@@ -811,10 +811,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
             if ((bi1.data[maxLength - 1] & 0x80000000) == (result.data[maxLength - 1] & 0x80000000))
                 throw (new ArithmeticException("Overflow in negation.\n"));
 
-            result.dataLength = maxLength;
+            result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
             return result;
         }
 
@@ -837,14 +837,14 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public override bool Equals(object o)
         {
-            BigInteger bi = (BigInteger)o;
+			var bi = (BigInteger)o;
 
-            if (this.dataLength != bi.dataLength)
+            if (DataLength != bi.DataLength)
                 return false;
 
-            for (int i = 0; i < this.dataLength; i++)
+            for (int i = 0; i < DataLength; i++)
             {
-                if (this.data[i] != bi.data[i])
+                if (data[i] != bi.data[i])
                     return false;
             }
             return true;
@@ -853,7 +853,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public override int GetHashCode()
         {
-            return this.ToString().GetHashCode();
+            return ToString().GetHashCode();
         }
 
 
@@ -874,7 +874,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 return true;
 
             // same sign
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--) ;
 
             if (pos >= 0)
@@ -900,7 +900,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 return false;
 
             // same sign
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--) ;
 
             if (pos >= 0)
@@ -937,11 +937,11 @@ namespace COTS.Infra.CrossCutting.Network.Security
         {
             uint[] result = new uint[maxLength];
 
-            int remainderLen = bi1.dataLength + 1;
+            int remainderLen = bi1.DataLength + 1;
             uint[] remainder = new uint[remainderLen];
 
             uint mask = 0x80000000;
-            uint val = bi2.data[bi2.dataLength - 1];
+            uint val = bi2.data[bi2.DataLength - 1];
             int shift = 0, resultPos = 0;
 
             while (mask != 0 && (val & mask) == 0)
@@ -952,7 +952,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             //Console.WriteLine("shift = {0}", shift);
             //Console.WriteLine("Before bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
 
-            for (int i = 0; i < bi1.dataLength; i++)
+            for (int i = 0; i < bi1.DataLength; i++)
                 remainder[i] = bi1.data[i];
             shiftLeft(remainder, shift);
             bi2 = bi2 << shift;
@@ -965,13 +965,13 @@ namespace COTS.Infra.CrossCutting.Network.Security
             Console.WriteLine();
             */
 
-            int j = remainderLen - bi2.dataLength;
+            int j = remainderLen - bi2.DataLength;
             int pos = remainderLen - 1;
 
-            ulong firstDivisorByte = bi2.data[bi2.dataLength - 1];
-            ulong secondDivisorByte = bi2.data[bi2.dataLength - 2];
+            ulong firstDivisorByte = bi2.data[bi2.DataLength - 1];
+            ulong secondDivisorByte = bi2.data[bi2.DataLength - 2];
 
-            int divisorLen = bi2.dataLength + 1;
+            int divisorLen = bi2.DataLength + 1;
             uint[] dividendPart = new uint[divisorLen];
 
             while (j > 0)
@@ -1003,7 +1003,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 for (int h = 0; h < divisorLen; h++)
                     dividendPart[h] = remainder[pos - h];
 
-                BigInteger kk = new BigInteger(dividendPart);
+				var kk = new BigInteger(dividendPart);
                 BigInteger ss = bi2 * (long)q_hat;
 
                 //Console.WriteLine("ss before = " + ss);
@@ -1020,7 +1020,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 //Console.WriteLine("yy = " + yy);
 
                 for (int h = 0; h < divisorLen; h++)
-                    remainder[pos - h] = yy.data[bi2.dataLength - h];
+                    remainder[pos - h] = yy.data[bi2.DataLength - h];
 
                 /*
                 Console.WriteLine("dividend = ");
@@ -1035,22 +1035,22 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 j--;
             }
 
-            outQuotient.dataLength = resultPos;
+            outQuotient.DataLength = resultPos;
             int y = 0;
-            for (int x = outQuotient.dataLength - 1; x >= 0; x--, y++)
+            for (int x = outQuotient.DataLength - 1; x >= 0; x--, y++)
                 outQuotient.data[y] = result[x];
             for (; y < maxLength; y++)
                 outQuotient.data[y] = 0;
 
-            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
-                outQuotient.dataLength--;
+            while (outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0)
+                outQuotient.DataLength--;
 
-            if (outQuotient.dataLength == 0)
-                outQuotient.dataLength = 1;
+            if (outQuotient.DataLength == 0)
+                outQuotient.DataLength = 1;
 
-            outRemainder.dataLength = shiftRight(remainder, shift);
+            outRemainder.DataLength = shiftRight(remainder, shift);
 
-            for (y = 0; y < outRemainder.dataLength; y++)
+            for (y = 0; y < outRemainder.DataLength; y++)
                 outRemainder.data[y] = remainder[y];
             for (; y < maxLength; y++)
                 outRemainder.data[y] = 0;
@@ -1071,13 +1071,13 @@ namespace COTS.Infra.CrossCutting.Network.Security
             // copy dividend to reminder
             for (int i = 0; i < maxLength; i++)
                 outRemainder.data[i] = bi1.data[i];
-            outRemainder.dataLength = bi1.dataLength;
+            outRemainder.DataLength = bi1.DataLength;
 
-            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
-                outRemainder.dataLength--;
+            while (outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0)
+                outRemainder.DataLength--;
 
             ulong divisor = (ulong)bi2.data[0];
-            int pos = outRemainder.dataLength - 1;
+            int pos = outRemainder.DataLength - 1;
             ulong dividend = (ulong)outRemainder.data[pos];
 
             //Console.WriteLine("divisor = " + divisor + " dividend = " + dividend);
@@ -1105,21 +1105,21 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 //Console.WriteLine(">>>> " + bi1);
             }
 
-            outQuotient.dataLength = resultPos;
+            outQuotient.DataLength = resultPos;
             int j = 0;
-            for (int i = outQuotient.dataLength - 1; i >= 0; i--, j++)
+            for (int i = outQuotient.DataLength - 1; i >= 0; i--, j++)
                 outQuotient.data[j] = result[i];
             for (; j < maxLength; j++)
                 outQuotient.data[j] = 0;
 
-            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
-                outQuotient.dataLength--;
+            while (outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0)
+                outQuotient.DataLength--;
 
-            if (outQuotient.dataLength == 0)
-                outQuotient.dataLength = 1;
+            if (outQuotient.DataLength == 0)
+                outQuotient.DataLength = 1;
 
-            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
-                outRemainder.dataLength--;
+            while (outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0)
+                outRemainder.DataLength--;
         }
 
 
@@ -1129,8 +1129,8 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator /(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
+			var quotient = new BigInteger();
+			var remainder = new BigInteger();
 
             int lastPos = maxLength - 1;
             bool divisorNeg = false, dividendNeg = false;
@@ -1153,7 +1153,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
             else
             {
-                if (bi2.dataLength == 1)
+                if (bi2.DataLength == 1)
                     singleByteDivide(bi1, bi2, quotient, remainder);
                 else
                     multiByteDivide(bi1, bi2, quotient, remainder);
@@ -1172,8 +1172,8 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator %(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger(bi1);
+			var quotient = new BigInteger();
+			var remainder = new BigInteger(bi1);
 
             int lastPos = maxLength - 1;
             bool dividendNeg = false;
@@ -1193,7 +1193,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
             else
             {
-                if (bi2.dataLength == 1)
+                if (bi2.DataLength == 1)
                     singleByteDivide(bi1, bi2, quotient, remainder);
                 else
                     multiByteDivide(bi1, bi2, quotient, remainder);
@@ -1212,9 +1212,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator &(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+			var result = new BigInteger();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
             for (int i = 0; i < len; i++)
             {
@@ -1222,10 +1222,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 result.data[i] = sum;
             }
 
-            result.dataLength = maxLength;
+            result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             return result;
         }
@@ -1237,9 +1237,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator |(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+			var result = new BigInteger();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
             for (int i = 0; i < len; i++)
             {
@@ -1247,10 +1247,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 result.data[i] = sum;
             }
 
-            result.dataLength = maxLength;
+            result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             return result;
         }
@@ -1262,9 +1262,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static BigInteger operator ^(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+			var result = new BigInteger();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
             for (int i = 0; i < len; i++)
             {
@@ -1272,10 +1272,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 result.data[i] = sum;
             }
 
-            result.dataLength = maxLength;
+            result.DataLength = maxLength;
 
-            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
-                result.dataLength--;
+            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                result.DataLength--;
 
             return result;
         }
@@ -1285,7 +1285,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Returns max(this, bi)
         //***********************************************************************
 
-        public BigInteger max(BigInteger bi)
+        public BigInteger Max(BigInteger bi)
         {
             if (this > bi)
                 return (new BigInteger(this));
@@ -1298,7 +1298,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Returns min(this, bi)
         //***********************************************************************
 
-        public BigInteger min(BigInteger bi)
+        public BigInteger Min(BigInteger bi)
         {
             if (this < bi)
                 return (new BigInteger(this));
@@ -1312,9 +1312,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Returns the absolute value
         //***********************************************************************
 
-        public BigInteger abs()
+        public BigInteger Abs()
         {
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)
+            if ((data[maxLength - 1] & 0x80000000) != 0)
                 return (-this);
             else
                 return (new BigInteger(this));
@@ -1363,15 +1363,15 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 catch (Exception) { }
             }
 
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
-            BigInteger biRadix = new BigInteger(radix);
+			var quotient = new BigInteger();
+			var remainder = new BigInteger();
+			var biRadix = new BigInteger(radix);
 
-            if (a.dataLength == 1 && a.data[0] == 0)
+            if (a.DataLength == 1 && a.data[0] == 0)
                 result = "0";
             else
             {
-                while (a.dataLength > 1 || (a.dataLength == 1 && a.data[0] != 0))
+                while (a.DataLength > 1 || (a.DataLength == 1 && a.data[0] != 0))
                 {
                     singleByteDivide(a, biRadix, quotient, remainder);
 
@@ -1406,9 +1406,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public string ToHexString()
         {
-            string result = data[dataLength - 1].ToString("X");
+            string result = data[DataLength - 1].ToString("X");
 
-            for (int i = dataLength - 2; i >= 0; i--)
+            for (int i = DataLength - 2; i >= 0; i--)
             {
                 result += data[i].ToString("X8");
             }
@@ -1422,7 +1422,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Modulo Exponentiation
         //***********************************************************************
 
-        public BigInteger modPow(BigInteger exp, BigInteger n)
+        public BigInteger ModPow(BigInteger exp, BigInteger n)
         {
             if ((exp.data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive exponents only."));
@@ -1431,7 +1431,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             BigInteger tempNum;
             bool thisNegative = false;
 
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)   // negative this
+            if ((data[maxLength - 1] & 0x80000000) != 0)   // negative this
             {
                 tempNum = -this % n;
                 thisNegative = true;
@@ -1442,19 +1442,19 @@ namespace COTS.Infra.CrossCutting.Network.Security
             if ((n.data[maxLength - 1] & 0x80000000) != 0)   // negative n
                 n = -n;
 
-            // calculate constant = b^(2k) / m
-            BigInteger constant = new BigInteger();
+			// calculate constant = b^(2k) / m
+			var constant = new BigInteger();
 
-            int i = n.dataLength << 1;
+            int i = n.DataLength << 1;
             constant.data[i] = 0x00000001;
-            constant.dataLength = i + 1;
+            constant.DataLength = i + 1;
 
             constant = constant / n;
-            int totalBits = exp.bitCount();
+            int totalBits = exp.BitCount();
             int count = 0;
 
             // perform squaring and multiply exponentiation
-            for (int pos = 0; pos < exp.dataLength; pos++)
+            for (int pos = 0; pos < exp.DataLength; pos++)
             {
                 uint mask = 0x01;
                 //Console.WriteLine("pos = " + pos);
@@ -1469,7 +1469,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                     tempNum = BarrettReduction(tempNum * tempNum, n, constant);
 
 
-                    if (tempNum.dataLength == 1 && tempNum.data[0] == 1)
+                    if (tempNum.DataLength == 1 && tempNum.data[0] == 1)
                     {
                         if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
                             return -resultNum;
@@ -1499,51 +1499,51 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         private BigInteger BarrettReduction(BigInteger x, BigInteger n, BigInteger constant)
         {
-            int k = n.dataLength,
+            int k = n.DataLength,
                 kPlusOne = k + 1,
                 kMinusOne = k - 1;
 
-            BigInteger q1 = new BigInteger();
+			var q1 = new BigInteger();
 
             // q1 = x / b^(k-1)
-            for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
+            for (int i = kMinusOne, j = 0; i < x.DataLength; i++, j++)
                 q1.data[j] = x.data[i];
-            q1.dataLength = x.dataLength - kMinusOne;
-            if (q1.dataLength <= 0)
-                q1.dataLength = 1;
+            q1.DataLength = x.DataLength - kMinusOne;
+            if (q1.DataLength <= 0)
+                q1.DataLength = 1;
 
 
             BigInteger q2 = q1 * constant;
-            BigInteger q3 = new BigInteger();
+			var q3 = new BigInteger();
 
             // q3 = q2 / b^(k+1)
-            for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
+            for (int i = kPlusOne, j = 0; i < q2.DataLength; i++, j++)
                 q3.data[j] = q2.data[i];
-            q3.dataLength = q2.dataLength - kPlusOne;
-            if (q3.dataLength <= 0)
-                q3.dataLength = 1;
+            q3.DataLength = q2.DataLength - kPlusOne;
+            if (q3.DataLength <= 0)
+                q3.DataLength = 1;
 
 
-            // r1 = x mod b^(k+1)
-            // i.e. keep the lowest (k+1) words
-            BigInteger r1 = new BigInteger();
-            int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
+			// r1 = x mod b^(k+1)
+			// i.e. keep the lowest (k+1) words
+			var r1 = new BigInteger();
+            int lengthToCopy = (x.DataLength > kPlusOne) ? kPlusOne : x.DataLength;
             for (int i = 0; i < lengthToCopy; i++)
                 r1.data[i] = x.data[i];
-            r1.dataLength = lengthToCopy;
+            r1.DataLength = lengthToCopy;
 
 
-            // r2 = (q3 * n) mod b^(k+1)
-            // partial multiplication of q3 and n
+			// r2 = (q3 * n) mod b^(k+1)
+			// partial multiplication of q3 and n
 
-            BigInteger r2 = new BigInteger();
-            for (int i = 0; i < q3.dataLength; i++)
+			var r2 = new BigInteger();
+            for (int i = 0; i < q3.DataLength; i++)
             {
                 if (q3.data[i] == 0) continue;
 
                 ulong mcarry = 0;
                 int t = i;
-                for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
+                for (int j = 0; j < n.DataLength && t < kPlusOne; j++, t++)
                 {
                     // t = i + j
                     ulong val = ((ulong)q3.data[i] * (ulong)n.data[j]) +
@@ -1556,16 +1556,16 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 if (t < kPlusOne)
                     r2.data[t] = (uint)mcarry;
             }
-            r2.dataLength = kPlusOne;
-            while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
-                r2.dataLength--;
+            r2.DataLength = kPlusOne;
+            while (r2.DataLength > 1 && r2.data[r2.DataLength - 1] == 0)
+                r2.DataLength--;
 
             r1 -= r2;
             if ((r1.data[maxLength - 1] & 0x80000000) != 0)        // negative
             {
-                BigInteger val = new BigInteger();
+				var val = new BigInteger();
                 val.data[kPlusOne] = 0x00000001;
-                val.dataLength = kPlusOne + 1;
+                val.DataLength = kPlusOne + 1;
                 r1 += val;
             }
 
@@ -1580,7 +1580,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Returns gcd(this, bi)
         //***********************************************************************
 
-        public BigInteger gcd(BigInteger bi)
+        public BigInteger Gcd(BigInteger bi)
         {
             BigInteger x;
             BigInteger y;
@@ -1597,7 +1597,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
             BigInteger g = y;
 
-            while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0))
+            while (x.DataLength > 1 || (x.DataLength == 1 && x.data[0] != 0))
             {
                 g = x;
                 x = y % x;
@@ -1612,7 +1612,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // Populates "this" with the specified amount of random bits
         //***********************************************************************
 
-        public void genRandomBits(int bits, Random rand)
+        public void GenRandomBits(int bits, Random rand)
         {
             int dwords = bits >> 5;
             int remBits = bits & 0x1F;
@@ -1640,10 +1640,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
             else
                 data[dwords - 1] |= 0x80000000;
 
-            dataLength = dwords;
+            DataLength = dwords;
 
-            if (dataLength == 0)
-                dataLength = 1;
+            if (DataLength == 0)
+                DataLength = 1;
         }
 
 
@@ -1657,12 +1657,12 @@ namespace COTS.Infra.CrossCutting.Network.Security
         //
         //***********************************************************************
 
-        public int bitCount()
+        public int BitCount()
         {
-            while (dataLength > 1 && data[dataLength - 1] == 0)
-                dataLength--;
+            while (DataLength > 1 && data[DataLength - 1] == 0)
+                DataLength--;
 
-            uint value = data[dataLength - 1];
+            uint value = data[DataLength - 1];
             uint mask = 0x80000000;
             int bits = 32;
 
@@ -1671,7 +1671,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 bits--;
                 mask >>= 1;
             }
-            bits += ((dataLength - 1) << 5);
+            bits += ((DataLength - 1) << 5);
 
             return bits;
         }
@@ -1721,8 +1721,8 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 throw (new ArgumentException("Jacobi defined only for odd integers."));
 
             if (a >= b) a %= b;
-            if (a.dataLength == 1 && a.data[0] == 0) return 0;  // a == 0
-            if (a.dataLength == 1 && a.data[0] == 1) return 1;  // a == 1
+            if (a.DataLength == 1 && a.data[0] == 0) return 0;  // a == 0
+            if (a.DataLength == 1 && a.data[0] == 1) return 1;  // a == 1
 
             if (a < 0)
             {
@@ -1733,7 +1733,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             }
 
             int e = 0;
-            for (int index = 0; index < a.dataLength; index++)
+            for (int index = 0; index < a.DataLength; index++)
             {
                 uint mask = 0x01;
 
@@ -1741,7 +1741,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 {
                     if ((a.data[index] & mask) != 0)
                     {
-                        index = a.dataLength;      // to break the outer loop
+                        index = a.DataLength;      // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -1758,7 +1758,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             if ((b.data[0] & 0x3) == 3 && (a1.data[0] & 0x3) == 3)
                 s = -s;
 
-            if (a1.dataLength == 1 && a1.data[0] == 1)
+            if (a1.DataLength == 1 && a1.data[0] == 1)
                 return s;
             else
                 return (s * Jacobi(b % a1, a1));
@@ -1769,7 +1769,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // the inverse does not exist.  (i.e. gcd(this, modulus) != 1)
         //***********************************************************************
 
-        public BigInteger modInverse(BigInteger modulus)
+        public BigInteger ModInverse(BigInteger modulus)
         {
             BigInteger[] p = { 0, 1 };
             BigInteger[] q = new BigInteger[2];    // quotients
@@ -1780,10 +1780,10 @@ namespace COTS.Infra.CrossCutting.Network.Security
             BigInteger a = modulus;
             BigInteger b = this;
 
-            while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0))
+            while (b.DataLength > 1 || (b.DataLength == 1 && b.data[0] != 0))
             {
-                BigInteger quotient = new BigInteger();
-                BigInteger remainder = new BigInteger();
+				var quotient = new BigInteger();
+				var remainder = new BigInteger();
 
                 if (step > 1)
                 {
@@ -1792,7 +1792,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                     p[1] = pval;
                 }
 
-                if (b.dataLength == 1)
+                if (b.DataLength == 1)
                     singleByteDivide(a, b, quotient, remainder);
                 else
                     multiByteDivide(a, b, quotient, remainder);
@@ -1814,7 +1814,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 step++;
             }
 
-            if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1))
+            if (r[0].DataLength > 1 || (r[0].DataLength == 1 && r[0].data[0] != 1))
                 throw (new ArithmeticException("No inverse!"));
 
             BigInteger result = ((p[0] - (p[1] * q[0])) % modulus);
@@ -1831,9 +1831,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // index contains the MSB.
         //***********************************************************************
 
-        public byte[] getBytes()
+        public byte[] GetBytes()
         {
-            int numBits = bitCount();
+            int numBits = BitCount();
 
             int numBytes = numBits >> 3;
             if ((numBits & 0x7) != 0)
@@ -1844,7 +1844,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             //Console.WriteLine(result.Length);
 
             int pos = 0;
-            uint tempVal, val = data[dataLength - 1];
+            uint tempVal, val = data[DataLength - 1];
 
             if ((tempVal = (val >> 24 & 0xFF)) != 0)
                 result[pos++] = (byte)tempVal;
@@ -1855,7 +1855,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             if ((tempVal = (val & 0xFF)) != 0)
                 result[pos++] = (byte)tempVal;
 
-            for (int i = dataLength - 2; i >= 0; i--, pos += 4)
+            for (int i = DataLength - 2; i >= 0; i--, pos += 4)
             {
                 val = data[i];
                 result[pos + 3] = (byte)(val & 0xFF);
@@ -1876,16 +1876,16 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // The Least Significant Bit position is 0.
         //***********************************************************************
 
-        public void setBit(uint bitNum)
+        public void SetBit(uint bitNum)
         {
             uint bytePos = bitNum >> 5;             // divide by 32
             byte bitPos = (byte)(bitNum & 0x1F);    // get the lowest 5 bits
 
             uint mask = (uint)1 << bitPos;
-            this.data[bytePos] |= mask;
+            data[bytePos] |= mask;
 
-            if (bytePos >= this.dataLength)
-                this.dataLength = (int)bytePos + 1;
+            if (bytePos >= DataLength)
+                DataLength = (int)bytePos + 1;
         }
 
 
@@ -1894,21 +1894,21 @@ namespace COTS.Infra.CrossCutting.Network.Security
         // The Least Significant Bit position is 0.
         //***********************************************************************
 
-        public void unsetBit(uint bitNum)
+        public void UnsetBit(uint bitNum)
         {
             uint bytePos = bitNum >> 5;
 
-            if (bytePos < this.dataLength)
+            if (bytePos < DataLength)
             {
                 byte bitPos = (byte)(bitNum & 0x1F);
 
                 uint mask = (uint)1 << bitPos;
                 uint mask2 = 0xFFFFFFFF ^ mask;
 
-                this.data[bytePos] &= mask2;
+                data[bytePos] &= mask2;
 
-                if (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
-                    this.dataLength--;
+                if (DataLength > 1 && data[DataLength - 1] == 0)
+                    DataLength--;
             }
         }
 
@@ -1922,9 +1922,9 @@ namespace COTS.Infra.CrossCutting.Network.Security
         //
         //***********************************************************************
 
-        public BigInteger sqrt()
+        public BigInteger Sqrt()
         {
-            uint numBits = (uint)this.bitCount();
+            uint numBits = (uint)BitCount();
 
             if ((numBits & 0x1) != 0)        // odd number of bits
                 numBits = (numBits >> 1) + 1;
@@ -1936,7 +1936,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
             uint mask;
 
-            BigInteger result = new BigInteger();
+			var result = new BigInteger();
             if (bitPos == 0)
                 mask = 0x80000000;
             else
@@ -1944,7 +1944,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 mask = (uint)1 << bitPos;
                 bytePos++;
             }
-            result.dataLength = (int)bytePos;
+            result.DataLength = (int)bytePos;
 
             for (int i = (int)bytePos - 1; i >= 0; i--)
             {
@@ -2000,7 +2000,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
         public static BigInteger[] LucasSequence(BigInteger P, BigInteger Q,
                                                  BigInteger k, BigInteger n)
         {
-            if (k.dataLength == 1 && k.data[0] == 0)
+            if (k.DataLength == 1 && k.data[0] == 0)
             {
                 BigInteger[] result = new BigInteger[3];
 
@@ -2010,18 +2010,18 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            BigInteger constant = new BigInteger();
+            var constant = new BigInteger();
 
-            int nLen = n.dataLength << 1;
+            int nLen = n.DataLength << 1;
             constant.data[nLen] = 0x00000001;
-            constant.dataLength = nLen + 1;
+            constant.DataLength = nLen + 1;
 
             constant = constant / n;
 
             // calculate values of s and t
             int s = 0;
 
-            for (int index = 0; index < k.dataLength; index++)
+            for (int index = 0; index < k.DataLength; index++)
             {
                 uint mask = 0x01;
 
@@ -2029,7 +2029,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                 {
                     if ((k.data[index] & mask) != 0)
                     {
-                        index = k.dataLength;      // to break the outer loop
+                        index = k.DataLength;      // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -2060,7 +2060,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
             if ((k.data[0] & 0x00000001) == 0)
                 throw (new ArgumentException("Argument k must be odd."));
 
-            int numbits = k.bitCount();
+            int numbits = k.BitCount();
             uint mask = (uint)0x1 << ((numbits & 0x1F) - 1);
 
             // v = v0, v1 = v1, u1 = u1, Q_k = Q^0
@@ -2069,7 +2069,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
                        v1 = P % n, u1 = Q_k;
             bool flag = true;
 
-            for (int i = k.dataLength - 1; i >= 0; i--)     // iterate on the binary expansion of k
+            for (int i = k.DataLength - 1; i >= 0; i--)     // iterate on the binary expansion of k
             {
                 //Console.WriteLine("round");
                 while (mask != 0)
