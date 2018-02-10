@@ -1,18 +1,19 @@
 using System;
+using System.Numerics;
 
 namespace COTS.Infra.CrossCutting.Network.Security {
 	public class Rsa {
-		protected static BigInteger N;
-		protected static BigInteger D;
-		protected static BigInteger Me = new BigInteger("65537", 10);
+		private static BigInteger N;
+		private static BigInteger D;
+		private static BigInteger Me = new BigInteger(65537);
 
 		public static bool SetKey(string p, string q) {
 			Console.WriteLine("Setting up RSA encyption");
 
 			BigInteger mP, mQ;
 			try {
-				mP = new BigInteger(p, 10);
-				mQ = new BigInteger(q, 10);
+				mP = BigInteger.Parse(p);
+				mQ = BigInteger.Parse(q);
 			} catch (Exception) {
 				Console.WriteLine("P,Q value could not be parsed!");
 				return false;
@@ -31,7 +32,7 @@ namespace COTS.Infra.CrossCutting.Network.Security {
 			Array.Copy(buffer, index, temp, 0, 128);
 
 			var input = new BigInteger(temp);
-			BigInteger output = input.ModPow(Me, N);
+			var output = BigInteger.ModPow(input, Me, N);
 
 			Array.Copy(GetPaddedValue(output), 0, buffer, index, 128);
 		}
@@ -41,13 +42,13 @@ namespace COTS.Infra.CrossCutting.Network.Security {
 			Array.Copy(buffer, index, temp, 0, 128);
 
 			var input = new BigInteger(temp);
-			BigInteger output = input.ModPow(D, N);
+			var output = BigInteger.ModPow(input, D, N);
 
 			Array.Copy(GetPaddedValue(output), 0, buffer, index, 128);
 		}
 
 		private static byte[] GetPaddedValue(BigInteger value) {
-			byte[] result = value.GetBytes();
+			byte[] result = value.ToByteArray();
 
 			const int length = (1024 >> 3);
 			if (result.Length >= length)

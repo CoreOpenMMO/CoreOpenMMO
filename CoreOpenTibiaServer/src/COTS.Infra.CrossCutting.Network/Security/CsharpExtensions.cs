@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Numerics;
 
 namespace COTS.Infra.CrossCutting.Network.Security
 {
@@ -62,7 +63,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random rng = new Random();
+            var rng = new Random();
             int n = list.Count;
             while (n > 1)
             {
@@ -76,7 +77,7 @@ namespace COTS.Infra.CrossCutting.Network.Security
 
         public static void Shuffle<T>(this IList<T> list, int index, int count)
         {
-            Random rng = new Random();
+            var rng = new Random();
 
             if (index + count > list.Count)
                 count = list.Count - index;
