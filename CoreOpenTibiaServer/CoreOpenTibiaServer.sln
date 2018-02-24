@@ -1,17 +1,14 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Domain", "src\COTS.Domain\COTS.Domain.csproj", "{B35793DB-F39B-44D4-B67D-0F05C1C42703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Domain", "src\COMMO.Domain\COMMO.Domain.csproj", "{B35793DB-F39B-44D4-B67D-0F05C1C42703}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Infra.CrossCutting.Network", "src\COTS.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj", "{04507B39-02A0-406A-AA97-AC793D6B1374}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Network", "src\COMMO.Network\COMMO.Network.csproj", "{04507B39-02A0-406A-AA97-AC793D6B1374}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Data", "src\COTS.Infra.Data\COTS.Data.csproj", "{A77658C3-5133-44E1-9915-8701419300B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.GameServer", "src\COMMO.GameServer\COMMO.GameServer.csproj", "{726F7F0F-D8FD-4601-9A62-108B0D5F6271}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.GameServer", "src\COTS.GameServer\COTS.GameServer.csproj", "{726F7F0F-D8FD-4601-9A62-108B0D5F6271}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTS.Infra.CrossCutting.Network.Tests", "src\COTS.Infra.CrossCutting.Network.Tests\COTS.Infra.CrossCutting.Network.Tests.csproj", "{F2A167D2-DEA2-4C05-9CAF-DC5743EC70FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Network.Tests", "src\COMMO.Network.Tests\COMMO.Network.Tests.csproj", "{F2A167D2-DEA2-4C05-9CAF-DC5743EC70FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +34,6 @@ Global
 		{04507B39-02A0-406A-AA97-AC793D6B1374}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04507B39-02A0-406A-AA97-AC793D6B1374}.Release|x64.ActiveCfg = Release|x64
 		{04507B39-02A0-406A-AA97-AC793D6B1374}.Release|x64.Build.0 = Release|x64
-		{A77658C3-5133-44E1-9915-8701419300B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A77658C3-5133-44E1-9915-8701419300B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A77658C3-5133-44E1-9915-8701419300B2}.Debug|x64.ActiveCfg = Debug|x64
-		{A77658C3-5133-44E1-9915-8701419300B2}.Debug|x64.Build.0 = Debug|x64
-		{A77658C3-5133-44E1-9915-8701419300B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A77658C3-5133-44E1-9915-8701419300B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A77658C3-5133-44E1-9915-8701419300B2}.Release|x64.ActiveCfg = Release|x64
-		{A77658C3-5133-44E1-9915-8701419300B2}.Release|x64.Build.0 = Release|x64
 		{726F7F0F-D8FD-4601-9A62-108B0D5F6271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{726F7F0F-D8FD-4601-9A62-108B0D5F6271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{726F7F0F-D8FD-4601-9A62-108B0D5F6271}.Debug|x64.ActiveCfg = Debug|x64
