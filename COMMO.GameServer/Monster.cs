@@ -1,4 +1,5 @@
 namespace COMMO.GameServer.World {
-    public class Monster {
-    }
+
+	public sealed class Monster {
+	}
 }
