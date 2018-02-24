@@ -4,9 +4,9 @@ using System.IO;
 using System.Text;
 using System.Numerics;
 
-namespace COMMO.Network.Security
+namespace COMMO.Network.Cryptography
 {
-    public static class CsharpExtensions
+    public static class CSharpExtensions
     {
         public static BigInteger ModInverse(this BigInteger a, BigInteger n)
         {

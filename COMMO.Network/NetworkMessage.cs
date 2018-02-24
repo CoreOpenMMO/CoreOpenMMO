@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Net.Sockets;
-using COMMO.Network.Security;
+using COMMO.Network.Cryptography;
 
 namespace COMMO.Network
 {

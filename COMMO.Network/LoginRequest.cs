@@ -1,4 +1,4 @@
-using COMMO.Network.Security;
+using COMMO.Network.Cryptography;
 using Newtonsoft.Json;
 using System;
 

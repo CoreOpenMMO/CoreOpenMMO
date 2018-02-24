@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace COMMO.Network.Security {
+namespace COMMO.Network.Cryptography {
 	public class Rsa {
 		private static BigInteger _n;
 		private static BigInteger _d;
@@ -23,7 +23,7 @@ namespace COMMO.Network.Security {
 
 			BigInteger mod = (mP - 1) * (mQ - 1);
 
-			_d = CsharpExtensions.ModInverse(_me, mod);
+			_d = CSharpExtensions.ModInverse(_me, mod);
 			return true;
 		}
 

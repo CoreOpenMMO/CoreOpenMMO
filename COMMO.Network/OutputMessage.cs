@@ -1,6 +1,6 @@
 using System;
 using COMMO.Network.Enums;
-using COMMO.Network.Security;
+using COMMO.Network.Cryptography;
 
 namespace COMMO.Network 
 {

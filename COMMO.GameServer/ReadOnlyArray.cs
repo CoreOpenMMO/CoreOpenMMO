@@ -13,7 +13,7 @@ namespace COMMO.GameServer {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
-            this._items = items;
+			_items = items;
         }
 
         [JsonConstructor]

@@ -1,14 +1,11 @@
-using COMMO.Network.Enums;
 using System;
-using System.Linq;
 
-namespace COMMO.Network.Security
-{
-    public static class XTea
+namespace COMMO.Network.Cryptography {
+	public static class XTea
     {
-		private const uint _bakedSum = 0xC6EF3720;
-        private const uint _delta = 0x9e3779b9;
-        private const uint _rounds = 32;
+		private const uint BakedSum = 0xC6EF3720;
+        private const uint Delta = 0x9e3779b9;
+        private const uint Rounds = 32;
 
 		public static byte[] EncryptXtea(byte[] msg, uint[] key) {
 			if (key.Length < 4)
@@ -24,13 +21,13 @@ namespace COMMO.Network.Security
 			for (var pos = 0; pos < msg.Length / 4; pos += 2, x_sum = 0) {
 				//Run rounds of XTea
 
-				count = _rounds;
+				count = Rounds;
 				//for (count = _rounds; count > 0; count--) {
 				while (count-- > 0) {
 					temporary = intbuffer.UIntBuffer[pos + 1];
 					intbuffer.UIntBuffer[pos] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum & 3];
 
-					x_sum += _delta;
+					x_sum += Delta;
 
 					temporary = intbuffer.UIntBuffer[pos];
 					intbuffer.UIntBuffer[pos + 1] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
@@ -51,16 +48,16 @@ namespace COMMO.Network.Security
 			uint x_sum = 0;
 			uint temporary = 0;
 			var intbuffer = new BufferRepresentation(encmsg);
-			for (var pos = 0; pos < encmsg.Length / 4; pos += 2, x_sum = _bakedSum) {
+			for (var pos = 0; pos < encmsg.Length / 4; pos += 2, x_sum = BakedSum) {
 				//Run rounds of XTea
 
-				count = _rounds;
+				count = Rounds;
 				//for (count = _rounds; count > 0; count--) {
 				while (count-- > 0) {
 					temporary = intbuffer.UIntBuffer[pos];
 					intbuffer.UIntBuffer[pos + 1] -= (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum >> 11 & 3];
 
-					x_sum -= _delta;
+					x_sum -= Delta;
 
 					temporary = intbuffer.UIntBuffer[pos + 1];
 					intbuffer.UIntBuffer[pos] += (temporary << 4 ^ temporary >> 5) + temporary ^ x_sum + key[x_sum & 3];

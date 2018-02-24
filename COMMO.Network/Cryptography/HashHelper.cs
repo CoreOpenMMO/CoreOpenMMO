@@ -1,4 +1,4 @@
-namespace COMMO.Network.Security
+namespace COMMO.Network.Cryptography
 {
     public static class HashHelper
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace COMMO.Network.Security {
+namespace COMMO.Network.Cryptography {
 	[StructLayout(LayoutKind.Explicit, Pack = 8)]
 	public struct BufferRepresentation {
 

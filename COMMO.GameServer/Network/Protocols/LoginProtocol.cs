@@ -1,7 +1,7 @@
 using COMMO.Domain.Interfaces.Services;
 using COMMO.Network;
 using COMMO.Network.Enums;
-using COMMO.Network.Security;
+using COMMO.Network.Cryptography;
 using System;
 using System.Linq;
 using System.Net;
