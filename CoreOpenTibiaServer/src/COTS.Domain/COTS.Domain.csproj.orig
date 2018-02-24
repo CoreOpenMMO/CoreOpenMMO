@@ -5,22 +5,21 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="EntityConfig\**" />
-    <EmbeddedResource Remove="EntityConfig\**" />
-    <None Remove="EntityConfig\**" />
-  </ItemGroup>
-
+<<<<<<< HEAD
   <ItemGroup>
     <PackageReference Include="editorconfig" Version="0.12.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
+    <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="System.Memory" Version="4.4.0-preview1-25305-02" />
-  </ItemGroup>
+=======
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+  </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\COTS.Domain\COTS.Domain.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="MoonSharp" Version="2.0.0" />
+>>>>>>> 8876237859e8831741ae419f4d37a941d2c1bf6b
   </ItemGroup>
 
 </Project>
