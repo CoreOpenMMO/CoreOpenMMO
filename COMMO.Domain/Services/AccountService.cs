@@ -8,11 +8,12 @@ namespace COMMO.Domain.Services
     {
         private readonly IAccountRepository _accountRepository;
 
-        public AccountService(IAccountRepository accountRepository) 
-            : base(accountRepository) 
-                => _accountRepository = accountRepository;
+		public AccountService(IAccountRepository accountRepository)
+			: base(accountRepository) {
+			_accountRepository = accountRepository;
+		}
 
-        public Account GetAccountByLogin(string username, string password) =>
+		public Account GetAccountByLogin(string username, string password) =>
             _accountRepository.GetAccountByLogin(username, password).Result;
     }
 }

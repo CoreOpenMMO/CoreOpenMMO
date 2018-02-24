@@ -12,10 +12,11 @@ namespace COMMO.Domain.LuaServices
     {
         private static IPlayerRepository _playerRepository;
 
-        public LuaPlayerService(IPlayerRepository playerRepository) =>
-            _playerRepository = playerRepository;
+		public LuaPlayerService(IPlayerRepository playerRepository) {
+			_playerRepository = playerRepository;
+		}
 
-        public virtual Player GetByGuid(Guid guid) =>
+		public virtual Player GetByGuid(Guid guid) =>
             _playerRepository.GetByGuid(guid).Result;
 
         public virtual Player GetById(int id) =>

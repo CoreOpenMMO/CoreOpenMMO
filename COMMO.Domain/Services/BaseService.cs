@@ -11,10 +11,11 @@ namespace COMMO.Domain.Services
     {
         private readonly IRepositoryBase<TEntity> _repository;
 
-        public BaseService(IRepositoryBase<TEntity> repository) => 
-            _repository = repository;
+		public BaseService(IRepositoryBase<TEntity> repository) {
+			_repository = repository;
+		}
 
-        public virtual Task<bool> Add(TEntity obj) => 
+		public virtual Task<bool> Add(TEntity obj) => 
             _repository.Add(obj);
 
         public Task<IEnumerable<TEntity>> GetAll() =>

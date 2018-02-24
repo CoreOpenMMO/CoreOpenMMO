@@ -10,11 +10,12 @@ namespace COMMO.Domain.Services
     {
         private readonly IPlayerRepository _playerRepository;
 
-        public PlayerService(IPlayerRepository playerRepository) 
-            : base(playerRepository) => 
-                _playerRepository = playerRepository;
+		public PlayerService(IPlayerRepository playerRepository)
+			: base(playerRepository) {
+			_playerRepository = playerRepository;
+		}
 
-        public IEnumerable<string> GetCharactersListByAccountId(int id) =>
+		public IEnumerable<string> GetCharactersListByAccountId(int id) =>
             _playerRepository.GetCharactersListByAccountId(id);
     }
 }
