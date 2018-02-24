@@ -1,5 +1,6 @@
-﻿using COTS.GameServer.OTBParsing;
+using COTS.GameServer.OTBParsing;
 using System.Collections.Generic;
+using COTS.GameServer.Items;
 
 namespace COTS.GameServer.World.Loading {
 
@@ -15,11 +16,10 @@ namespace COTS.GameServer.World.Loading {
             var stream = new ParsingStream(parsingTree, parsingNode);
 
             var itemId = stream.ReadUInt16();
-            var item = Item.CreateFromId(itemId);
+            // var item = Item.CreateFromId(itemId);
         }
 
         private static List<ItemAttribute> DeserializeAttribute(ref ParsingStream stream) {
-#warning Implement this
             return new List<ItemAttribute>();
         }
     }

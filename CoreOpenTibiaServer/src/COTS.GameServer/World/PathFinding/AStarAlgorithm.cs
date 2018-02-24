@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace COTS.GameServer.World.PathFinding {
@@ -23,7 +23,6 @@ namespace COTS.GameServer.World.PathFinding {
             }
 
             // Initializing open and closed lists
-#warning Consider creating "object pool" to reduce GC pressure
             var openList = new PriorityQueue(MaximumNodes);
             var closedList = new HashSet<AStartNode>();
             openList.TryEnqueue(new AStartNode(
@@ -99,7 +98,6 @@ namespace COTS.GameServer.World.PathFinding {
         }
 
         private static List<PathCoordinate> GenerateReversedPath(AStartNode end) {
-#warning Consider creating a "pool of lists" to reduce GC pressure
             // We "over-allocate" memory to prevent resizing the list
             var maximumPathLength = end.CostFromStart * end.CostFromStart;
             var path = new List<PathCoordinate>(maximumPathLength);

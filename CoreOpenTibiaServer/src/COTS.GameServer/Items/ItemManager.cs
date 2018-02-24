@@ -30,7 +30,7 @@ namespace COTS.GameServer.Items {
         private UInt32 _minorVersion = 0;
         private UInt32 _buildVersion = 0;
 
-        private List<Item> _items;
+        private List<Item> _items = new List<Item>();
         private List<SharedItem> _sharedItems;
 
         public Item GetItem(ushort uid) {
@@ -54,15 +54,6 @@ namespace COTS.GameServer.Items {
             //{ /* Resize _items to insert a new element */ }
 
             return (_items[item.ID] = item) == item;
-        }
-
-        public bool DeleteItem(Item item) // This should not exist? Maybe just replace by a blank element with .disposed/removed = true, as the UID cannot be reclaimed!!
-        { // Finish this ///////// NOT????
-            Item deletedItem;
-            if (true) // _items.contains item
-                deletedItem = null; // = _items.remove item
-
-            return (deletedItem = null) == null;
         }
 
         public int GetSharedItemCount() => _sharedItems != null ? _sharedItems.Count : 0;

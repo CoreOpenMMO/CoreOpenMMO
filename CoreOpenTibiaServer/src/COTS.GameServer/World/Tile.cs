@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using COTS.GameServer.Items;
 
 namespace COTS.GameServer.World {
 
