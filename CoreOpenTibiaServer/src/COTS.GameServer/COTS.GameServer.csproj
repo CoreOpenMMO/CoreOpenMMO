@@ -38,9 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\COTS.Domain\COTS.Domain.csproj" />
-    <ProjectReference Include="..\COTS.Infra.CrossCutting.Ioc\COTS.Infra.CrossCutting.Ioc.csproj" />
     <ProjectReference Include="..\COTS.Infra.CrossCutting.Network\COTS.Infra.CrossCutting.Network.csproj" />
-    <ProjectReference Include="..\COTS.Infra.CrossCutting.Security\COTS.Infra.CrossCutting.Security.csproj" />
     <ProjectReference Include="..\COTS.Infra.Data\COTS.Data.csproj" />
   </ItemGroup>
 

@@ -1,11 +1,10 @@
-﻿using CommandLine;
+using CommandLine;
 using COTS.GameServer.CommandLineArgumentsParsing;
 using COTS.GameServer.Lua;
 using System;
 using COTS.GameServer.Network;
 using COTS.GameServer.Network.Protocols;
 using Microsoft.Extensions.DependencyInjection;
-using COTS.Infra.CrossCutting.Ioc;
 using System.Threading.Tasks;
 
 namespace COTS.GameServer {
@@ -17,7 +16,6 @@ namespace COTS.GameServer {
         private static void Main(string[] args) {
 
             var serviceCollection = new ServiceCollection();
-            BootStrapper.ConfigureGlobalServices(serviceCollection);
             ConfigureLocalServices(serviceCollection);
 
             _serviceProvider = serviceCollection.BuildServiceProvider();

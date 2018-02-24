@@ -1,13 +1,11 @@
 using COTS.Infra.CrossCutting.Network.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 
-namespace COTS.GameServer.Tests {
-    [TestClass]
-    public sealed class XTeaTests {
+namespace COTS.Infra.CrossCutting.Network.Tests {
+	[TestClass]
+	public sealed class XTeaTests {
 
-		#region PrivateStructures
 		private struct _FakeCryptMessage {
 			public byte[] Buffer;
 			public int HeaderPosition;
@@ -48,8 +46,7 @@ namespace COTS.GameServer.Tests {
 				for (var k = 0; k < size; k++) {
 					newArray[k] = BitConverter.GetBytes(randomI.Next(minValue: 0, maxValue: 255))[0];
 				}
-			}
-			else {
+			} else {
 				#region ManualData
 				newArray[0] = 123;
 				newArray[1] = 0;
@@ -226,10 +223,9 @@ namespace COTS.GameServer.Tests {
 			}
 			return msg.Buffer;
 		}
-		#endregion
 
 		[TestMethod]
-        public void XTeaEncryption_Validation() {
+		public void XTeaEncryption_Validation() {
 			var fakeMessage = _PreMadeMessage(128);
 			var message = new _FakeCryptMessage(fakeMessage, 0);
 
