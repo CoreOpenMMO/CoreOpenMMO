@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\COMMO.Domain\COMMO.Domain.csproj" />
     <ProjectReference Include="..\COMMO.Network\COMMO.Network.csproj" />
+    <ProjectReference Include="..\COMMO\COMMO.csproj" />
   </ItemGroup>
 
 </Project>
