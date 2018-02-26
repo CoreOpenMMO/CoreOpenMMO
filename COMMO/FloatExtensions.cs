@@ -1,4 +1,4 @@
-namespace COMMO.GameServer {
+namespace COMMO {
 
     public static class FloatExtensions {
 

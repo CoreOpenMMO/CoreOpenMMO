@@ -1,6 +1,6 @@
 using System;
 
-namespace COMMO.GameServer {
+namespace COMMO {
 
 	/// <summary>
 	/// This class allows us to navigate a byte array in stream-like fashion.
