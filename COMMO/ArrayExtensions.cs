@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace COMMO.GameServer {
+namespace COMMO {
 
     public static class ArrayExtensions {
 
