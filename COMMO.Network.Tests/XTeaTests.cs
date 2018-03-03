@@ -12,34 +12,34 @@ namespace COMMO.Network.Tests {
 
 		[TestMethod]
 		public void XTeaEncryption_Validation() {
-			var encryptedMessage = XTea.EncryptXtea(_referenceMessageToEncrypt, _referenceEncryptionKey);
+			var encryptedMessage = PseudoXTea.EncryptXtea(_referenceMessageToEncrypt, _referenceEncryptionKey);
 			CollectionAssert.AreEqual(encryptedMessage, _referenceEncryptedMessage);
 		}
 
 		[TestMethod]
 		public void XTeaDecryption_Validation() {
-			var decryptedMsg = XTea.DecryptXtea(_referenceEncryptedMessage, _referenceEncryptionKey);
+			var decryptedMsg = PseudoXTea.DecryptXtea(_referenceEncryptedMessage, _referenceEncryptionKey);
 			CollectionAssert.AreEqual(decryptedMsg, _referenceMessageToEncrypt);
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(System.Exception))]
 		public void XTeaEncryption_Validation_EmptyMessage() {
-			var encryptedMessage = XTea.EncryptXtea(new byte[] {}, _referenceEncryptionKey);
+			var encryptedMessage = PseudoXTea.EncryptXtea(new byte[] {}, _referenceEncryptionKey);
 			CollectionAssert.AreEqual(encryptedMessage, _referenceEncryptedMessage);
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(System.Exception))]
 		public void XTeaEncryption_Validation_WrongBlockSize() {
-			var encryptedMessage = XTea.EncryptXtea(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, _referenceEncryptionKey);
+			var encryptedMessage = PseudoXTea.EncryptXtea(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, _referenceEncryptionKey);
 			CollectionAssert.AreEqual(encryptedMessage, _referenceEncryptedMessage);
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(System.Exception))]
 		public void XTeaEncryption_Validation_WrongKeySize() {
-			var encryptedMessage = XTea.EncryptXtea(_referenceEncryptedMessage, new uint[] { 0, 0, 0 });
+			var encryptedMessage = PseudoXTea.EncryptXtea(_referenceEncryptedMessage, new uint[] { 0, 0, 0 });
 			CollectionAssert.AreEqual(encryptedMessage, _referenceEncryptedMessage);
 		}
 	}
