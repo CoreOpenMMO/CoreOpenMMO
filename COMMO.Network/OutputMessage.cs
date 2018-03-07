@@ -1,133 +1,53 @@
 using System;
-using COMMO.Network.Enums;
-using COMMO.Network.Cryptography;
 
-namespace COMMO.Network 
-{
-    public class OutputMessage : NetworkMessage
-    {
-        #region Constants
-        public const int HeaderLength = 2;
-        public const int CryptoLength = 4;
-        public const int XteaMultiple = 8;
-        public const int MaxBodyLength = NetworkMessageSizeMax - HeaderLength - CryptoLength - XteaMultiple;
-        public const int MaxProtocolBodyLength = MaxBodyLength - 10;
-        #endregion
+namespace COMMO.Network {
 
-        private int _headerPosition;
-        /// <summary>
-        /// Current position of header cursor 
-        /// </summary>
-        public int HeaderPosition
-        {
-            get { return _headerPosition; }
-            protected set { _headerPosition = value; }
-        }
+	public sealed class OutputMessage {
+		public const int MaximumMessageSizeInBytes = 24590;
 
-        //public Connection MessageTarget; HERE SHOULD BE CONNECTION!
-        public bool DisconnectAfterMessage;
-        public bool IsRecycledMessage = true;
+		private readonly byte[] _data = new byte[MaximumMessageSizeInBytes];
 
-        public OutputMessage()
-        {
-            FreeMessage();
-        }
+		public int Position { get; private set; } = 0;
 
-        public void FreeMessage()
-        {
-            //allocate enough size for headers
-            //2 bytes for unencrypted message size
-            //4 bytes for checksum
-            //2 bytes for encrypted message size
-            _headerPosition = 8;
-            //MessageTarget = null;
-            DisconnectAfterMessage = false;
+		public void Clear() {
+			Position = 0;
+		}
 
-            Reset(8);
-        }
+		public bool CanWriteBytes(int byteCount) {
+			if (byteCount < 0)
+				throw new ArgumentNullException(nameof(byteCount));
 
-        public void WriteMessageLength()
-        {
-            AddHeaderUInt16((ushort)Length);
-        }
+			return MaximumMessageSizeInBytes - Position < byteCount;
+		}
 
-        public void AddCryptoHeader(bool addChecksum)
-        {
-            if (addChecksum)
-            {
-                AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length));
-            }
+		public void AddByte(byte b) {
+			if (!CanWriteBytes(sizeof(byte)))
+				throw new InvalidOperationException();
 
-            AddHeaderUInt16((ushort)Length);
-        }
+			_data[Position] = b;
+			Position += sizeof(byte);
+		}
 
-        #region Add To Header
-        protected void AddHeaderBytes(byte[] value)
-        {
-            if (value.Length > _headerPosition)
-            {
-                Console.WriteLine("OutputMessage AddHeader buffer is full!");
-                return;
-            }
+		public void AddBytes(ReadOnlySpan<byte> bytes) {
+			if (!CanWriteBytes(bytes.Length))
+				throw new InvalidOperationException();
 
-            _headerPosition -= value.Length;
-            Array.Copy(value, 0, Buffer, _headerPosition, value.Length);
-            Length += value.Length;
-        }
+			bytes.CopyTo(new Span<byte>(
+				array: _data,
+				start: Position,
+				length: _data.Length - Position));
+			Position += bytes.Length;
+		}
 
-        protected void AddHeaderUInt32(uint value)
-        {
-            AddHeaderBytes(BitConverter.GetBytes(value));
-        }
+		public void AddUInt16(UInt16 uint16) => AddBytes(BitConverter.GetBytes(uint16));
 
-        protected void AddHeaderUInt16(ushort value)
-        {
-            AddHeaderBytes(BitConverter.GetBytes(value));
-        }
-        #endregion
+		public void AddUInt32(UInt32 uint32) => AddBytes(BitConverter.GetBytes(uint32));
 
-        public void Append(NetworkMessage msg)
-        {
-            int msgLen = msg.Length;
-            Buffer.MemCpy(Position, msg.Buffer, msgLen);
-            Length += msgLen;
-            Position += msgLen;
-        }
-
-        public void AddPaddingBytes(int count)
-        {
-            Buffer.MemSet(Position, (byte)ServerPacketType.PaddingByte, count);
-            Length += count;
-            Position += count;
-        }
-
-        #region Checksum
-
-        public bool CheckAdler32()
-        {
-            return Tools.AdlerChecksum(Buffer, 6, Length) == GetAdler32();
-        }
-
-        public void InsertAdler32()
-        {
-            Array.Copy(BitConverter.GetBytes(Tools.AdlerChecksum(Buffer, 6, Length)), 0, Buffer, 2, 4);
-        }
-
-        public uint GetAdler32()
-        {
-            return BitConverter.ToUInt32(Buffer, 2);
-        }
-
-        #endregion
-
-        public void InsertPacketLength()
-        {
-            Array.Copy(BitConverter.GetBytes((ushort)(Length - 8)), 0, Buffer, 6, 2);
-        }
-
-        public void InsertTotalLength()
-        {
-            Array.Copy(BitConverter.GetBytes((ushort)(Length - 2)), 0, Buffer, 0, 2);
-        }
-    }
+		public ReadOnlySpan<byte> AsSpan() {
+			return new ReadOnlySpan<byte>(
+				array: _data,
+				start: 0,
+				length: Position);
+		}
+	}
 }

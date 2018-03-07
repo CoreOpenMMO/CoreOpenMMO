@@ -1,8 +1,9 @@
 using System;
 using System.Numerics;
 
-namespace COMMO.Network.Cryptography {
-	public class Rsa {
+namespace COMMO.Network {
+
+	public class HomebrewRSA {
 		private static BigInteger _n;
 		private static BigInteger _d;
 		private static BigInteger _me = new BigInteger(65537);
@@ -23,7 +24,7 @@ namespace COMMO.Network.Cryptography {
 
 			BigInteger mod = (mP - 1) * (mQ - 1);
 
-			_d = CSharpExtensions.ModInverse(_me, mod);
+			_d = _me.ModInverse(mod);
 			return true;
 		}
 
