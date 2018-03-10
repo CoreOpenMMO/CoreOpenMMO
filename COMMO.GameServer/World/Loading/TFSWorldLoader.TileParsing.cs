@@ -5,7 +5,7 @@ namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
 
-		private static void ParseTileAreaNode(OTBTree parsingTree, OTBNode tileAreaNode) {
+		private static void ParseTileAreaNode(OTBTree parsingTree, OldOTBNode tileAreaNode) {
 			if (parsingTree == null)
 				throw new ArgumentNullException(nameof(parsingTree));
 			if (tileAreaNode == null)
@@ -31,7 +31,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		private static void ParseTileNode(
 			OTBTree parsingTree,
-			OTBNode tileNode,
+			OldOTBNode tileNode,
 			UInt16 areaStartingX,
 			UInt16 areaStartingY,
 			Byte areaZ
@@ -68,7 +68,7 @@ namespace COMMO.GameServer.World.Loading {
 				tile.Flags.AddFlags(tileFlags);
 		}
 
-		private static TileFlags ParseTileAttributes(ref OTBTree parsingTree, ref OTBNodeParsingStream stream, ref Tile tile, OTBNode tileNode) {
+		private static TileFlags ParseTileAttributes(ref OTBTree parsingTree, ref OTBNodeParsingStream stream, ref Tile tile, OldOTBNode tileNode) {
 			var tileFlags = new TileFlags();
 			TFSWorldNodeAttribute nodeAttribute;
 			while (!stream.IsOver) {

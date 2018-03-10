@@ -7,7 +7,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		private static Item ParseItemNode(
 			OTBTree parsingTree,
-			OTBNode parsingNode
+			OldOTBNode parsingNode
 			) {
 			if (parsingNode.Type != OTBNodeType.Item)
 				throw new MalformedItemNodeException();

@@ -29,10 +29,10 @@ namespace COMMO.GameServer.World.Loading {
 				throw new MalformedWorldException();
 
 			var guessedMaximumNodeDepth = 128;
-			var nodeStack = new Stack<OTBNode>(capacity: guessedMaximumNodeDepth);
+			var nodeStack = new Stack<OldOTBNode>(capacity: guessedMaximumNodeDepth);
 
 			var rootNodeType = (byte)stream.ReadByte();
-			var rootNode = new OTBNode() {
+			var rootNode = new OldOTBNode() {
 				Type = (OTBNodeType)rootNodeType,
 				DataBegin = (int)stream.Position
 			};
@@ -47,7 +47,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		private static void ParseTreeAfterRootNodeStart(
 			ByteArrayReadStream stream,
-			Stack<OTBNode> nodeStack
+			Stack<OldOTBNode> nodeStack
 			) {
 			while (!stream.IsOver) {
 				var currentMark = (OTBMarkupByte)stream.ReadByte();
@@ -77,7 +77,7 @@ namespace COMMO.GameServer.World.Loading {
 			}
 		}
 
-		private static void ProcessNodeStart(ByteArrayReadStream stream, Stack<OTBNode> nodeStack) {
+		private static void ProcessNodeStart(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
 			if (!nodeStack.TryPeek(out var currentNode))
 				throw new MalformedWorldException();
 
@@ -88,7 +88,7 @@ namespace COMMO.GameServer.World.Loading {
 			if (stream.IsOver)
 				throw new MalformedWorldException();
 
-			var child = new OTBNode {
+			var child = new OldOTBNode {
 				Type = (OTBNodeType)childType,
 				DataBegin = stream.Position//  + sizeof(MarkupByte)
 			};
@@ -97,7 +97,7 @@ namespace COMMO.GameServer.World.Loading {
 			nodeStack.Push(child);
 		}
 
-		private static void ProcessNodeEnd(ByteArrayReadStream stream, Stack<OTBNode> nodeStack) {
+		private static void ProcessNodeEnd(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
 			if (!nodeStack.TryPeek(out var currentNode))
 				throw new MalformedWorldException();
 
