@@ -43,22 +43,29 @@ namespace COMMO.GameServer.World.Loading {
 
 			var tileX = areaStartingX + stream.ReadByte();
 			var tileY = areaStartingY + stream.ReadByte();
+			var tilePosition = new Position(
+				x: tileX,
+				y: tileY,
+				z: areaZ);
 
 			Tile tile = null;
-			if (tileNode.Type == OTBNodeType.HouseTile)
-				tile = ParseHouseTile(ref stream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
+			if (tileNode.Type == OTBNodeType.HouseTile) {
+				tile = new Tile(
+					position: tilePosition,
+					belongsToHouse: true);
+
+				var houseId = stream.ReadUInt32();
+				var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
+				house.AddTile(tile);
+			} else {
+				tile = new Tile(
+					position: tilePosition,
+					belongsToHouse: false);
+			}
 
 			var tileFlags = ParseTileAttributes(ref parsingTree, ref stream, ref tile, tileNode);
 			if (tile != null)
 				tile.Flags.AddFlags(tileFlags);
-		}
-
-		private static Tile ParseHouseTile(ref OTBNodeParsingStream stream, UInt16 tileX, UInt16 tileY, byte tileZ) {
-			var houseId = stream.ReadUInt32();
-			var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
-			var tile = HouseTile.CreateTileAndAddItToHouse(tileX, tileY, tileZ, house);
-
-			return tile;
 		}
 
 		private static TileFlags ParseTileAttributes(ref OTBTree parsingTree, ref OTBNodeParsingStream stream, ref Tile tile, OTBNode tileNode) {
