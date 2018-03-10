@@ -3,17 +3,17 @@ using System;
 
 namespace COMMO.GameServer.World.Loading {
 
-	public static partial class WorldLoader {
+	public static partial class TFSWorldLoader {
 
-		public static void ParseTileAreaNode(ParsingTree parsingTree, ParsingNode tileAreaNode) {
+		private static void ParseTileAreaNode(OTBTree parsingTree, OTBNode tileAreaNode) {
 			if (parsingTree == null)
 				throw new ArgumentNullException(nameof(parsingTree));
 			if (tileAreaNode == null)
 				throw new ArgumentNullException(nameof(tileAreaNode));
 
-			var stream = new ParsingStream(
+			var stream = new OTBNodeParsingStream(
 				tree: parsingTree,
-				node: tileAreaNode);
+				nodeToParse: tileAreaNode);
 
 			var areaStartingX = stream.ReadUInt16();
 			var areaStartingY = stream.ReadUInt16();
@@ -30,22 +30,22 @@ namespace COMMO.GameServer.World.Loading {
 		}
 
 		private static void ParseTileNode(
-			ParsingTree parsingTree,
-			ParsingNode tileNode,
+			OTBTree parsingTree,
+			OTBNode tileNode,
 			UInt16 areaStartingX,
 			UInt16 areaStartingY,
 			Byte areaZ
 			) {
-			if (tileNode.Type != NodeType.NormalTile && tileNode.Type != NodeType.HouseTile)
+			if (tileNode.Type != OTBNodeType.NormalTile && tileNode.Type != OTBNodeType.HouseTile)
 				throw new MalformedTileAreaNodeException("Unknow tile area node type.");
 
-			var stream = new ParsingStream(parsingTree, tileNode);
+			var stream = new OTBNodeParsingStream(parsingTree, tileNode);
 
 			var tileX = areaStartingX + stream.ReadByte();
 			var tileY = areaStartingY + stream.ReadByte();
 
 			Tile tile = null;
-			if (tileNode.Type == NodeType.HouseTile)
+			if (tileNode.Type == OTBNodeType.HouseTile)
 				tile = ParseHouseTile(ref stream, (ushort)tileX, (ushort)tileY, areaZ); // Improve this, remove casts
 
 			var tileFlags = ParseTileAttributes(ref parsingTree, ref stream, ref tile, tileNode);
@@ -53,7 +53,7 @@ namespace COMMO.GameServer.World.Loading {
 				tile.Flags.AddFlags(tileFlags);
 		}
 
-		private static Tile ParseHouseTile(ref ParsingStream stream, UInt16 tileX, UInt16 tileY, byte tileZ) {
+		private static Tile ParseHouseTile(ref OTBNodeParsingStream stream, UInt16 tileX, UInt16 tileY, byte tileZ) {
 			var houseId = stream.ReadUInt32();
 			var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
 			var tile = HouseTile.CreateTileAndAddItToHouse(tileX, tileY, tileZ, house);
@@ -61,18 +61,18 @@ namespace COMMO.GameServer.World.Loading {
 			return tile;
 		}
 
-		private static TileFlags ParseTileAttributes(ref ParsingTree parsingTree, ref ParsingStream stream, ref Tile tile, ParsingNode tileNode) {
+		private static TileFlags ParseTileAttributes(ref OTBTree parsingTree, ref OTBNodeParsingStream stream, ref Tile tile, OTBNode tileNode) {
 			var tileFlags = new TileFlags();
-			NodeAttribute nodeAttribute;
+			TFSWorldNodeAttribute nodeAttribute;
 			while (!stream.IsOver) {
-				nodeAttribute = (NodeAttribute)stream.ReadByte();
+				nodeAttribute = (TFSWorldNodeAttribute)stream.ReadByte();
 				switch (nodeAttribute) {
-					case NodeAttribute.TileFlags:
+					case TFSWorldNodeAttribute.TileFlags:
 					tileFlags = ParseTileFlags(ref stream);
 					break;
 
-					case NodeAttribute.Item:
-					ParseTileItem(ref stream, ref tile, tileNode.Type == NodeType.HouseTile);
+					case TFSWorldNodeAttribute.Item:
+					ParseTileItem(ref stream, ref tile, tileNode.Type == OTBNodeType.HouseTile);
 					break;
 
 					default:
@@ -81,34 +81,34 @@ namespace COMMO.GameServer.World.Loading {
 			}
 
 			foreach (var itemNode in tileNode.Children) {
-				if (itemNode.Type != NodeType.Item)
+				if (itemNode.Type != OTBNodeType.Item)
 					throw new MalformedItemNodeException();
 
-				var itemStream = new ParsingStream(parsingTree, itemNode);
-				ParseTileItem(ref itemStream, ref tile, tileNode.Type == NodeType.HouseTile);
+				var itemStream = new OTBNodeParsingStream(parsingTree, itemNode);
+				ParseTileItem(ref itemStream, ref tile, tileNode.Type == OTBNodeType.HouseTile);
 			}
 
 			return tileFlags;
 		}
 
-		private static TileFlags ParseTileFlags(ref ParsingStream stream) {
+		private static TileFlags ParseTileFlags(ref OTBNodeParsingStream stream) {
 			var flags = (TileFlags)stream.ReadUInt32();
 			var tileFlags = TileFlags.None;
 
-			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)OTBMTileFlag.NoLogout))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)OTBMTileFlag.NoLogout);
+			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.NoLogout))
+				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.NoLogout);
 
-			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)OTBMTileFlag.NoPvpZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)OTBMTileFlag.NoPvpZone);
-			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)OTBMTileFlag.PvpZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)OTBMTileFlag.PvpZone);
-			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)OTBMTileFlag.ProtectionZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)OTBMTileFlag.ProtectionZone);
+			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.NoPvpZone))
+				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.NoPvpZone);
+			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.PvpZone))
+				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.PvpZone);
+			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.ProtectionZone))
+				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.ProtectionZone);
 
 			return tileFlags;
 		}
 
-		private static void ParseTileItem(ref ParsingStream stream, ref Tile tile, bool isHouse = false) {
+		private static void ParseTileItem(ref OTBNodeParsingStream stream, ref Tile tile, bool isHouse = false) {
 			var itemId = stream.ReadUInt16();
 			var item = new Items.Item(itemId);
 

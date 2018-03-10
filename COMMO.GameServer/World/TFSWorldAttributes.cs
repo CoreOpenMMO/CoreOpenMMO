@@ -2,12 +2,12 @@ using System;
 
 namespace COMMO.GameServer.World {
 
-    public sealed class WorldAttributes {
+    public sealed class TFSWorldAttributes {
         public readonly string WorldDescription;
         public readonly string SpawnsFilename;
         public readonly string HousesFilename;
 
-        public WorldAttributes(
+        public TFSWorldAttributes(
             string worldDescription,
             string spawnsFilename,
             string housesFilename

@@ -1,6 +1,6 @@
 namespace COMMO.GameServer.OTBParsing {
 
-	public enum NodeType : byte {
+	public enum OTBNodeType : byte {
 		NotSetYet = 0,          // Added on C# version
 		RootVersion1 = 1,       // OTBM_ROOTV1
 		WorldData = 2,          // OTBM_MAP_DATA

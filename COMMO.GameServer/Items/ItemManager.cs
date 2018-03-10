@@ -312,22 +312,22 @@ namespace COMMO.GameServer.Items {
 
         private void LoadFromOTB(string path) {
             var data = FileManager.ReadFileToByteArray(path);
-            var parsingTree = WorldLoader.ParseWorld(data);
+            var parsingTree = TFSWorldLoader.ParseWorld(data);
 
             var rootNode = parsingTree.Root;
-            var stream = new ParsingStream(parsingTree, rootNode);
+            var stream = new OTBNodeParsingStream(parsingTree, rootNode);
 
             ParseOTBVersion(ref stream);
             _sharedItems = new List<SharedItem>(rootNode.Children.Count);
 
             foreach (var itemNode in rootNode.Children) {
-                var itemStream = new ParsingStream(parsingTree, itemNode);
+                var itemStream = new OTBNodeParsingStream(parsingTree, itemNode);
                 ParseItemNode(ref itemStream);
             }
             _sharedItems.TrimExcess();
         }
 
-        private void ParseOTBVersion(ref ParsingStream stream) {
+        private void ParseOTBVersion(ref OTBNodeParsingStream stream) {
             stream.UnderlayingStream.Skip(4); // Skip flags
             var attr = (OTBAttributes)stream.ReadByte();
             if (attr == OTBAttributes.ROOT_VERSION) {
@@ -342,7 +342,7 @@ namespace COMMO.GameServer.Items {
             }
         }
 
-        private void ParseItemNode(ref ParsingStream stream) {
+        private void ParseItemNode(ref OTBNodeParsingStream stream) {
             var flags = (SharedItemFlags)stream.ReadUInt32();
             var item = new SharedItem(flags);
 

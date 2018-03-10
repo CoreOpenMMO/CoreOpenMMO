@@ -2,10 +2,10 @@ using System;
 
 namespace COMMO.GameServer.OTBParsing {
 
-    public sealed class ParsingTree {
+    public sealed class OTBTree {
 
         /// <summary>
-        /// To save memory, the <see cref="ParsingNode"/>s don't actually store their information.
+        /// To save memory, the <see cref="OTBNode"/>s don't actually store their information.
         /// Instead, they just keep a `offset' and a `byte count' to this array.
         /// </summary>
         public readonly byte[] Data;
@@ -14,9 +14,9 @@ namespace COMMO.GameServer.OTBParsing {
         /// World info is store in a "adhoc xml".
         /// This is the root node of such pseudo-xmml.
         /// </summary>
-        public readonly ParsingNode Root;
+        public readonly OTBNode Root;
 
-        public ParsingTree(byte[] data, ParsingNode root) {
+        public OTBTree(byte[] data, OTBNode root) {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
             if (root == null)

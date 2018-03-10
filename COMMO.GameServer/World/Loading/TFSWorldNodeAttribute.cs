@@ -5,7 +5,7 @@ namespace COMMO.GameServer.World.Loading {
     /// This is here so CodeMade doesn't reorganize this document
     /// </Auto-Generated>
     /// </summary>
-    public enum NodeAttribute : byte {
+    public enum TFSWorldNodeAttribute : byte {
         WorldDescription = 1,                   // OTBM_ATTR_DESCRIPTION = 1,
         ExtensionFile = 2,                      // OTBM_ATTR_EXT_FILE = 2,
         TileFlags = 3,                          // OTBM_ATTR_TILE_FLAGS = 3,

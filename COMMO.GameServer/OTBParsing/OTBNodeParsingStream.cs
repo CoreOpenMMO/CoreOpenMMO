@@ -3,11 +3,16 @@ using System.Text;
 
 namespace COMMO.GameServer.OTBParsing {
 
+	/// <summary>
+	/// This struct is used to parse a OTBNode.
+	/// To understand why it require both a reference to the node and to the tree which 
+	/// the node belongs to, <see cref="OTBTree"/>.
+	/// </summary>
 	/// <remarks>
 	/// !! This is a mutable struct !!
 	/// Be careful when passing it to methods!
 	/// </remarks>
-	public struct ParsingStream {
+	public struct OTBNodeParsingStream {
 		public readonly ByteArrayReadStream UnderlayingStream;
 		public readonly int BeginPosition;
 		public int CurrentPosition => UnderlayingStream.Position;
@@ -15,18 +20,18 @@ namespace COMMO.GameServer.OTBParsing {
 
 		private byte[] _parsingBuffer;
 
-		public ParsingStream(ParsingTree tree, ParsingNode node) {
+		public OTBNodeParsingStream(OTBTree tree, OTBNode nodeToParse) {
 			if (tree == null)
 				throw new ArgumentNullException(nameof(tree));
-			if (node == null)
-				throw new ArgumentNullException(nameof(node));
+			if (nodeToParse == null)
+				throw new ArgumentNullException(nameof(nodeToParse));
 
 			UnderlayingStream = new ByteArrayReadStream(
 				array: tree.Data,
-				position: node.DataBegin);
+				position: nodeToParse.DataBegin);
 
-			BeginPosition = node.DataBegin;
-			EndPosition = node.DataEnd;
+			BeginPosition = nodeToParse.DataBegin;
+			EndPosition = nodeToParse.DataEnd;
 
 			// The buffer must be at least as big as the largest non-string
 			// object we can parse. Currently it's a uint32.
@@ -38,7 +43,7 @@ namespace COMMO.GameServer.OTBParsing {
 		public byte ReadByte() {
 			var value = UnderlayingStream.ReadByte();
 
-			if ((MarkupByte)value != MarkupByte.Escape)
+			if ((OTBMarkupByte)value != OTBMarkupByte.Escape)
 				return value;
 			else
 				return UnderlayingStream.ReadByte();

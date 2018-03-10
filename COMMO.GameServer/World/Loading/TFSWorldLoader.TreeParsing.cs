@@ -1,16 +1,16 @@
+using COMMO.GameServer.OTBParsing;
 using System;
 using System.Collections.Generic;
-using COMMO.GameServer.OTBParsing;
 
 namespace COMMO.GameServer.World.Loading {
 
-    public static partial class WorldLoader {
+	public static partial class TFSWorldLoader {
 
-        public static WorldHeader GetWorldHeader(ParsingTree tree) {
+        public static TFSWorldHeader GetWorldHeader(OTBTree tree) {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var parsingStream = new ParsingStream(tree, tree.Root);
+            var parsingStream = new OTBNodeParsingStream(tree, tree.Root);
 
             var worldEncodingVersion = parsingStream.ReadUInt32();
             var worldWidth = parsingStream.ReadUInt16();
@@ -18,7 +18,7 @@ namespace COMMO.GameServer.World.Loading {
             var itemEncodingMajorVersion = parsingStream.ReadUInt32();
             var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 
-            return new WorldHeader(
+            return new TFSWorldHeader(
                 worldEncodingVersion: worldEncodingVersion,
                 worldWidth: worldWidth,
                 worldHeight: worldHeight,
@@ -26,7 +26,7 @@ namespace COMMO.GameServer.World.Loading {
                 itemEncodingMinorVersion: itemEncodingMinorVersion);
         }
 
-        public static WorldAttributes GetWorldAttributes(ParsingTree tree) {
+        public static TFSWorldAttributes GetWorldAttributes(OTBTree tree) {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
@@ -34,23 +34,23 @@ namespace COMMO.GameServer.World.Loading {
                 throw new MalformedWorldException();
 
             var worldDataNode = tree.Root.Children[0];
-            if ((NodeType)worldDataNode.Type != NodeType.WorldData)
+            if ((OTBNodeType)worldDataNode.Type != OTBNodeType.WorldData)
                 throw new MalformedWorldException();
 
-            var parsingStream = new ParsingStream(tree, worldDataNode);
+            var parsingStream = new OTBNodeParsingStream(tree, worldDataNode);
 
             var worldDescription = new List<string>();
             string spawnsFilename = null;
             string housesFilename = null;
 
             while (!parsingStream.IsOver) {
-                var attribute = (NodeAttribute)parsingStream.ReadByte();
+                var attribute = (TFSWorldNodeAttribute)parsingStream.ReadByte();
                 switch (attribute) {
-                    case NodeAttribute.WorldDescription:
+                    case TFSWorldNodeAttribute.WorldDescription:
                     worldDescription.Add(parsingStream.ReadString());
                     break;
 
-                    case NodeAttribute.ExtensionFileForSpawns:
+                    case TFSWorldNodeAttribute.ExtensionFileForSpawns:
                     if (spawnsFilename != null) {
                         throw new MalformedWorldAttributesNodeException("Multiple filenames for world spawns.");
                     } else {
@@ -58,7 +58,7 @@ namespace COMMO.GameServer.World.Loading {
                     }
                     break;
 
-                    case NodeAttribute.ExtensionFileForHouses:
+                    case TFSWorldNodeAttribute.ExtensionFileForHouses:
                     if (housesFilename != null) {
                         throw new MalformedWorldAttributesNodeException("Multiple filenames for world houses.");
                     } else {
@@ -75,7 +75,7 @@ namespace COMMO.GameServer.World.Loading {
                 separator: Environment.NewLine,
                 values: worldDescription);
 
-            return new WorldAttributes(
+            return new TFSWorldAttributes(
                 worldDescription: formattedWorldDescription,
                 spawnsFilename: spawnsFilename,
                 housesFilename: housesFilename);

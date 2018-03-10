@@ -7,7 +7,7 @@ namespace COMMO.GameServer.World
     /// This is here so CodeMade doesn't reorganize this document
     /// </Auto-Generated>
     /// </summary>
-    public enum OTBMTileFlag : UInt32 {
+    public enum TFSTileFlag : UInt32 {
         ProtectionZone =    0b0001, // OTBM_TILEFLAG_PROTECTIONZONE
         NoPvpZone =         0b0010, // OTBM_TILEFLAG_NOPVPZONE
         NoLogout =          0b0100, // OTBM_TILEFLAG_NOLOGOUT
