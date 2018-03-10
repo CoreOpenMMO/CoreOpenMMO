@@ -31,7 +31,7 @@ namespace COMMO.GameServer.World.Loading {
 			throw new NotImplementedException();
 		}
 
-		public static TFSWorldHeader GetWorldHeader(OTBTree tree) {
+		public static TFSWorldHeader GetWorldHeader(OldOTBTree tree) {
 			if (tree == null)
 				throw new ArgumentNullException(nameof(tree));
 
@@ -51,7 +51,7 @@ namespace COMMO.GameServer.World.Loading {
 				itemEncodingMinorVersion: itemEncodingMinorVersion);
 		}
 
-		public static TFSWorldAttributes GetWorldAttributes(OTBTree tree) {
+		public static TFSWorldAttributes GetWorldAttributes(OldOTBTree tree) {
 			if (tree == null)
 				throw new ArgumentNullException(nameof(tree));
 

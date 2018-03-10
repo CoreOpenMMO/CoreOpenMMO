@@ -18,7 +18,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
-		private static OTBTree ExtractOTBTree(byte[] serializedWorldData) {
+		private static OldOTBTree ExtractOTBTree(byte[] serializedWorldData) {
 			var stream = new ByteArrayReadStream(serializedWorldData);
 
 			// Skipping the first 4 bytes coz they are used to store a... identifier?
@@ -42,7 +42,7 @@ namespace COMMO.GameServer.World.Loading {
 			if (nodeStack.Count != 0)
 				throw new MalformedWorldException();
 
-			return new OTBTree(data: serializedWorldData, root: rootNode);
+			return new OldOTBTree(data: serializedWorldData, root: rootNode);
 		}
 
 		private static void ParseTreeAfterRootNodeStart(

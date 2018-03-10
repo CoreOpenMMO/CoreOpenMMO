@@ -5,7 +5,7 @@ namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
 
-		private static void ParseTileAreaNode(OTBTree parsingTree, OldOTBNode tileAreaNode) {
+		private static void ParseTileAreaNode(OldOTBTree parsingTree, OldOTBNode tileAreaNode) {
 			if (parsingTree == null)
 				throw new ArgumentNullException(nameof(parsingTree));
 			if (tileAreaNode == null)
@@ -30,7 +30,7 @@ namespace COMMO.GameServer.World.Loading {
 		}
 
 		private static void ParseTileNode(
-			OTBTree parsingTree,
+			OldOTBTree parsingTree,
 			OldOTBNode tileNode,
 			UInt16 areaStartingX,
 			UInt16 areaStartingY,
@@ -41,11 +41,11 @@ namespace COMMO.GameServer.World.Loading {
 
 			var stream = new OTBNodeParsingStream(parsingTree, tileNode);
 
-			var tileX = areaStartingX + stream.ReadByte();
-			var tileY = areaStartingY + stream.ReadByte();
+			var tileXOffset = stream.ReadByte();
+			var tileYOffset = stream.ReadByte();
 			var tilePosition = new Position(
-				x: tileX,
-				y: tileY,
+				x: areaStartingX + tileXOffset,
+				y: areaStartingY + tileYOffset,
 				z: areaZ);
 
 			Tile tile = null;
@@ -61,80 +61,6 @@ namespace COMMO.GameServer.World.Loading {
 				tile = new Tile(
 					position: tilePosition,
 					belongsToHouse: false);
-			}
-
-			var tileFlags = ParseTileAttributes(ref parsingTree, ref stream, ref tile, tileNode);
-			if (tile != null)
-				tile.Flags.AddFlags(tileFlags);
-		}
-
-		private static TileFlags ParseTileAttributes(ref OTBTree parsingTree, ref OTBNodeParsingStream stream, ref Tile tile, OldOTBNode tileNode) {
-			var tileFlags = new TileFlags();
-			TFSWorldNodeAttribute nodeAttribute;
-			while (!stream.IsOver) {
-				nodeAttribute = (TFSWorldNodeAttribute)stream.ReadByte();
-				switch (nodeAttribute) {
-					case TFSWorldNodeAttribute.TileFlags:
-					tileFlags = ParseTileFlags(ref stream);
-					break;
-
-					case TFSWorldNodeAttribute.Item:
-					ParseTileItem(ref stream, ref tile, tileNode.Type == OTBNodeType.HouseTile);
-					break;
-
-					default:
-					throw new MalformedTileNodeException("Unknow node attribute " + nameof(nodeAttribute) + " of type " + nodeAttribute);
-				}
-			}
-
-			foreach (var itemNode in tileNode.Children) {
-				if (itemNode.Type != OTBNodeType.Item)
-					throw new MalformedItemNodeException();
-
-				var itemStream = new OTBNodeParsingStream(parsingTree, itemNode);
-				ParseTileItem(ref itemStream, ref tile, tileNode.Type == OTBNodeType.HouseTile);
-			}
-
-			return tileFlags;
-		}
-
-		private static TileFlags ParseTileFlags(ref OTBNodeParsingStream stream) {
-			var flags = (TileFlags)stream.ReadUInt32();
-			var tileFlags = TileFlags.None;
-
-			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.NoLogout))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.NoLogout);
-
-			if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.NoPvpZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.NoPvpZone);
-			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.PvpZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.PvpZone);
-			else if (TileFlagsExtensions.FlagsAreSet(flags, (TileFlags)TFSTileFlag.ProtectionZone))
-				TileFlagsExtensions.AddFlags(tileFlags, (TileFlags)TFSTileFlag.ProtectionZone);
-
-			return tileFlags;
-		}
-
-		private static void ParseTileItem(ref OTBNodeParsingStream stream, ref Tile tile, bool isHouse = false) {
-			var itemId = stream.ReadUInt16();
-			var item = new Items.Item(itemId);
-
-			if (isHouse && item.IsMoveable())
-				throw new MoveableItemInHouseException(); // Don't need to use Exception. Maybe just a warning with pos and don't place the item in tile is Okay
-			else {
-				// if item.count <= 0; item.count = 1. But if always create with count = 0 this should only be item.count = 1, ou create with count = 1
-				if (tile != null) {
-					//tile.AddInternalThing(null); // Item
-					// item.StartDecaying();
-					// item.LoadedFromMap = true;
-				} else if (item != null) { // item is ground Tile
-										   // ground_item = item
-				} else {
-					tile = new Tile(0, 0, 0); // XYZ
-											  //tile.AddInternalThing(null); // Item
-											  // item.StartDecaying();
-											  // item.LoadedFromMap = true;
-				}
 			}
 		}
 	}

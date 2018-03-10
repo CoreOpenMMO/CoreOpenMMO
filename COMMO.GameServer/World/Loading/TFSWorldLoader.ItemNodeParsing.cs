@@ -5,15 +5,14 @@ namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
 
-		private static Item ParseItemNode(
-			OTBTree parsingTree,
+		private static void ParseItemNode(
+			OldOTBTree parsingTree,
 			OldOTBNode parsingNode
 			) {
 			if (parsingNode.Type != OTBNodeType.Item)
 				throw new MalformedItemNodeException();
 
 #warning Implement this
-			return null;
 		}
 	}
 }

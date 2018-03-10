@@ -2,7 +2,7 @@ using System;
 
 namespace COMMO.GameServer.OTBParsing {
 
-    public sealed class OTBTree {
+    public sealed class OldOTBTree {
 
         /// <summary>
         /// To save memory, the <see cref="OldOTBNode"/>s don't actually store their information.
@@ -16,7 +16,7 @@ namespace COMMO.GameServer.OTBParsing {
         /// </summary>
         public readonly OldOTBNode Root;
 
-        public OTBTree(byte[] data, OldOTBNode root) {
+        public OldOTBTree(byte[] data, OldOTBNode root) {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
             if (root == null)

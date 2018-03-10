@@ -3,13 +3,13 @@ using System.Text;
 
 namespace COMMO.GameServer.OTBParsing {
 
-	public ref struct OTBParsingStream {
+	public ref struct OldOTBParsingStream {
 		public readonly ReadOnlyMemoryStream UnderlayingStream;
 		public int CurrentPosition => UnderlayingStream.Position;
 
 		private byte[] _parsingBuffer;
 
-		public OTBParsingStream(ReadOnlySpan<byte> otbData) {
+		public OldOTBParsingStream(ReadOnlySpan<byte> otbData) {
 			UnderlayingStream = new ReadOnlyMemoryStream(otbData);
 
 			// The buffer must be at least as big as the largest non-string
@@ -22,7 +22,7 @@ namespace COMMO.GameServer.OTBParsing {
 		public byte ReadByte() {
 			var value = UnderlayingStream.ReadByte();
 
-			if ((MarkupByte)value != MarkupByte.Escape)
+			if ((OTBMarkupByte)value != OTBMarkupByte.Escape)
 				return value;
 			else
 				return UnderlayingStream.ReadByte();

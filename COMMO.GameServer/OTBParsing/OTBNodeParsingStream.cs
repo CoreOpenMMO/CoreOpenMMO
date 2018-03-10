@@ -6,7 +6,7 @@ namespace COMMO.GameServer.OTBParsing {
 	/// <summary>
 	/// This struct is used to parse a OTBNode.
 	/// To understand why it require both a reference to the node and to the tree which 
-	/// the node belongs to, <see cref="OTBTree"/>.
+	/// the node belongs to, <see cref="OldOTBTree"/>.
 	/// </summary>
 	/// <remarks>
 	/// !! This is a mutable struct !!
@@ -20,7 +20,7 @@ namespace COMMO.GameServer.OTBParsing {
 
 		private byte[] _parsingBuffer;
 
-		public OTBNodeParsingStream(OTBTree tree, OldOTBNode nodeToParse) {
+		public OTBNodeParsingStream(OldOTBTree tree, OldOTBNode nodeToParse) {
 			if (tree == null)
 				throw new ArgumentNullException(nameof(tree));
 			if (nodeToParse == null)

@@ -17,6 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Items\DeprecatedItemGroupException.cs" />
+    <Compile Remove="Items\ItemAttribute.cs" />
+    <Compile Remove="Items\ItemGroup.cs" />
+    <Compile Remove="Items\ItemManager.cs" />
+    <Compile Remove="Items\ItemType.cs" />
+    <Compile Remove="Items\OTBAttributes.cs" />
+    <Compile Remove="Items\SharedItem.cs" />
+    <Compile Remove="Items\SharedItemAbilities.cs" />
+    <Compile Remove="Items\SharedItemFlags.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Memory" Version="4.5.0-preview1-26216-02" />
@@ -26,6 +38,12 @@
     <ProjectReference Include="..\COMMO.Domain\COMMO.Domain.csproj" />
     <ProjectReference Include="..\COMMO.Network\COMMO.Network.csproj" />
     <ProjectReference Include="..\COMMO\COMMO.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Items\Item.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
 
 </Project>
