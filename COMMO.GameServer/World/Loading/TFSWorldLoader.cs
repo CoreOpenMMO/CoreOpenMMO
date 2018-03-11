@@ -10,6 +10,7 @@ namespace COMMO.GameServer.World.Loading {
 			if (serializedWorldData.Length < MinimumWorldSize)
 				throw new MalformedWorldException();
 
+			var otbTree = ExtractOTBTree(serializedWorldData);
 			throw new NotImplementedException();
 		}
 

@@ -41,11 +41,14 @@ namespace COMMO.GameServer.OTBParsing {
 				throw new InvalidOperationException();
 
 			// Marking node's data
+			// length = end - start - 1 because the end is non-inclusive
 			var start = _nodeStarts.Pop();
 			var data = new Memory<byte>(
 				array: _serializedTreeData,
 				start: start,
-				length: end - start);
+				length: end - start - 1);
+
+
 
 			// Checking if this node has children
 			var childCount = _childrenCounts.Pop();
