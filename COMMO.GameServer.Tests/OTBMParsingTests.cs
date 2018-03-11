@@ -5,7 +5,7 @@ using Xunit;
 
 namespace COMMO.GameServer.Tests
 {
-	public class OTBMLoadTests {
+	public class OTBMParsingTests {
 
 		[Theory]
 		[InlineData("(((()))")]
@@ -14,7 +14,7 @@ namespace COMMO.GameServer.Tests
 		[InlineData("(")]
 		[InlineData(")")]
 		[InlineData("()()")]
-		public void OTBMLoad_Wrong(String map)
+		public void OTBM_Parsing_Wrong(String map)
         {
 			var newmap = map.Select(c => c == '(' ? (byte)OTBMarkupByte.Start : (byte)OTBMarkupByte.End).ToArray();
 			Assert.Throws<InvalidOperationException>(() => {
@@ -42,7 +42,7 @@ namespace COMMO.GameServer.Tests
 		[InlineData("(()())")]
 		[InlineData("((())())")]
 		[InlineData("(()(())((()))(()()(()))())")]
-		public void OTBMLoad_Right(String map) {
+		public void OTBM_Parsing_Right(String map) {
 			var newmap = map.Select(c => c == '(' ? (byte)OTBMarkupByte.Start : (byte)OTBMarkupByte.End).ToArray();
 			var treeBuilder = new OTBTreeBuilder(newmap);
 
