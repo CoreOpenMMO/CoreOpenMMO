@@ -137,6 +137,7 @@ namespace COMMO.GameServer.World.Loading {
 				length: rootEnd - rootStart);
 
 			return new OTBNode(
+				type: rootNodeType,
 				children: ReadOnlyArray<OTBNode>.WrapCollection(rootChildren.ToArray()),
 				data: rootData);
 		}

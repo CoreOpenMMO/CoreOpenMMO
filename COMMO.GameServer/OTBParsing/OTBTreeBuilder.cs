@@ -6,6 +6,7 @@ namespace COMMO.GameServer.OTBParsing {
 	public sealed class OTBTreeBuilder {
 		private readonly byte[] _serializedTreeData;
 		private readonly Stack<int> _nodeStarts = new Stack<int>();
+		private readonly Stack<OTBNodeType> _nodeTypes = new Stack<OTBNodeType>();
 		private readonly Stack<int> _childrenCounts = new Stack<int>();
 		private readonly Stack<OTBNode> _builtNodes = new Stack<OTBNode>();
 
@@ -16,7 +17,7 @@ namespace COMMO.GameServer.OTBParsing {
 			_serializedTreeData = serializedTreeData;
 		}
 
-		public void AddNodeStart(int start) {
+		public void AddNodeStart(int start, OTBNodeType type) {
 			if (start < 0 || start > _serializedTreeData.Length)
 				throw new ArgumentOutOfRangeException(nameof(start));
 
@@ -28,6 +29,7 @@ namespace COMMO.GameServer.OTBParsing {
 
 			_nodeStarts.Push(start);
 			_childrenCounts.Push(0);
+			_nodeTypes.Push(type);
 		}
 
 		public void AddNodeEnd(int end) {
@@ -57,6 +59,7 @@ namespace COMMO.GameServer.OTBParsing {
 
 			// Creating node and storing it
 			var node = new OTBNode(
+				type: _nodeTypes.Pop(),
 				children: ReadOnlyArray<OTBNode>.WrapCollection(currentNodeChildren),
 				data: data);
 			_builtNodes.Push(node);
