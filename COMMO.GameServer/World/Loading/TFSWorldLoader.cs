@@ -6,9 +6,7 @@ namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
 
-		public static World ParseWorld(byte[] serializedWorldData) {
-			if (serializedWorldData == null)
-				throw new ArgumentNullException(nameof(serializedWorldData));
+		public static World ParseWorld(ReadOnlySpan<byte> serializedWorldData) {
 			if (serializedWorldData.Length < MinimumWorldSize)
 				throw new MalformedWorldException();
 

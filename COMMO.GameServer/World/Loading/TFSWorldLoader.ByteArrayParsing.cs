@@ -18,7 +18,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		private const int MinimumWorldSize = IdentifierLength + MinimumNodeSize;
 
-		private static OldOTBTree ExtractOTBTree(byte[] serializedWorldData) {
+		private static OldOTBTree OldExtractOTBTree(byte[] serializedWorldData) {
 			var stream = new ByteArrayReadStream(serializedWorldData);
 
 			// Skipping the first 4 bytes coz they are used to store a... identifier?
@@ -60,15 +60,15 @@ namespace COMMO.GameServer.World.Loading {
 
 				switch (currentMark) {
 					case OTBMarkupByte.Start:
-					ProcessNodeStart(stream, nodeStack);
+					OldProcessNodeStart(stream, nodeStack);
 					break;
 
 					case OTBMarkupByte.End:
-					ProcessNodeEnd(stream, nodeStack);
+					OldProcessNodeEnd(stream, nodeStack);
 					break;
 
 					case OTBMarkupByte.Escape:
-					ProcessNodeEscape(stream);
+					OldProcessNodeEscape(stream);
 					break;
 
 					default:
@@ -77,7 +77,7 @@ namespace COMMO.GameServer.World.Loading {
 			}
 		}
 
-		private static void ProcessNodeStart(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
+		private static void OldProcessNodeStart(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
 			if (!nodeStack.TryPeek(out var currentNode))
 				throw new MalformedWorldException();
 
@@ -97,7 +97,7 @@ namespace COMMO.GameServer.World.Loading {
 			nodeStack.Push(child);
 		}
 
-		private static void ProcessNodeEnd(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
+		private static void OldProcessNodeEnd(ByteArrayReadStream stream, Stack<OldOTBNode> nodeStack) {
 			if (!nodeStack.TryPeek(out var currentNode))
 				throw new MalformedWorldException();
 
@@ -107,10 +107,46 @@ namespace COMMO.GameServer.World.Loading {
 			nodeStack.Pop();
 		}
 
-		private static void ProcessNodeEscape(ByteArrayReadStream stream) {
+		private static void OldProcessNodeEscape(ByteArrayReadStream stream) {
 			var escapedByte = stream.ReadByte();
 			if (stream.IsOver)
 				throw new MalformedWorldException();
+		}
+
+		public static OTBNode ExtractOTBTree(byte[] serializedWorldData) {
+			var stream = new ReadOnlyMemoryStream(serializedWorldData);
+
+			// Skipping the first 4 bytes coz they are used to store a... identifier?
+			stream.Skip(IdentifierLength);
+
+			var firstMarker = (OTBMarkupByte)stream.ReadByte();
+			if (firstMarker != OTBMarkupByte.Start)
+				throw new MalformedWorldException();
+
+			var guessedMaximumNodeDepth = 128;
+			var nodeStack = new Stack<(OTBNodeType nodeType, int nodeStart)>(capacity: guessedMaximumNodeDepth);
+
+			var rootNodeType = (OTBNodeType)stream.ReadByte();
+			var rootStart = stream.Position;
+			nodeStack.Push((rootNodeType, rootStart));
+
+			(var rootChildren, var rootEnd) = ParseTreeAfterRootNodeStart(stream, nodeStack);
+			var rootData = new ReadOnlyMemory<byte>(
+				array: serializedWorldData,
+				start: rootStart,
+				length: rootEnd - rootStart);
+
+			return new OTBNode(
+				children: ReadOnlyArray<OTBNode>.WrapCollection(rootChildren.ToArray()),
+				data: rootData);
+		}
+
+		private static (List<OTBNode> rootChildren, int rootEnd) ParseTreeAfterRootNodeStart
+			(ReadOnlyMemoryStream stream,
+			Stack<(OTBNodeType nodeType, int nodeStart)> nodeStack
+			) {
+
+			throw new NotImplementedException();
 		}
 	}
 }
