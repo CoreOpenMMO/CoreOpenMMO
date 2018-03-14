@@ -38,7 +38,7 @@ namespace COMMO.GameServer.World.Loading {
 
 				switch (currentMark) {
 					case OTBMarkupByte.Start:
-					treeBuilder.AddNodeStart(
+					treeBuilder.AddNodeDataBegin(
 						start: stream.Position,
 						type: nodeType);
 					break;

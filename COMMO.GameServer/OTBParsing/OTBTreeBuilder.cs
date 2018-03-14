@@ -17,7 +17,8 @@ namespace COMMO.GameServer.OTBParsing {
 			_serializedTreeData = serializedTreeData;
 		}
 
-		public void AddNodeStart(int start, OTBNodeType type) {
+		/// <remarks>Start will be included in the data.</remarks>
+		public void AddNodeDataBegin(int start, OTBNodeType type) {
 			if (start < 0 || start > _serializedTreeData.Length)
 				throw new ArgumentOutOfRangeException(nameof(start));
 
@@ -32,26 +33,26 @@ namespace COMMO.GameServer.OTBParsing {
 			_nodeTypes.Push(type);
 		}
 
+		/// <remarks>End will not be included in the data.</remarks>
 		public void AddNodeEnd(int end) {
 			if (end < 0 || end > _serializedTreeData.Length)
 				throw new ArgumentOutOfRangeException();
 
-			// Sanity check
-			if (_nodeStarts.Count == 0)
+			// Sanity checks
+			if (!_nodeStarts.TryPop(out var start))
+				throw new InvalidOperationException();
+			if (end < start)
 				throw new InvalidOperationException();
 
-			// Marking node's data
-			// length = end - start - 1 because the end is non-inclusive
-			var start = _nodeStarts.Pop();
 			var data = new Memory<byte>(
 				array: _serializedTreeData,
 				start: start,
-				length: end - start - 1);
-
-
+				length: end - start);
 
 			// Checking if this node has children
-			var childCount = _childrenCounts.Pop();
+			if (!_childrenCounts.TryPop(out var childCount))
+				throw new InvalidOperationException();
+
 			var currentNodeChildren = new OTBNode[childCount];
 			for (int i = 0; i < childCount; i++)
 				currentNodeChildren[i] = _builtNodes.Pop();
