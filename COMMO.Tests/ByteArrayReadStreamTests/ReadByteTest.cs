@@ -2,8 +2,7 @@ using FluentAssertions;
 using NUnit.Framework;
 
 namespace COMMO.Tests.ByteArrayReadStreamTests {
-	public class ReadByteTest
-    {
+	public class ReadByteTest {
 
 		[TestCase(new byte[] { 0, 7, 3 }, 0, 0, false)]
 		[TestCase(new byte[] { 0, 7, 3 }, 1, 7, false)]

@@ -26,7 +26,11 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 		[TestCase(new byte[] { 0, 1 }, 0)]
 		[TestCase(new byte[] { 0, 1 }, 1)]
 		[TestCase(new byte[] { 0, 1 }, 2)]
-		public void ShouldCreateIfArgumentsAreValid(byte[] array, int position) => 
+		public void ShouldCreateIfArgumentsAreValid(byte[] array, int position) =>
 			new ByteArrayReadStream(array, position);
+
+		[TestCase(new byte[] { 0, 1 })]
+		public void ShouldCreateWithPositionDefaultValue(byte[] array) =>
+			new ByteArrayReadStream(array);
 	}
 }

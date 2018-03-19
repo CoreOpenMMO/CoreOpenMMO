@@ -1,8 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace COMMO.Tests.ByteArrayReadStreamTests {
 	public class GetByteTest {
