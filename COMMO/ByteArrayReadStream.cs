@@ -21,9 +21,14 @@ namespace COMMO {
 
 		public bool IsOver => Position >= _array.Length;
 
-		public int BytesLeftToRead() => _array.Length - Position;
+		public int BytesLeftToRead => _array.Length - Position;
 
-		public byte PeakByte() => _array[Position];
+		public byte GetByte() {
+			if (IsOver)
+				throw new InvalidOperationException();
+
+			return _array[Position];
+		}
 
 		public byte ReadByte() {
 			if (IsOver)
