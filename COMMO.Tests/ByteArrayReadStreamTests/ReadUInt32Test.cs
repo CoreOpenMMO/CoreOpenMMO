@@ -12,13 +12,16 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 			action.Should().ThrowExactly<InvalidOperationException>();
 		}
 
-		[TestCase(new byte[] { 1, 7, 3, 4 }, 0, 1, 1)]
-		[TestCase(new byte[] { 1, 7, 3, 4 }, 1, 2, 7)]
-		public void ShouldReadAndSkipPositionsProperly(byte[] array, int position, int expectedPosition, int expectedResult) {
-			var objectResult = new ByteArrayReadStream(array, position);
-			var result = objectResult.ReadUInt32();
-			result.Should().Be((uint)expectedResult);
-			objectResult.Position.Should().Be(expectedPosition);
+		[TestCase((uint)7)]
+		[TestCase((uint)1212)]
+		[TestCase(uint.MaxValue)]
+		[TestCase(uint.MinValue)]
+		public void ShouldReadAndSkipPositionsProperly(uint value) {
+			var bytearray = BitConverter.GetBytes(value);
+			var result = new ByteArrayReadStream(bytearray)
+				.ReadUInt32();
+
+			result.Should().Be(value);
 		}
 	}
 }
