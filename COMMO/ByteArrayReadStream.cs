@@ -1,8 +1,6 @@
 using System;
-using System.Runtime.InteropServices;
 
 namespace COMMO {
-
 	/// <summary>
 	/// This class allows us to navigate a byte array in stream-like fashion.
 	/// </summary>
@@ -41,22 +39,22 @@ namespace COMMO {
 			return data;
 		}
 
-		public UInt16 ReadUInt16() {
+		public ushort ReadUInt16() {
 			if (IsOver)
 				throw new InvalidOperationException();
 
 			var data = BitConverter.ToUInt16(_array, Position);
-			Position += sizeof(UInt16);
+			Position += sizeof(ushort);
 
 			return data;
 		}
 
-		public UInt32 ReadUInt32() {
+		public uint ReadUInt32() {
 			if (IsOver)
 				throw new InvalidOperationException();
 
 			var data = BitConverter.ToUInt32(_array, Position);
-			Position += sizeof(UInt32);
+			Position += sizeof(uint);
 
 			return data;
 		}
