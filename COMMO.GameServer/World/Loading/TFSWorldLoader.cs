@@ -53,7 +53,7 @@ namespace COMMO.GameServer.World.Loading {
 			if (rootNode.Children.Count != 1)
 				throw new MalformedWorldException();
 
-			var parsingStream = new OldOTBParsingStream(rootNode.Data.Span);
+			var parsingStream = new OTBParsingStream(rootNode.Data.Span);
 
 			var headerVersion = parsingStream.ReadUInt32();
 			if (headerVersion == 0 || headerVersion > 2)
