@@ -1,92 +1,111 @@
 using COMMO.GameServer.OTBParsing;
 using System;
-using System.Collections.Generic;
 
 namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
+
+		/*
+			OTBM_ROOTV1
+			|
+			|--- OTBM_MAP_DATA
+			|	|
+			|	|--- OTBM_TILE_AREA
+			|	|	|--- OTBM_TILE
+			|	|	|--- OTBM_TILE_SQUARE (not implemented)
+			|	|	|--- OTBM_TILE_REF (not implemented)
+			|	|	|--- OTBM_HOUSETILE
+			|	|
+			|	|--- OTBM_SPAWNS (not implemented)
+			|	|	|--- OTBM_SPAWN_AREA (not implemented)
+			|	|	|--- OTBM_MONSTER (not implemented)
+			|	|
+			|	|--- OTBM_TOWNS
+			|	|	|--- OTBM_TOWN
+			|	|
+			|	|--- OTBM_WAYPOINTS
+			|		|--- OTBM_WAYPOINT
+			|
+			|--- OTBM_ITEM_DEF (not implemented)
+		*/
+
+		public const uint SupportedItemEncodingMajorVersion = 3;
+		public const uint SupportedItemEncodingMinorVersion = 8;
 
 		public static World ParseWorld(byte[] serializedWorldData) {
 			if (serializedWorldData.Length < MinimumWorldSize)
 				throw new MalformedWorldException();
 
 			var otbTree = ExtractOTBTree(serializedWorldData);
+			var world = new World();
+
+			ParseOTBTreeRootNode(otbTree, world);
+			Parse(otbTree.Children[0], world);
+
 			throw new NotImplementedException();
 		}
 
-		public static TFSWorldHeader GetWorldHeader(OldOTBTree tree) {
-			if (tree == null)
-				throw new ArgumentNullException(nameof(tree));
+		private static void ParseOTBTreeRootNode(OTBNode rootNode, World world) {
+			if (rootNode == null)
+				throw new ArgumentNullException(nameof(rootNode));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+			if (rootNode.Children.Count != 1)
+				throw new MalformedWorldException();
 
-			var parsingStream = new OTBNodeParsingStream(tree, tree.Root);
+			var parsingStream = new OldOTBParsingStream(rootNode.Data.Span);
 
-			var worldEncodingVersion = parsingStream.ReadUInt32();
+			var headerVersion = parsingStream.ReadUInt32();
+			if (headerVersion == 0 || headerVersion > 2)
+				throw new UnsupportedWorldEncodingVersionException();
+
 			var worldWidth = parsingStream.ReadUInt16();
 			var worldHeight = parsingStream.ReadUInt16();
-			var itemEncodingMajorVersion = parsingStream.ReadUInt32();
-			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 
-			return new TFSWorldHeader(
-				worldEncodingVersion: worldEncodingVersion,
-				worldWidth: worldWidth,
-				worldHeight: worldHeight,
-				itemEncodingMajorVersion: itemEncodingMajorVersion,
-				itemEncodingMinorVersion: itemEncodingMinorVersion);
+			var itemEncodingMajorVersion = parsingStream.ReadUInt32();
+			if (itemEncodingMajorVersion != SupportedItemEncodingMajorVersion)
+				throw new UnsupportedItemEncodingVersionException();
+
+			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
+			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
+				throw new UnsupportedItemEncodingVersionException();
+
+			Console.WriteLine($"OTBM header version: {headerVersion}");
+			Console.WriteLine($"World width: {parsingStream.ReadUInt16()}");
+			Console.WriteLine($"World height: {parsingStream.ReadUInt16()}");
+			Console.WriteLine($"Item encoding major version: {parsingStream.ReadUInt32()}");
+			Console.WriteLine($"Item encoding minor version: {parsingStream.ReadUInt32()}");
 		}
 
-		public static TFSWorldAttributes GetWorldAttributes(OldOTBTree tree) {
-			if (tree == null)
-				throw new ArgumentNullException(nameof(tree));
-
-			if (tree.Root.Children.Count != 1)
+		private static void Parse(OTBNode worldDataNode, World world) {
+			if (worldDataNode == null)
+				throw new ArgumentNullException(nameof(worldDataNode));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+			if (worldDataNode.Type != OTBNodeType.WorldData)
 				throw new MalformedWorldException();
 
-			var worldDataNode = tree.Root.Children[0];
-			if ((OTBNodeType)worldDataNode.Type != OTBNodeType.WorldData)
-				throw new MalformedWorldException();
-
-			var parsingStream = new OTBNodeParsingStream(tree, worldDataNode);
-
-			var worldDescription = new List<string>();
-			string spawnsFilename = null;
-			string housesFilename = null;
-
-			while (!parsingStream.IsOver) {
-				var attribute = (TFSWorldNodeAttribute)parsingStream.ReadByte();
-				switch (attribute) {
-					case TFSWorldNodeAttribute.WorldDescription:
-					worldDescription.Add(parsingStream.ReadString());
+			foreach (var child in worldDataNode.Children) {
+				switch (child.Type) {
+					case OTBNodeType.TileArea:
+					// ParseTileAreaNode(child, world);
 					break;
 
-					case TFSWorldNodeAttribute.ExtensionFileForSpawns:
-					if (spawnsFilename != null) {
-						throw new MalformedWorldAttributesNodeException("Multiple filenames for world spawns.");
-					} else {
-						spawnsFilename = parsingStream.ReadString();
-					}
+					case OTBNodeType.TownCollection:
+					// ParseTownCollectionNode(child, world);
 					break;
 
-					case TFSWorldNodeAttribute.ExtensionFileForHouses:
-					if (housesFilename != null) {
-						throw new MalformedWorldAttributesNodeException("Multiple filenames for world houses.");
-					} else {
-						housesFilename = parsingStream.ReadString();
-					}
+					case OTBNodeType.WayPointCollection:
+					// ParseWaypointCollectionNode(child, world);
 					break;
+
+					case OTBNodeType.ItemDefinition:
+					throw new NotImplementedException("TFS didn't implement this. So didn't we.");
 
 					default:
-					throw new MalformedWorldAttributesNodeException("Unknown attribute found in world attributes note.");
+					throw new MalformedWorldException();
 				}
 			}
-
-			var formattedWorldDescription = string.Join(
-				separator: Environment.NewLine,
-				values: worldDescription);
-
-			return new TFSWorldAttributes(
-				worldDescription: formattedWorldDescription,
-				spawnsFilename: spawnsFilename,
-				housesFilename: housesFilename);
 		}
 	}
 }
