@@ -5,63 +5,38 @@ namespace COMMO.GameServer.World.Loading {
 
 	public static partial class TFSWorldLoader {
 
-		//	private static void ParseTileAreaNode(OldOTBTree parsingTree, OldOTBNode tileAreaNode) {
-		//		if (parsingTree == null)
-		//			throw new ArgumentNullException(nameof(parsingTree));
-		//		if (tileAreaNode == null)
-		//			throw new ArgumentNullException(nameof(tileAreaNode));
+		private static void ParseTileAreaNode(OTBNode tileAreaNode, World world) {
+			if (tileAreaNode == null)
+				throw new ArgumentNullException(nameof(tileAreaNode));
+			if (tileAreaNode.Type != OTBNodeType.TileArea)
+				throw new WorldLoadingException();
 
-		//		var stream = new OTBNodeParsingStream(
-		//			tree: parsingTree,
-		//			nodeToParse: tileAreaNode);
+			var stream = new OTBParsingStream(tileAreaNode.Data.Span);
 
-		//		var areaStartingX = stream.ReadUInt16();
-		//		var areaStartingY = stream.ReadUInt16();
-		//		var areaZ = stream.ReadByte();
+			var areaStartX = stream.ReadUInt16();
+			var areaStartY = stream.ReadUInt16();
+			var areaZ = stream.ReadByte();
 
-		//		foreach (var tileNode in tileAreaNode.Children) {
-		//			ParseTileNode(
-		//				parsingTree: parsingTree,
-		//				tileNode: tileNode,
-		//				areaStartingX: areaStartingX,
-		//				areaStartingY: areaStartingY,
-		//				areaZ: areaZ);
-		//		}
-		//	}
+			var areaStartPosition = new Position(
+				x: areaStartX,
+				y: areaStartY,
+				z: areaZ);
 
-		//	private static void ParseTileNode(
-		//		OldOTBTree parsingTree,
-		//		OldOTBNode tileNode,
-		//		UInt16 areaStartingX,
-		//		UInt16 areaStartingY,
-		//		Byte areaZ
-		//		) {
-		//		if (tileNode.Type != OTBNodeType.NormalTile && tileNode.Type != OTBNodeType.HouseTile)
-		//			throw new MalformedTileAreaNodeException("Unknow tile area node type.");
+			foreach (var tileNode in tileAreaNode.Children) {
+				ParseTileNode(
+					tilesAreaStartPosition: areaStartPosition,
+					tileNode: tileNode,
+					world: world);
+			}
+		}
 
-		//		var stream = new OTBNodeParsingStream(parsingTree, tileNode);
+		private static void ParseTileNode(
+			in Position tilesAreaStartPosition,
+			OTBNode tileNode,
+			World world
+			) {
 
-		//		var tileXOffset = stream.ReadByte();
-		//		var tileYOffset = stream.ReadByte();
-		//		var tilePosition = new Position(
-		//			x: areaStartingX + tileXOffset,
-		//			y: areaStartingY + tileYOffset,
-		//			z: areaZ);
-
-		//		Tile tile = null;
-		//		if (tileNode.Type == OTBNodeType.HouseTile) {
-		//			tile = new Tile(
-		//				position: tilePosition,
-		//				belongsToHouse: true);
-
-		//			var houseId = stream.ReadUInt32();
-		//			var house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
-		//			house.AddTile(tile);
-		//		} else {
-		//			tile = new Tile(
-		//				position: tilePosition,
-		//				belongsToHouse: false);
-		//		}
-		//	}
+			throw new NotImplementedException();
+		}
 	}
 }

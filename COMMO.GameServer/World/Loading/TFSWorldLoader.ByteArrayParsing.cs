@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using COMMO.GameServer.OTBParsing;
 
 namespace COMMO.GameServer.World.Loading {
@@ -12,7 +11,7 @@ namespace COMMO.GameServer.World.Loading {
 		private const int IdentifierLength = 4;
 
 		/// <summary>
-		/// NodeStart + NodeType + NodeEnd
+		/// A well-formed node with no data contains at least 3 bytes: NodeStart + NodeType + NodeEnd.
 		/// </summary>
 		private const int MinimumNodeSize = 3;
 

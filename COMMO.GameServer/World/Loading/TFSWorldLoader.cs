@@ -34,7 +34,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		public static World ParseWorld(byte[] serializedWorldData) {
 			if (serializedWorldData.Length < MinimumWorldSize)
-				throw new MalformedWorldException();
+				throw new WorldLoadingException();
 
 			var otbTree = ExtractOTBTree(serializedWorldData);
 			var world = new World();
@@ -51,24 +51,24 @@ namespace COMMO.GameServer.World.Loading {
 			if (world == null)
 				throw new ArgumentNullException(nameof(world));
 			if (rootNode.Children.Count != 1)
-				throw new MalformedWorldException();
+				throw new WorldLoadingException();
 
 			var parsingStream = new OTBParsingStream(rootNode.Data.Span);
 
 			var headerVersion = parsingStream.ReadUInt32();
 			if (headerVersion == 0 || headerVersion > 2)
-				throw new UnsupportedWorldEncodingVersionException();
+				throw new WorldLoadingException();
 
 			var worldWidth = parsingStream.ReadUInt16();
 			var worldHeight = parsingStream.ReadUInt16();
 
 			var itemEncodingMajorVersion = parsingStream.ReadUInt32();
 			if (itemEncodingMajorVersion != SupportedItemEncodingMajorVersion)
-				throw new UnsupportedItemEncodingVersionException();
+				throw new WorldLoadingException();
 
 			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
-				throw new UnsupportedItemEncodingVersionException();
+				throw new WorldLoadingException();
 
 			Console.WriteLine($"OTBM header version: {headerVersion}");
 			Console.WriteLine($"World width: {parsingStream.ReadUInt16()}");
@@ -83,12 +83,12 @@ namespace COMMO.GameServer.World.Loading {
 			if (world == null)
 				throw new ArgumentNullException(nameof(world));
 			if (worldDataNode.Type != OTBNodeType.WorldData)
-				throw new MalformedWorldException();
+				throw new WorldLoadingException();
 
 			foreach (var child in worldDataNode.Children) {
 				switch (child.Type) {
 					case OTBNodeType.TileArea:
-					// ParseTileAreaNode(child, world);
+					ParseTileAreaNode(child, world);
 					break;
 
 					case OTBNodeType.TownCollection:
@@ -103,7 +103,7 @@ namespace COMMO.GameServer.World.Loading {
 					throw new NotImplementedException("TFS didn't implement this. So didn't we.");
 
 					default:
-					throw new MalformedWorldException();
+					throw new WorldLoadingException();
 				}
 			}
 		}
