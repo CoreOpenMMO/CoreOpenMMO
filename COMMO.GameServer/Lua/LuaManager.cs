@@ -29,7 +29,7 @@ namespace COMMO.GameServer.Lua
 
         private void LoadLuaFiles()
         {
-            Console.WriteLine("Loading lua files...");
+            Console.WriteLine("TFSLoading lua files...");
             _logger.LogWarning("Lua files not found...");
 
             //TODO FELIPE MUNIZ -> LOAD LUA FILES

@@ -1,7 +1,7 @@
 using COMMO.GameServer.OTBParsing;
 using System;
 
-namespace COMMO.GameServer.World.Loading {
+namespace COMMO.GameServer.World.TFSLoading {
 
 	public static partial class TFSWorldLoader {
 
@@ -34,7 +34,7 @@ namespace COMMO.GameServer.World.Loading {
 
 		public static World ParseWorld(byte[] serializedWorldData) {
 			if (serializedWorldData.Length < MinimumWorldSize)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			var otbTree = ExtractOTBTree(serializedWorldData);
 			var world = new World();
@@ -51,24 +51,24 @@ namespace COMMO.GameServer.World.Loading {
 			if (world == null)
 				throw new ArgumentNullException(nameof(world));
 			if (rootNode.Children.Count != 1)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			var parsingStream = new OTBParsingStream(rootNode.Data.Span);
 
 			var headerVersion = parsingStream.ReadUInt32();
 			if (headerVersion == 0 || headerVersion > 2)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			var worldWidth = parsingStream.ReadUInt16();
 			var worldHeight = parsingStream.ReadUInt16();
 
 			var itemEncodingMajorVersion = parsingStream.ReadUInt32();
 			if (itemEncodingMajorVersion != SupportedItemEncodingMajorVersion)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			Console.WriteLine($"OTBM header version: {headerVersion}");
 			Console.WriteLine($"World width: {parsingStream.ReadUInt16()}");
@@ -83,7 +83,7 @@ namespace COMMO.GameServer.World.Loading {
 			if (world == null)
 				throw new ArgumentNullException(nameof(world));
 			if (worldDataNode.Type != OTBNodeType.WorldData)
-				throw new WorldLoadingException();
+				throw new TFSWorldLoadingException();
 
 			foreach (var child in worldDataNode.Children) {
 				switch (child.Type) {
@@ -103,7 +103,7 @@ namespace COMMO.GameServer.World.Loading {
 					throw new NotImplementedException("TFS didn't implement this. So didn't we.");
 
 					default:
-					throw new WorldLoadingException();
+					throw new TFSWorldLoadingException();
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 using System;
 using COMMO.GameServer.OTBParsing;
 
-namespace COMMO.GameServer.World.Loading {
+namespace COMMO.GameServer.World.TFSLoading {
 
 	public static partial class TFSWorldLoader {
 

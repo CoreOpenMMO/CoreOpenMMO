@@ -9,30 +9,19 @@ namespace COMMO.GameServer.World {
 	/// It's position is described using 2 ushort and a byte because
 	/// the it's a relative position within a "floor"
 	/// </summary>
-    public sealed class Tile {
+	public sealed class Tile {
 		public readonly Position Position;
 		public readonly bool BelongsToHouse;
 
-        public readonly List<Item> Items = new List<Item>();
-        public readonly List<PlayerCharacter> PlayerCharacters = new List<PlayerCharacter>();
+		public readonly List<Item> Items = new List<Item>();
+		public readonly List<PlayerCharacter> PlayerCharacters = new List<PlayerCharacter>();
 
-        public TileFlags Flags;
+		public readonly TileFlags Flags;
 
-        public Tile(Position position, bool belongsToHouse) {
+		public Tile(Position position, TileFlags flags, bool belongsToHouse) {
 			Position = position;
+			Flags = flags;
 			BelongsToHouse = belongsToHouse;
-        }
-
-        public void AddInternalThing(Item item) {
-            throw new NotImplementedException();
-        }
-
-        public void AddThing(object p) {
-            throw new NotImplementedException();
-        }
-
-        public object GetGround() {
-            throw new NotImplementedException();
-        }
-    }
+		}
+	}
 }

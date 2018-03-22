@@ -30,35 +30,35 @@ namespace COMMO.GameServer.World {
             if (newTile == null)
                 throw new ArgumentNullException(nameof(newTile));
 
-            var leafNode = RootQuadTreeNode.CreateLeafOrGetReference(x, y, WorldHighestLayer);
+            //var leafNode = RootQuadTreeNode.CreateLeafOrGetReference(x, y, WorldHighestLayer);
             
-            UpdateNeighbors(x, y, leafNode);
+            //UpdateNeighbors(x, y, leafNode);
 
-            // Updating floor data
-            var floor = leafNode.CreateFloorOrGetReference(z);
+            //// Updating floor data
+            //var floor = leafNode.CreateFloorOrGetReference(z);
 
-            ushort xOffset = (ushort)(x & Floor.FloorMask);
-            ushort yOffset = (ushort)(y & Floor.FloorMask);
+            //ushort xOffset = (ushort)(x & Floor.FloorMask);
+            //ushort yOffset = (ushort)(y & Floor.FloorMask);
 
-            // If there is not tile in the given coordinates,
-            // just set it to be the parameter of this method
-            var oldTile = floor.Tiles.Get(xOffset, yOffset);
-            if (oldTile == null) {
-                floor.Tiles.Set(x, y, newTile);
-                return;
-            }
+            //// If there is not tile in the given coordinates,
+            //// just set it to be the parameter of this method
+            //var oldTile = floor.Tiles.Get(xOffset, yOffset);
+            //if (oldTile == null) {
+            //    floor.Tiles.Set(x, y, newTile);
+            //    return;
+            //}
 
-            // If there is already a tile in the given coordinates,
-            // we'll update it's items
-            var newItems = newTile.Items;
-            var newItemCount = newTile.Items.Count;
-            for (int i = 0; i < newItemCount; i++) {
-                oldTile.AddThing(newItems[i]);
-            }
+            //// If there is already a tile in the given coordinates,
+            //// we'll update it's items
+            //var newItems = newTile.Items;
+            //var newItemCount = newTile.Items.Count;
+            //for (int i = 0; i < newItemCount; i++) {
+            //    oldTile.AddThing(newItems[i]);
+            //}
 
-            // No idea what a "item.GetGround" is supposed to be
-            if (newTile.GetGround() != null)
-                oldTile.AddThing(newTile.GetGround());
+            //// No idea what a "item.GetGround" is supposed to be
+            //if (newTile.GetGround() != null)
+            //    oldTile.AddThing(newTile.GetGround());
         }
 
         private void UpdateNeighbors(ushort leafsXCoordinate, ushort leafsYCoordinate, QuadTreeLeafNode leafNode) {
