@@ -9,8 +9,8 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 		[TestCase(new byte[] { 0, 7 }, 2)]
 		public void ShouldThrowExceptionIfArrayIsOver(byte[] array, int position) {
 			var objectResult = new ByteArrayReadStream(array, position);
-			Action action = () => { objectResult.ReadUInt16(); };
-			action.Should().ThrowExactly<InvalidOperationException>();
+			Action action = () => { objectResult.ReadUshort(); };
+			action.Should().ThrowExactly<ArgumentOutOfRangeException>();
 		}
 
 		[TestCase((ushort)7)]
@@ -20,7 +20,7 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 		public void ShouldReadAndSkipPositionsProperlySingleValue(ushort value) {
 			var bytearray = BitConverter.GetBytes(value);
 			var byteArrayReader = new ByteArrayReadStream(bytearray);
-			var result = byteArrayReader.ReadUInt16();
+			var result = byteArrayReader.ReadUshort();
 
 			result.Should().Be(value);
 			byteArrayReader.Position.Should().Be(sizeof(ushort));
@@ -33,7 +33,7 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 		public void ShouldReadAndSkipPositionsProperlyArrayOfValues(ushort[] values, bool isOver) {
 			var bytearray = values.SelectMany(BitConverter.GetBytes).ToArray();
 			var byteArrayReader = new ByteArrayReadStream(bytearray);
-			var result = byteArrayReader.ReadUInt16();
+			var result = byteArrayReader.ReadUshort();
 
 			result.Should().Be(values[0]);
 			byteArrayReader.Position.Should().Be(sizeof(ushort));

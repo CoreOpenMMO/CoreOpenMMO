@@ -16,7 +16,7 @@ namespace COMMO.Tests.ByteArrayReadStreamTests {
 		public void ShouldThrowAnExceptionIfTryingToGetAnValueOfAnEndedByteArray(byte[] array, int position) {
 			var resultObject = new ByteArrayReadStream(array, position);
 			Action action = () => { resultObject.GetByte(); };
-			action.Should().ThrowExactly<InvalidOperationException>();
+			action.Should().ThrowExactly<IndexOutOfRangeException>();
 		}
 	}
 }

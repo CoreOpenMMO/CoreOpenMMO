@@ -18,54 +18,37 @@ namespace COMMO {
 			Position = position;
 		}
 
-		public bool IsOver => Position >= _array.Length;
+		public bool IsOver => 
+			Position >= _array.Length;
 
-		public int BytesLeftToRead => _array.Length - Position;
+		public int BytesLeftToRead => 
+			_array.Length - Position;
 
-		public byte GetByte() {
-			if (IsOver)
-				throw new InvalidOperationException();
-
-			return _array[Position];
-		}
+		public byte GetByte() => 
+			_array[Position];
 
 		public byte ReadByte() {
-			if (IsOver)
-				throw new InvalidOperationException();
-
 			var data = _array[Position];
 			Position += sizeof(byte);
 
 			return data;
 		}
 
-		public ushort ReadUInt16() {
-			if (IsOver)
-				throw new InvalidOperationException();
-
+		public ushort ReadUshort() {
 			var data = BitConverter.ToUInt16(_array, Position);
 			Position += sizeof(ushort);
 
 			return data;
 		}
 
-		public uint ReadUInt32() {
-			if (IsOver)
-				throw new InvalidOperationException();
-
+		public uint ReadUint() {
 			var data = BitConverter.ToUInt32(_array, Position);
 			Position += sizeof(uint);
 
 			return data;
 		}
 
-		public void Skip(int byteCount = 1) {
-			if (byteCount <= 0)
-				throw new ArgumentOutOfRangeException(nameof(byteCount));
-			if (Position + byteCount >= _array.Length)
-				throw new ArgumentOutOfRangeException(nameof(byteCount));
-
+		public void Skip(ushort byteCount = 1) => 
 			Position += byteCount;
-		}
 	}
 }
