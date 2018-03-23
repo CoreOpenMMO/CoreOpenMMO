@@ -61,8 +61,8 @@ namespace COMMO.GameServer.World.TFSLoading {
 				var attribute = (TFSWorldNodeAttribute)stream.ReadByte();
 				switch (attribute) {
 					case TFSWorldNodeAttribute.TileFlags:
-					var flags = stream.ReadUInt32();
-					tileFlags = UpdateTileFlags(tileFlags, flags);
+					var newFlags = (TFSTileFlag)stream.ReadUInt32();
+					tileFlags = UpdateTileFlags(tileFlags, newFlags);
 					break;
 
 					case TFSWorldNodeAttribute.Item:
@@ -92,8 +92,20 @@ namespace COMMO.GameServer.World.TFSLoading {
 			}
 		}
 
-		private static TileFlags UpdateTileFlags(TileFlags oldFlags, uint newFlags) {
-			throw new NotImplementedException();
+		private static TileFlags UpdateTileFlags(TileFlags oldFlags, TFSTileFlag newFlags) {
+			if ((newFlags & TFSTileFlag.NoLogout) != 0)
+				oldFlags |= TileFlags.NoLogout;
+
+			// I think we should throw if a tile contains contradictory flags, instead of just
+			// ignoring them like tfs does...
+			if ((newFlags & TFSTileFlag.ProtectionZone) != 0)
+				oldFlags |= TileFlags.ProtectionZone;
+			else if ((newFlags & TFSTileFlag.NoPvpZone) != 0)
+				oldFlags |= TileFlags.NoPvpZone;
+			else if ((newFlags & TFSTileFlag.PvpZone) != 0)
+				oldFlags |= TileFlags.PvpZone;
+
+			return oldFlags;
 		}
 	}
 }
