@@ -1,5 +1,7 @@
+using COMMO.GameServer.Items;
 using COMMO.GameServer.OTBParsing;
 using System;
+using System.Collections.Generic;
 
 namespace COMMO.GameServer.World.TFSLoading {
 
@@ -52,11 +54,15 @@ namespace COMMO.GameServer.World.TFSLoading {
 				yOffset: yOffset);
 
 			// Checking whether the tile belongs to a house
-			var tileBelongsToAHouse = tileNode.Type == OTBNodeType.HouseTile;
-
-			var tileFlags = TileFlags.None;
+			House house = null;
+			if (tileNode.Type == OTBNodeType.HouseTile) {
+				var houseId = stream.ReadUInt32();
+				house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
+			}
 
 			// Parsing the tile attributes
+			var tileFlags = TileFlags.None;
+			var tilesItems = new List<Item>();
 			while (!stream.IsOver) {
 				var attribute = (TFSWorldNodeAttribute)stream.ReadByte();
 				switch (attribute) {
@@ -66,30 +72,31 @@ namespace COMMO.GameServer.World.TFSLoading {
 					break;
 
 					case TFSWorldNodeAttribute.Item:
-					// Do stuff
+#warning Not implemented -- Halp Ratazana
 					break;
 
 					default:
 					throw new TFSWorldLoadingException("TFS just threw a exception here, so shall we.");
 				}
 
-
 				throw new NotImplementedException();
 			}
 
-			// Finally, we create the actual tile
+			// Parsing tile's items stored as child
+			foreach (var itemNode in tileNode.Children) {
+#warning Not implemented -- Halp Ratazana
+			}
+
+			// Finally, we collected all the data and create the tile,
+			// adding it to a house, if necessary
 			var tile = new Tile(
 				position: tilePosition,
 				flags: tileFlags,
-				belongsToHouse: tileBelongsToAHouse);
+				belongsToHouse: house != null,
+				items: tilesItems);
 
-			// Add it to a house, if necessary
-			if (tileBelongsToAHouse) {
-				var houseId = stream.ReadUInt32();
-				HouseManager.Instance
-					.CreateHouseOrGetReference(houseId)
-					.AddTile(tile);
-			}
+			house?.AddTile(tile);
+			world.AddTile(tile);
 		}
 
 		private static TileFlags UpdateTileFlags(TileFlags oldFlags, TFSTileFlag newFlags) {

@@ -18,10 +18,14 @@ namespace COMMO.GameServer.World {
 
 		public readonly TileFlags Flags;
 
-		public Tile(Position position, TileFlags flags, bool belongsToHouse) {
+		public Tile(Position position, TileFlags flags, bool belongsToHouse, List<Item> items) {
+			if (items == null)
+				throw new ArgumentNullException(nameof(items));
+
 			Position = position;
 			Flags = flags;
 			BelongsToHouse = belongsToHouse;
+			Items = items;
 		}
 	}
 }
