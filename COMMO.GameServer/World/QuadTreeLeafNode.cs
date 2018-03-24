@@ -1,43 +1,36 @@
-using System;
-using System.Collections.Generic;
-
 namespace COMMO.GameServer.World {
 
-    /// <summary>
-    /// This class represents the most "zoomed-in" part of the World,
-    /// therefore it doesn't contain children nodes.
-    /// </summary>
-    public sealed class QuadTreeLeafNode : QuadTreeNode {
-        public QuadTreeLeafNode SouthNeighbor;
-        public QuadTreeLeafNode EastNeighbor;
+	/// <summary>
+	/// This class represents the most "zoomed-in" part of the QuadTree,
+	/// therefore it contains no children.
+	/// </summary>
+	/// <remarks>
+	/// This class is built on the assumption that <see cref="Coordinate.Z"/>
+	/// is a sbyte!
+	/// </remarks>
+	public sealed class QuadTreeLeafNode : QuadTreeNode {
+		private readonly Floor[] _floors = new Floor[World.FloorCount];
 
-        public readonly List<PlayerCharacter> Players = new List<PlayerCharacter>();
-        public readonly List<Monster> Monsters = new List<Monster>();
+		public QuadTreeLeafNode()
+			: base(isLeaf: true) {
+		}
 
-        private readonly Floor[] _floors = new Floor[World.WorldHighestLayer];
+		public Floor CreateFloorOrGetReference(sbyte z) {
+			// This way we "wrap around" for negative values
+			var floorIndex = (byte)z;
 
-        public QuadTreeLeafNode()
-            : base(isLeaf: true) {
-        }
+			if (_floors[floorIndex] == null)
+				_floors[floorIndex] = new Floor();
 
-        // We lazily create floors to save memory.
-        // We could eargily create them to increase performance tho
-        public Floor CreateFloorOrGetReference(byte z) {
-            if (z > World.WorldHighestLayer)
-                throw new ArgumentOutOfRangeException(nameof(z) + $" must be equal to or less than {World.WorldHighestLayer}");
+			return _floors[floorIndex];
+		}
 
-            if (_floors[z] == null)
-                _floors[z] = new Floor();
+		public bool TryGetFloor(sbyte z, out Floor floor) {
+			// This way we "wrap around" for negative values
+			var floorIndex = (byte)z;
 
-            return _floors[z];
-        }
-
-        public bool TryGetFloor(byte z, out Floor floor) {
-            if (z > World.WorldHighestLayer)
-                throw new ArgumentOutOfRangeException(nameof(z) + $" must be equal to or less than {World.WorldHighestLayer}");
-
-            floor = _floors[z];
-            return floor != null;
-        }
-    }
+			floor = _floors[floorIndex];
+			return floor != null;
+		}
+	}
 }

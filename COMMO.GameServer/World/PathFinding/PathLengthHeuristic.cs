@@ -20,7 +20,7 @@ namespace COMMO.GameServer.World.PathFinding {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int EstimateDistance(in Position lhs, in Position rhs) {
+        public static int EstimateDistance(in Coordinate lhs, in Coordinate rhs) {
             return
                 Math.Abs(lhs.X - rhs.X) +
                 Math.Abs(lhs.Y - rhs.Y);

@@ -19,7 +19,7 @@ namespace COMMO.GameServer.World.TFSLoading {
 			var areaStartY = stream.ReadUInt16();
 			var areaZ = stream.ReadByte();
 
-			var areaStartPosition = new Position(
+			var areaStartPosition = new Coordinate(
 				x: areaStartX,
 				y: areaStartY,
 				z: areaZ);
@@ -33,7 +33,7 @@ namespace COMMO.GameServer.World.TFSLoading {
 		}
 
 		private static void ParseTileNode(
-			in Position tilesAreaStartPosition,
+			in Coordinate tilesAreaStartPosition,
 			OTBNode tileNode,
 			World world
 			) {

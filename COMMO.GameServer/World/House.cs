@@ -6,7 +6,7 @@ namespace COMMO.GameServer.World {
 	public sealed class House {
 		public readonly UInt32 Id;
 		public string HouseName;
-		public Position EntryPosition;
+		public Coordinate EntryDoor;
 
 		public readonly List<Tile> Tiles = new List<Tile>();
 
@@ -31,11 +31,11 @@ namespace COMMO.GameServer.World {
 			BottommostTileCoordinate = Math.Max(BottommostTileCoordinate, tile.Position.Y);
 		}
 
-		public bool TryGetTile(ushort tileXCoordinate, ushort tileYCoordinate, byte tileZCoordinate, out Tile tile) {
-			if (tileXCoordinate < LeftmostTileCoordinate ||
-				tileXCoordinate > RightmostTileCoordinate ||
-				tileYCoordinate < TopmostTileCoordinate ||
-				tileYCoordinate > BottommostTileCoordinate) {
+		public bool TryGetTile(in Coordinate location, out Tile tile) {
+			if (location.X < LeftmostTileCoordinate ||
+				location.X > RightmostTileCoordinate ||
+				location.Y < TopmostTileCoordinate ||
+				location.Y > BottommostTileCoordinate) {
 
 				tile = null;
 				return false;
@@ -43,9 +43,9 @@ namespace COMMO.GameServer.World {
 
 			for (int i = 0; i < Tiles.Count; i++) {
 				var currentTile = Tiles[i];
-				if (currentTile.Position.X == tileXCoordinate &&
-					currentTile.Position.Y == tileYCoordinate &&
-					currentTile.Position.Z == tileZCoordinate) {
+				if (currentTile.Position.X == location.X &&
+					currentTile.Position.Y == location.Y &&
+					currentTile.Position.Z == location.Z) {
 
 					tile = currentTile;
 					return true;

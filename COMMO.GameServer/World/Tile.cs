@@ -10,7 +10,7 @@ namespace COMMO.GameServer.World {
 	/// the it's a relative position within a "floor"
 	/// </summary>
 	public sealed class Tile {
-		public readonly Position Position;
+		public readonly Coordinate Position;
 		public readonly bool BelongsToHouse;
 
 		public readonly List<Item> Items = new List<Item>();
@@ -18,7 +18,7 @@ namespace COMMO.GameServer.World {
 
 		public readonly TileFlags Flags;
 
-		public Tile(Position position, TileFlags flags, bool belongsToHouse, List<Item> items) {
+		public Tile(Coordinate position, TileFlags flags, bool belongsToHouse, List<Item> items) {
 			if (items == null)
 				throw new ArgumentNullException(nameof(items));
 

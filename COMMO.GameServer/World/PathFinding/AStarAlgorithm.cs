@@ -15,7 +15,7 @@ namespace COMMO.GameServer.World.PathFinding {
             PathFound
         }
 
-        public static ComputePathResult TryComputePath(in Position start, in Position end, out List<PathCoordinate> path) {
+        public static ComputePathResult TryComputePath(in Coordinate start, in Coordinate end, out List<PathCoordinate> path) {
             // Trivial case
             if (start == end) {
                 path = null;
@@ -87,11 +87,11 @@ namespace COMMO.GameServer.World.PathFinding {
             }
         }
 
-        private static bool IsGoal(AStartNode s, in Position end) {
+        private static bool IsGoal(AStartNode s, in Coordinate end) {
             return s.X == end.X && s.Y == end.Y;
         }
 
-        private static IEnumerable<AStartNode> GenerateNeighbors(AStartNode parent, in Position goal) {
+        private static IEnumerable<AStartNode> GenerateNeighbors(AStartNode parent, in Coordinate goal) {
             // This method depends on the World class to check whether a given
             // point is "walkable" or not
             throw new NotImplementedException();

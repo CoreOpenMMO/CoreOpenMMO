@@ -4,9 +4,9 @@ namespace COMMO.GameServer.World {
 	public sealed class Town : IEquatable<Town> {
 		public readonly uint TownId;
 		public readonly string TownName;
-		public readonly Position TemplePosition;
+		public readonly Coordinate TemplePosition;
 
-		public Town(uint townId, string townName, Position templePosition) {
+		public Town(uint townId, string townName, Coordinate templePosition) {
 			if (townName == null)
 				throw new ArgumentNullException(nameof(townName));
 
