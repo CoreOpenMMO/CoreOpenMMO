@@ -39,11 +39,5 @@
     <ProjectReference Include="..\COMMO.Network\COMMO.Network.csproj" />
     <ProjectReference Include="..\COMMO\COMMO.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Items\Item.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-  </ItemGroup>
-
+  
 </Project>
