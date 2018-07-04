@@ -1,0 +1,46 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/11/08 - 17:15:20
+
+RaceNumber    = 232
+Name          = "The Halloween Hare"
+Article       = ""
+Outfit        = (74, 0-0-0-0)
+Corpses       = 4173, 0
+Blood         = Blood
+Experience    = 0
+SummonCost    = 0
+FleeThreshold = 0
+Attack        = 0
+Defend        = 999
+Armor         = 999
+Poison        = 0
+LoseTarget    = 95
+Strategy      = (0, 0, 0, 100)
+
+Flags         = {KickBoxes,
+                 SeeInvisible,
+                 Unpushable,
+                 DistanceFighting,
+                 NoSummon,
+                 NoIllusion,
+                 NoConvince,
+                 NoBurning,
+                 NoPoison,
+                 NoEnergy,
+                 NoHit,
+                 NoLifeDrain,
+                 NoParalyze}
+
+Skills        = {(HitPoints, 2000, 0, 2000, 0, 0, 0),
+                 (GoStrength, 120, 0, 120, 0, 0, 0),
+                 (CarryStrength, 1000, 0, 1000, 0, 0, 0),
+                 (FistFighting, 0, 0, 0, 0, 1200, 0)}
+
+Spells        = {Actor (0) -> Outfit ((74, 0-0-0-0), 60) : 1,
+                 Destination (5, 11, 3, 3) -> Outfit ((54, 0-0-0-0), 6000) : 60,
+                 Destination (5, 11, 3, 3) -> Outfit ((48, 0-0-0-0), 6000) : 60,
+                 Destination (5, 11, 3, 3) -> Outfit ((0, 2978), 6000) : 60,
+                 Destination (5, 11, 3, 3) -> Outfit ((33, 0-0-0-0), 6000) : 60,
+                 Destination (5, 11, 3, 3) -> Outfit ((68, 0-0-0-0), 6000) : 60,
+                 Destination (5, 11, 3, 3) -> Outfit ((65, 0-0-0-0), 6000) : 60}

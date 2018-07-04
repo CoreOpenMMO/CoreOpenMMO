@@ -1,0 +1,26 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 60
+Name          = "pig"
+Article       = "a"
+Outfit        = (60, 0-0-0-0)
+Corpse        = 4116
+Blood         = Blood
+Experience    = 0
+SummonCost    = 255
+FleeThreshold = 25
+Attack        = 0
+Defend        = 2
+Armor         = 2
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 25, 0, 25, 0, 0, 0),
+                 (GoStrength, 17, 0, 17, 0, 0, 0),
+                 (CarryStrength, 150, 0, 150, 0, 0, 0),
+                 (FistFighting, 10, 10, 10, 100, 1500, 1)}
+
+Inventory     = {(3577, 4, 650)}

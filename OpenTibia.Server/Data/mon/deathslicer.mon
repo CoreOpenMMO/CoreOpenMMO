@@ -1,0 +1,40 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 102
+Name          = "deathslicer"
+Article       = "a"
+Outfit        = (102, 0-0-0-0)
+Corpse        = 3138
+Blood         = Bones
+Experience    = 0
+SummonCost    = 0
+FleeThreshold = 20
+Attack        = 90
+Defend        = 199
+Armor         = 199
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Flags         = {KickBoxes,
+                 KickCreatures,
+                 SeeInvisible,
+                 NoSummon,
+                 NoIllusion,
+                 NoConvince,
+                 NoBurning,
+                 NoPoison,
+                 NoEnergy,
+                 NoHit,
+                 NoLifeDrain}
+
+Skills        = {(HitPoints, 8200, 0, 8200, 0, 0, 0),
+                 (GoStrength, 199, 0, 199, 0, 0, 0),
+                 (CarryStrength, 800, 0, 800, 0, 0, 0),
+                 (FistFighting, 110, 110, 110, 50, 1000, 25)}
+
+Spells        = {Victim (1, 0, 0) -> Damage (256, 200, 50) : 2,
+                 Victim (7, 0, 0) -> Damage (8, 200, 50) : 3,
+                 Origin (2, 4) -> Damage (8, 200, 50) : 4}

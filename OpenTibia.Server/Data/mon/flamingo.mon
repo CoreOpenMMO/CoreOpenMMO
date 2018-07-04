@@ -1,0 +1,24 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 212
+Name          = "flamingo"
+Article       = "a"
+Outfit        = (212, 0-0-0-0)
+Corpse        = 4366
+Blood         = Blood
+Experience    = 0
+SummonCost    = 250
+FleeThreshold = 25
+Attack        = 4
+Defend        = 6
+Armor         = 1
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 25, 0, 25, 0, 0, 0),
+                 (GoStrength, 44, 0, 44, 0, 0, 0),
+                 (CarryStrength, 100, 0, 100, 0, 0, 0),
+                 (FistFighting, 9, 9, 9, 100, 1200, 1)}

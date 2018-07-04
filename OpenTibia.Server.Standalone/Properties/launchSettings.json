@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "OpenTibia.Server.Standalone": {
+      "commandName": "Project"
+    }
+  }
+}

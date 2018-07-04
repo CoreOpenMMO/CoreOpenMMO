@@ -1,0 +1,27 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/11/08 - 13:54:44
+
+RaceNumber    = 74
+Name          = "rabbit"
+Article       = "a"
+Outfit        = (74, 0-0-0-0)
+Corpse        = 4173
+Blood         = Blood
+Experience    = 0
+SummonCost    = 220
+FleeThreshold = 15
+Attack        = 0
+Defend        = 2
+Armor         = 1
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 15, 0, 15, 0, 0, 0),
+                 (GoStrength, 50, 0, 50, 0, 0, 0),
+                 (CarryStrength, 100, 0, 100, 0, 0, 0),
+                 (FistFighting, 0, 0, 0, 0, 1200, 0)}
+
+Inventory     = {(3595, 1, 100),
+                 (3577, 2, 850)}

@@ -1,0 +1,28 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/11/08 - 13:54:44
+
+RaceNumber    = 14
+Name          = "sheep"
+Article       = "a"
+Outfit        = (14, 0-0-0-0)
+Corpse        = 4086
+Blood         = Blood
+Experience    = 0
+SummonCost    = 250
+FleeThreshold = 20
+Attack        = 0
+Defend        = 2
+Armor         = 1
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 20, 0, 20, 0, 0, 0),
+                 (GoStrength, 18, 0, 18, 0, 0, 0),
+                 (CarryStrength, 100, 0, 100, 0, 0, 0),
+                 (FistFighting, 0, 0, 0, 0, 1200, 0)}
+
+Inventory     = {(3577, 4, 700)}
+
+Talk          = {"Maeh"}

@@ -1,0 +1,47 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 75
+Name          = "Gamemaster"
+Article       = "a"
+Outfit        = (75, 0-0-0-0)
+Corpse        = 4240
+Blood         = Blood
+Experience    = 0
+SummonCost    = 0
+FleeThreshold = 20
+Attack        = 299
+Defend        = 199
+Armor         = 199
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Flags         = {KickBoxes,
+                 KickCreatures,
+                 SeeInvisible,
+                 Unpushable,
+                 NoSummon,
+                 NoIllusion,
+                 NoConvince,
+                 NoBurning,
+                 NoPoison,
+                 NoEnergy,
+                 NoHit,
+                 NoLifeDrain}
+
+Skills        = {(HitPoints, 8200, 0, 8200, 0, 0, 0),
+                 (GoStrength, 199, 0, 199, 0, 0, 0),
+                 (CarryStrength, 800, 0, 800, 0, 0, 0),
+                 (FistFighting, 599, 599, 599, 50, 1000, 25)}
+
+Spells        = {Actor (13) -> Healing (6000, 1500) : 2,
+                 Victim (1, 0, 0) -> Damage (256, 2000, 150) : 3,
+                 Victim (7, 0, 0) -> Damage (512, 999, 30) : 4,
+                 Angle (0, 1, 12) -> Damage (8, 2000, 250) : 5}
+
+Talk          = {"Watch the rules!",
+                 "Hey, you! I've seen that!",
+                 "Are you AFK or what?",
+                 "Does your mother know what you are doing?"}

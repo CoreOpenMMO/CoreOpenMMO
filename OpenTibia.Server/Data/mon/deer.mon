@@ -1,0 +1,27 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 31
+Name          = "deer"
+Article       = "a"
+Outfit        = (31, 0-0-0-0)
+Corpse        = 4016
+Blood         = Blood
+Experience    = 0
+SummonCost    = 260
+FleeThreshold = 25
+Attack        = 2
+Defend        = 2
+Armor         = 2
+Poison        = 0
+LoseTarget    = 0
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 25, 0, 25, 0, 0, 0),
+                 (GoStrength, 58, 0, 58, 0, 0, 0),
+                 (CarryStrength, 250, 0, 250, 0, 0, 0),
+                 (FistFighting, 10, 10, 10, 100, 1100, 1)}
+
+Inventory     = {(3582, 1, 450),
+                 (3577, 3, 800)}

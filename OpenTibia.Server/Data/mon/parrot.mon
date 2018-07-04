@@ -1,0 +1,31 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 217
+Name          = "parrot"
+Article       = "a"
+Outfit        = (217, 0-0-0-0)
+Corpse        = 4379
+Blood         = Blood
+Experience    = 0
+SummonCost    = 250
+FleeThreshold = 25
+Attack        = 6
+Defend        = 6
+Armor         = 2
+Poison        = 0
+LoseTarget    = 10
+Strategy      = (100, 0, 0, 0)
+
+Skills        = {(HitPoints, 25, 0, 25, 0, 0, 0),
+                 (GoStrength, 120, 0, 120, 0, 0, 0),
+                 (CarryStrength, 100, 0, 100, 0, 0, 0),
+                 (FistFighting, 13, 13, 13, 100, 1100, 1)}
+
+Talk          = {"BR? PL? SWE?",
+                 "Screeeeeeech!",
+                 "Neeeewbiiieee!",
+                 "You advanshed, you advanshed!",
+                 "Hope you die and loooosh it!",
+                 "Hunterrr ish PK!"}
