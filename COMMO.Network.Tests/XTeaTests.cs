@@ -1,5 +1,6 @@
+using FluentAssertions;
+using NUnit.Framework;
 using System;
-using Xunit;
 
 namespace COMMO.Network.Tests {
 
@@ -8,26 +9,22 @@ namespace COMMO.Network.Tests {
 		private readonly byte[] _message = new byte[] { 123, 0, 20, 20, 0, 48, 10, 66, 101, 109, 32, 118, 105, 110, 100, 111 };
 		private readonly byte[] _encryptedMessage = new byte[] { 163, 35, 242, 102, 150, 173, 252, 174, 83, 54, 209, 248, 35, 145, 205, 229 };
 
-		[Fact]
+		[Test]
 		public void XTeaEncrypt() {
 			var encryptedMessage = XTea
 				.Encrypt(_message, _key.AsSpan().AsBytes())
 				.ToArray();
 
-			Assert.Equal(
-				expected: _encryptedMessage,
-				actual: encryptedMessage);
+			encryptedMessage.Should().BeEquivalentTo(_encryptedMessage);
 		}
 
-		[Fact]
+		[Test]
 		public void XTeaDecrypt() {
 			var decryptedMsg = XTea
 				.Decrypt(_encryptedMessage, _key.AsSpan().AsBytes())
 				.ToArray();
 
-			Assert.Equal(
-				expected: _message,
-				actual: decryptedMsg);
+			_message.Should().BeEquivalentTo(decryptedMsg);
 		}
 	}
 }
