@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>COMMO.Server.Data</RootNamespace>
+    <AssemblyName>COMMO.Server.Data</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.1\COMMO.Server.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Data.Contracts\COMMO.Data.Contracts.csproj" />
+    <ProjectReference Include="..\COMMO.Scheduling.Contracts\COMMO.Scheduling.Contracts.csproj" />
+    <ProjectReference Include="..\COMMO.Security\COMMO.Security.csproj" />
+  </ItemGroup>
+
+</Project>

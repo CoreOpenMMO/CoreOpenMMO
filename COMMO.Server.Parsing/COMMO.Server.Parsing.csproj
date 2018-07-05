@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>COMMO.Server.Parsing</RootNamespace>
+    <AssemblyName>COMMO.Server.Parsing</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sprache" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Data.Contracts\COMMO.Data.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
