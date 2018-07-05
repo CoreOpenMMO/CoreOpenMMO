@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OptimizedPriorityQueue" Version="4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Scheduling.Contracts\COMMO.Scheduling.Contracts.csproj" />
+    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Server.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
+

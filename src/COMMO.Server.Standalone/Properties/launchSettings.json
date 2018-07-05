@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "COMMO.Server.Standalone": {
+      "commandName": "Project"
+    }
+  }
+}

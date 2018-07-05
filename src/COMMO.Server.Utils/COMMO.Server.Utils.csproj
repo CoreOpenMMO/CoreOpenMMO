@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BinaryHeap.cs" />
+    <Compile Remove="BytePair.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sprache" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Server.Data\COMMO.Server.Data.csproj" />
+  </ItemGroup>
+
+</Project>

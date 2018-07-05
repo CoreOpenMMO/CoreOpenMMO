@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Configuration\COMMO.Configuration.csproj" />
+    <ProjectReference Include="..\COMMO.Data\COMMO.Data.csproj" />
+    <ProjectReference Include="..\COMMO.Server.Data\COMMO.Server.Data.csproj" />
+    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Server.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
