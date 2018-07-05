@@ -1,4 +1,4 @@
-﻿// <copyright file="OpenTibiaDbContext.cs" company="2Dudes">
+// <copyright file="OpenTibiaDbContext.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -37,7 +37,8 @@ namespace COMMO.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // TODO: to configuration
-            optionsBuilder.UseSqlServer(@"<sql server connection string>");
+			optionsBuilder.UseInMemoryDatabase("Context");
+            //optionsBuilder.UseSqlServer(@"<sql server connection string>");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

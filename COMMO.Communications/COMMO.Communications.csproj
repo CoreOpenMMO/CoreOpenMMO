@@ -6,7 +6,7 @@
     <RootNamespace>COMMO.Communications</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.1\COMMO.Communications.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.1\COMMO.Communications.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Interfaces\IOutgoingPacketHandler.cs" />

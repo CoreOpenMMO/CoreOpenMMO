@@ -4,10 +4,15 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>COMMO.Common.Helpers</AssemblyName>
     <RootNamespace>COMMO.Common.Helpers</RootNamespace>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.1\COMMO.Common.Helpers.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DocumentationFile>bin\Release\netcoreapp2.1\COMMO.Common.Helpers.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
