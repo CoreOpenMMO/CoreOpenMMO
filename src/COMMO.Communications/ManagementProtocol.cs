@@ -1,15 +1,15 @@
-﻿// <copyright file="ManagementProtocol.cs" company="2Dudes">
+// <copyright file="ManagementProtocol.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Communications.Interfaces;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Communications
 {
-    using COMMO.Communications.Interfaces;
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-
     internal class ManagementProtocol : OpenTibiaProtocol
     {
         public override bool KeepConnectionOpen => true;
@@ -21,7 +21,7 @@ namespace COMMO.Communications
 
         public override void ProcessMessage(Connection connection, NetworkMessage inboundMessage)
         {
-            LoginOrManagementIncomingPacketType packetType = (LoginOrManagementIncomingPacketType)inboundMessage.GetByte();
+            var packetType = (LoginOrManagementIncomingPacketType)inboundMessage.GetByte();
 
             // TODO: move this validation?
             if (packetType != LoginOrManagementIncomingPacketType.AuthenticationRequest && !connection.IsAuthenticated)
@@ -37,7 +37,7 @@ namespace COMMO.Communications
             if (handler?.ResponsePackets != null)
             {
                 // Send any responses prepared for 
-                NetworkMessage message = new NetworkMessage();
+                var message = new NetworkMessage();
 
                 foreach (var outPacket in handler.ResponsePackets)
                 {

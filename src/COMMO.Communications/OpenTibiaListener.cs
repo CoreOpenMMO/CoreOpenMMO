@@ -1,17 +1,17 @@
-﻿// <copyright file="OpenTibiaListener.cs" company="2Dudes">
+// <copyright file="OpenTibiaListener.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using COMMO.Communications.Interfaces;
+
 namespace COMMO.Communications
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Sockets;
-    using COMMO.Communications.Interfaces;
-
     public abstract class OpenTibiaListener : TcpListener, IOpenTibiaListener
     {
         public IProtocol Protocol { get; }
@@ -50,7 +50,7 @@ namespace COMMO.Communications
 
         public void OnAccept(IAsyncResult ar)
         {
-            Connection connection = new Connection();
+            var connection = new Connection();
 
             connection.OnCloseEvent += OnConnectionClose;
             connection.OnProcessEvent += Protocol.ProcessMessage;

@@ -1,21 +1,19 @@
-﻿// <copyright file="MoveItemPlayerAction.cs" company="2Dudes">
+// <copyright file="MoveItemPlayerAction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace COMMO.Server.Actions
-{
-    using System;
-    using System.Threading.Tasks;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Data.Contracts;
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Movement;
+using System;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Data.Contracts;
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Movement;
 
-    internal class MoveItemPlayerAction : BasePlayerAction
+namespace COMMO.Server.Actions {
+	internal class MoveItemPlayerAction : BasePlayerAction
     {
         public MoveItemPlayerAction(IPlayer player, ItemMovePacket itemMovePacket, Location retryAtLocation)
             : base(player, itemMovePacket, retryAtLocation)

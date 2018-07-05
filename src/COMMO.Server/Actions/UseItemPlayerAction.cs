@@ -1,21 +1,21 @@
-﻿// <copyright file="UseItemPlayerAction.cs" company="2Dudes">
+// <copyright file="UseItemPlayerAction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Linq;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Events;
+using COMMO.Server.Scripting;
+
 namespace COMMO.Server.Actions
 {
-    using System;
-    using System.Linq;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Events;
-    using COMMO.Server.Scripting;
-
     internal class UseItemPlayerAction : BasePlayerAction
     {
         public UseItemPlayerAction(IPlayer player, ItemUsePacket itemUsePacket, Location retryLocation)

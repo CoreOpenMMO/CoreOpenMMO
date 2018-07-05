@@ -1,14 +1,14 @@
-﻿// <copyright file="CharacterListItem.cs" company="2Dudes">
+// <copyright file="CharacterListItem.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Net;
+using COMMO.Common.Helpers;
+
 namespace COMMO.Communications.Packets
 {
-    using System.Net;
-    using COMMO.Common.Helpers;
-
     public class CharacterListItem : ICharacterListItem
     {
         /// <summary>

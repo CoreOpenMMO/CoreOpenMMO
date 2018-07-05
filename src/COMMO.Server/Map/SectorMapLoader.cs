@@ -4,15 +4,15 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using COMMO.Server.Data.Interfaces;
+using StackExchange.Redis;
+
 namespace COMMO.Server.Map
 {
-    using System;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using COMMO.Server.Data.Interfaces;
-    using StackExchange.Redis;
-
     public class SectorMapLoader : IMapLoader
     {
         // TODO: to configuration

@@ -4,19 +4,19 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Items;
+using Sprache;
+using static COMMO.Server.Parsing.Grammar.EventGrammar;
+
 namespace COMMO.Server.Events
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Items;
-    using Sprache;
-    using static COMMO.Server.Parsing.Grammar.EventGrammar;
-
     public class MoveUseItemEventLoader : IItemEventLoader
     {
         /*

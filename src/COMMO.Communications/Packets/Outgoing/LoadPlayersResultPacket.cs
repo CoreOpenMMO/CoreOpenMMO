@@ -1,16 +1,16 @@
-﻿// <copyright file="LoadPlayersResultPacket.cs" company="2Dudes">
+// <copyright file="LoadPlayersResultPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
+using COMMO.Data.Models;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Communications.Packets.Outgoing
 {
-    using System.Collections.Generic;
-    using COMMO.Data.Models;
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-
     public class LoadPlayersResultPacket : PacketOutgoing
     {
         public IList<PlayerModel> LoadedPlayers { get; set; }

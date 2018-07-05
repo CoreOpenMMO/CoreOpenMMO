@@ -13,7 +13,7 @@ namespace COMMO.Communications
 {
     public class Connection
     {
-        private object writeLock;
+        private readonly object _writeLock;
 
         public delegate void OnConnectionClose(Connection c);
 
@@ -43,7 +43,7 @@ namespace COMMO.Communications
 
         public Connection()
         {
-            writeLock = new object();
+            _writeLock = new object();
             Socket = null;
             Stream = null;
             InMessage = new NetworkMessage(0);
@@ -172,7 +172,7 @@ namespace COMMO.Communications
 
             try
             {
-                lock (writeLock)
+                lock (_writeLock)
                 {
                     Stream.BeginWrite(message.Buffer, 0, message.Length, null, null);
                 }

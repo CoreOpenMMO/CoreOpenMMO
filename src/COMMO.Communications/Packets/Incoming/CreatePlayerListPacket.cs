@@ -12,8 +12,6 @@ using COMMO.Server.Data.Interfaces;
 
 namespace COMMO.Communications.Packets.Incoming
 {
-    
-
     public class CreatePlayerListPacket : IPacketIncoming, IPlayerListInfo
     {
         public CreatePlayerListPacket(NetworkMessage message)

@@ -1,15 +1,15 @@
-﻿// <copyright file="StandardAttackOperation.cs" company="2Dudes">
+// <copyright file="StandardAttackOperation.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Server.Combat
 {
-    using System;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-
     internal class StandardAttackOperation : BaseAttackOperation
     {
         public StandardAttackOperation(ICombatActor hunter, ICombatActor prey)

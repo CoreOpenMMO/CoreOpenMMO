@@ -6,12 +6,12 @@
 
 using COMMO.Utilities;
 
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Utilities;
+
 namespace COMMO.Communications.Packets.Outgoing
 {
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Utilities;
-
     public class ServerStatusPacket : PacketOutgoing
     {
         public string Data { get; set; }

@@ -1,13 +1,13 @@
-﻿// <copyright file="ProtocolFactory.cs" company="2Dudes">
+// <copyright file="ProtocolFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Communications.Interfaces;
+
 namespace COMMO.Communications
 {
-    using COMMO.Communications.Interfaces;
-
     /// <summary>
     /// Class that provides methods for <see cref="IProtocol"/> creation.
     /// </summary>

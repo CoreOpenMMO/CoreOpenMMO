@@ -1,21 +1,21 @@
-﻿// <copyright file="BaseItemEvent.cs" company="2Dudes">
+// <copyright file="BaseItemEvent.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Parsing.Grammar;
+using COMMO.Server.Scripting;
+
+using Sprache;
+
 namespace COMMO.Server.Events
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Parsing.Grammar;
-    using COMMO.Server.Scripting;
-
-    using Sprache;
-
     internal abstract class BaseItemEvent : IItemEvent
     {
         public const string IsTypeFunctionName = "IsType";

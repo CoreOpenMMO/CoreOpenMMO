@@ -1,16 +1,16 @@
-﻿// <copyright file="ItemEventFactory.cs" company="2Dudes">
+// <copyright file="ItemEventFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using static COMMO.Server.Parsing.Grammar.EventGrammar;
+
 namespace COMMO.Server.Events
 {
-    using System;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using static COMMO.Server.Parsing.Grammar.EventGrammar;
-
     public static class ItemEventFactory
     {
         public static IItemEvent Create(MoveUseEvent moveUseEvent)

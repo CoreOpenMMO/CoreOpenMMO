@@ -1,24 +1,24 @@
-﻿// <copyright file="LoginProtocol.cs" company="2Dudes">
+// <copyright file="LoginProtocol.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using COMMO.Communications.Interfaces;
+using COMMO.Communications.Packets;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Configuration;
+using COMMO.Data;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Communications
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using COMMO.Communications.Interfaces;
-    using COMMO.Communications.Packets;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Configuration;
-    using COMMO.Data;
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-
     internal class LoginProtocol : OpenTibiaProtocol
     {
         public override bool KeepConnectionOpen => false;
@@ -40,7 +40,7 @@ namespace COMMO.Communications
                 throw new ArgumentNullException(nameof(inboundMessage));
             }
 
-            LoginOrManagementIncomingPacketType packetType = (LoginOrManagementIncomingPacketType)inboundMessage.GetByte();
+            var packetType = (LoginOrManagementIncomingPacketType)inboundMessage.GetByte();
 
             if (packetType != LoginOrManagementIncomingPacketType.LoginServerRequest)
             {
@@ -49,7 +49,7 @@ namespace COMMO.Communications
                 return;
             }
 
-            NewConnectionPacket newConnPacket = new NewConnectionPacket(inboundMessage);
+            var newConnPacket = new NewConnectionPacket(inboundMessage);
             var gameConfig = ServiceConfiguration.GetConfiguration();
 
             if (newConnPacket.Version != gameConfig.ClientVersionInt)
@@ -94,7 +94,7 @@ namespace COMMO.Communications
 
             connection.SetXtea(loginPacket.XteaKey);
 
-            using (OpenTibiaDbContext otContext = new OpenTibiaDbContext())
+            using (var otContext = new OpenTibiaDbContext())
             {
                 // validate credentials.
                 var user = otContext.Users.FirstOrDefault(u => u.Login == loginPacket.AccountNumber && u.Passwd.Equals(loginPacket.Password));
@@ -131,7 +131,7 @@ namespace COMMO.Communications
 
         private void SendDisconnect(Connection connection, string reason)
         {
-            NetworkMessage message = new NetworkMessage(4);
+            var message = new NetworkMessage(4);
             message.AddPacket(new LoginServerDisconnectPacket
             {
                 Reason = reason
@@ -142,7 +142,7 @@ namespace COMMO.Communications
 
         private void SendCharacterList(Connection connection, string motd, ushort premiumDays, IEnumerable<ICharacterListItem> chars)
         {
-            NetworkMessage message = new NetworkMessage(4);
+            var message = new NetworkMessage(4);
 
             if (motd != string.Empty)
             {

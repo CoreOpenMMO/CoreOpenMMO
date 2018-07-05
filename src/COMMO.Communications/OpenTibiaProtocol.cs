@@ -1,15 +1,15 @@
-﻿// <copyright file="OpenTibiaProtocol.cs" company="2Dudes">
+// <copyright file="OpenTibiaProtocol.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Communications.Interfaces;
+using COMMO.Server.Data;
+
 namespace COMMO.Communications
 {
-    using System;
-    using COMMO.Communications.Interfaces;
-    using COMMO.Server.Data;
-
     public abstract class OpenTibiaProtocol : IProtocol
     {
         public virtual bool KeepConnectionOpen { get; protected set; }

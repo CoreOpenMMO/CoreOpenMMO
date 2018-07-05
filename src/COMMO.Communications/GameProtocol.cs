@@ -4,15 +4,15 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Linq;
+using COMMO.Communications.Interfaces;
+using COMMO.Configuration;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Communications
 {
-    using System;
-    using System.Linq;
-    using COMMO.Communications.Interfaces;
-    using COMMO.Configuration;
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-
     internal class GameProtocol : OpenTibiaProtocol
     {
         public GameProtocol(IHandlerFactory handlerFactory)
@@ -85,7 +85,7 @@ namespace COMMO.Communications
             if (handler?.ResponsePackets != null && handler.ResponsePackets.Any())
             {
                 // Send any responses prepared for 
-                NetworkMessage message = new NetworkMessage(4);
+                var message = new NetworkMessage(4);
 
                 foreach (var outPacket in handler.ResponsePackets)
                 {
