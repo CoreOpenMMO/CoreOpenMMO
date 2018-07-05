@@ -1,18 +1,18 @@
-﻿// <copyright file="MovementBase.cs" company="2Dudes">
+// <copyright file="MovementBase.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Scheduling;
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Notifications;
+
 namespace COMMO.Server.Movement
 {
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Scheduling;
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Notifications;
-
     /// <summary>
     /// Class that represents a common base bewteen movements.
     /// </summary>

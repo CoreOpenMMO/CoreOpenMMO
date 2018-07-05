@@ -1,21 +1,21 @@
-﻿// <copyright file="PlayerLoginHandler.cs" company="2Dudes">
+// <copyright file="PlayerLoginHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Linq;
+using COMMO.Communications;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Configuration;
+using COMMO.Data;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data;
+
 namespace COMMO.Server.Handlers
 {
-    using System;
-    using System.Linq;
-    using COMMO.Communications;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Configuration;
-    using COMMO.Data;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data;
-
     internal class PlayerLoginHandler : IncomingPacketHandler
     {
         public override void HandleMessageContents(NetworkMessage message, Connection connection)

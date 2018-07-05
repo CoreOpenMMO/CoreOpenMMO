@@ -1,15 +1,15 @@
-﻿// <copyright file="ICombatActor.cs" company="2Dudes">
+// <copyright file="ICombatActor.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Data.Interfaces
 {
-    using System;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Models.Structs;
-
     public delegate void OnAttackTargetChange(uint oldTargetId, uint newTargetId);
 
     public interface ICombatActor : INeedsCooldowns

@@ -4,12 +4,12 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
+using COMMO.Data.Configurations;
+using COMMO.Data.Models;
+
 namespace COMMO.Data
 {
-    using Microsoft.EntityFrameworkCore;
-    using COMMO.Data.Configurations;
-    using COMMO.Data.Models;
-
     // [DbConfigurationType(typeof(OpenTibia.Db.MultipleDbConfiguration))]
     public class OpenTibiaDbContext : DbContext
     {

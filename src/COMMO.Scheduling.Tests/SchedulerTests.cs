@@ -4,15 +4,15 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using COMMO.TestUtils;
 using COMMO.Scheduling.Contracts;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace COMMO.Scheduling.Tests {
-	using System;
-	using System.Threading.Tasks;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
-	using Moq;
-	using COMMO.TestUtils;
-
 	/// <summary>
 	/// Tests for the <see cref="Scheduler"/> class
 	/// </summary>
@@ -25,9 +25,9 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void Scheduler_Initialization()
         {
-            DateTime anyNonDefaultDateTime = DateTime.Now;
-            DateTime defaultDateTime = default(DateTime);
-            DateTime invalidDateTime = DateTime.Now - TimeSpan.FromHours(1);
+            var anyNonDefaultDateTime = DateTime.Now;
+            var defaultDateTime = default(DateTime);
+            var invalidDateTime = DateTime.Now - TimeSpan.FromHours(1);
 
             // use a default time for the reference time.
             Assert.ThrowsException<ArgumentException>(() => new Scheduler(defaultDateTime));
@@ -36,7 +36,7 @@ namespace COMMO.Scheduling.Tests {
             Assert.ThrowsException<ArgumentException>(() => new Scheduler(invalidDateTime));
 
             // use a non default reference time.
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+            var scheduler = new Scheduler(anyNonDefaultDateTime);
         }
 
         /// <summary>
@@ -45,13 +45,13 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void InmediateEvent_Throws_WhenBad()
         {
-            DateTime anyNonDefaultDateTime = DateTime.Now;
+            var anyNonDefaultDateTime = DateTime.Now;
 
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+            var scheduler = new Scheduler(anyNonDefaultDateTime);
 
             Assert.ThrowsException<ArgumentNullException>(() => scheduler.ImmediateEvent(null), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
 
-            Mock<IEvent> eventMock = new Mock<IEvent>();
+            var eventMock = new Mock<IEvent>();
 
             Assert.ThrowsException<ArgumentException>(() => scheduler.ImmediateEvent(eventMock.Object), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
         }
@@ -62,21 +62,21 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void ScheduleEvent_Throws_WhenBad()
         {
-            DateTime anyNonDefaultDateTime = DateTime.Now;
-            DateTime defaultDateTime = default(DateTime);
-            DateTime invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
-            DateTime validRunAtDateTime = anyNonDefaultDateTime + TimeSpan.FromMilliseconds(1);
-            DateTime twoSecondsFromNowDateTime = anyNonDefaultDateTime + TimeSpan.FromSeconds(2);
+            var anyNonDefaultDateTime = DateTime.Now;
+	        var defaultDateTime = default(DateTime);
+	        var invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
+	        var validRunAtDateTime = anyNonDefaultDateTime + TimeSpan.FromMilliseconds(1);
+	        var twoSecondsFromNowDateTime = anyNonDefaultDateTime + TimeSpan.FromSeconds(2);
 
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+	        var scheduler = new Scheduler(anyNonDefaultDateTime);
 
             ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, validRunAtDateTime), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
 
-            Mock<IEvent> eventMock = new Mock<IEvent>();
+	        var eventMock = new Mock<IEvent>();
 
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, validRunAtDateTime), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
 
-            Mock<BaseEvent> bEventMock = new Mock<BaseEvent>();
+	        var bEventMock = new Mock<BaseEvent>();
 
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, defaultDateTime), $"Parameter runAt has the default value.");
 
@@ -94,20 +94,20 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void Cancelling_SingleEvent()
         {
-            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
-            TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
-            TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
-            DateTime anyNonDefaultDateTime = DateTime.Now;
-            DateTime twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
+	        var overheadDelay = TimeSpan.FromMilliseconds(100);
+	        var twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
+	        var threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
+	        var anyNonDefaultDateTime = DateTime.Now;
+	        var twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
             const int ExpectedCounterValueBeforeRun = 0;
             const int ExpectedCounterValueAfterRun = 0;
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>();
+	        var bEventMockForScheduled = new Mock<BaseEvent>();
 
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+	        var scheduler = new Scheduler(anyNonDefaultDateTime);
 
             scheduler.OnEventFired += (sender, eventArgs) =>
             {
@@ -152,23 +152,23 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void Cancelling_AllEventsFor()
         {
-            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
-            TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
-            TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
-            DateTime anyNonDefaultDateTime = DateTime.Now;
-            DateTime twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
+	        var overheadDelay = TimeSpan.FromMilliseconds(100);
+	        var twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
+	        var threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
+	        var anyNonDefaultDateTime = DateTime.Now;
+	        var twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
             const uint anyRequestorId = 100u;
-            const int ExpectedCounterValueBeforeRun = 0;
-            const int ExpectedCounterValueAfterRun = 0;
+            const int expectedCounterValueBeforeRun = 0;
+            const int expectedCounterValueAfterRun = 0;
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(anyRequestorId);
-            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(anyRequestorId);
-            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(anyRequestorId);
+            var bEventMockForScheduled1 = new Mock<BaseEvent>(anyRequestorId);
+	        var bEventMockForScheduled2 = new Mock<BaseEvent>(anyRequestorId);
+	        var bEventMockForScheduled3 = new Mock<BaseEvent>(anyRequestorId);
 
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+	        var scheduler = new Scheduler(anyNonDefaultDateTime);
 
             scheduler.OnEventFired += (sender, eventArgs) =>
             {
@@ -190,7 +190,7 @@ namespace COMMO.Scheduling.Tests {
             Task.Delay(overheadDelay)
                 .ContinueWith(prev =>
                 {
-                    Assert.AreEqual(ExpectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
+                    Assert.AreEqual(expectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {expectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
                 })
                 .Wait();
 
@@ -201,7 +201,7 @@ namespace COMMO.Scheduling.Tests {
             Task.Delay(threeSecondsTimeSpan)
                 .ContinueWith(prev =>
                 {
-                    Assert.AreEqual(ExpectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
+                    Assert.AreEqual(expectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {expectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
                 })
                 .Wait();
         }
@@ -212,18 +212,18 @@ namespace COMMO.Scheduling.Tests {
         [TestMethod]
         public void OnEventFired_IsCalled()
         {
-            const int ExpectedCounterValueBeforeRun = 0;
-            const int ExpectedCounterValueAfterRun = 1;
+            const int expectedCounterValueBeforeRun = 0;
+            const int expectedCounterValueAfterRun = 1;
 
-            TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
-            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
-            DateTime anyNonDefaultDateTime = DateTime.Now;
-            DateTime twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
+	        var twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
+	        var overheadDelay = TimeSpan.FromMilliseconds(100);
+	        var anyNonDefaultDateTime = DateTime.Now;
+	        var twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
-            Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>();
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>();
+	        var bEventMockForInmediate = new Mock<BaseEvent>();
+	        var bEventMockForScheduled = new Mock<BaseEvent>();
 
-            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+	        var scheduler = new Scheduler(anyNonDefaultDateTime);
 
             var inmediateEventFiredCounter = 0;
             var scheduledEventFiredCounter = 0;
@@ -253,7 +253,7 @@ namespace COMMO.Scheduling.Tests {
             Task.Delay(overheadDelay)
                 .ContinueWith(prev =>
                     {
-                        Assert.AreEqual(ExpectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
+                        Assert.AreEqual(expectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {expectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
                     })
                 .Wait();
 
@@ -264,7 +264,7 @@ namespace COMMO.Scheduling.Tests {
             Task.Delay(overheadDelay)
                 .ContinueWith(prev =>
                     {
-                        Assert.AreEqual(ExpectedCounterValueAfterRun, inmediateEventFiredCounter, $"Inmediate events counter does not match: Expected {ExpectedCounterValueAfterRun}, got {inmediateEventFiredCounter}.");
+                        Assert.AreEqual(expectedCounterValueAfterRun, inmediateEventFiredCounter, $"Inmediate events counter does not match: Expected {expectedCounterValueAfterRun}, got {inmediateEventFiredCounter}.");
                     })
                 .Wait();
 
@@ -272,7 +272,7 @@ namespace COMMO.Scheduling.Tests {
             Task.Delay(twoSecondsTimeSpan)
                 .ContinueWith(prev =>
                     {
-                        Assert.AreEqual(ExpectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
+                        Assert.AreEqual(expectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {expectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
                     })
                 .Wait();
         }

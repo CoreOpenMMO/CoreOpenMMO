@@ -1,18 +1,18 @@
-﻿// <copyright file="SimpleDoSDefender.cs" company="2Dudes">
+// <copyright file="SimpleDoSDefender.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace COMMO.Security
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public class SimpleDoSDefender : IDoSDefender
     {
         // To prevent a memory attack... just blacklist a maximum of 1M addresses.

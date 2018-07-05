@@ -1,22 +1,22 @@
-﻿// <copyright file="ThingMovementGroundToSlot.cs" company="2Dudes">
+// <copyright file="ThingMovementGroundToSlot.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Linq;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Events;
+using COMMO.Server.Movement.EventConditions;
+using COMMO.Server.Notifications;
+
 namespace COMMO.Server.Movement
 {
-    using System;
-    using System.Linq;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Events;
-    using COMMO.Server.Movement.EventConditions;
-    using COMMO.Server.Notifications;
-
     internal class ThingMovementGroundToSlot : MovementBase
     {
         public ThingMovementGroundToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)

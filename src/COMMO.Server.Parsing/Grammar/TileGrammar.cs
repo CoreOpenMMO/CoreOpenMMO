@@ -1,15 +1,15 @@
-﻿// <copyright file="TileGrammar.cs" company="2Dudes">
+// <copyright file="TileGrammar.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Linq;
+using System.Text;
+using Sprache;
+
 namespace COMMO.Server.Parsing.Grammar
 {
-    using System.Linq;
-    using System.Text;
-    using Sprache;
-
     public class TileGrammar
     {
         private static readonly Parser<char> EqualSign = Parse.Char('=');

@@ -1,13 +1,13 @@
-﻿// <copyright file="DuplicateComparer.cs" company="2Dudes">
+// <copyright file="DuplicateComparer.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace COMMO.Utilities
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// System.Collections.Generic.SortedList by default does not allow duplicate items.
     /// Since items are keyed by TotalCost there can be duplicate entries per key.

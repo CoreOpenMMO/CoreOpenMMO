@@ -4,15 +4,15 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Parsing;
+
 namespace COMMO.Server.Items
 {
-    using System;
-    using System.Collections.Generic;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Parsing;
-
     public class Item : Thing, IItem
     {
         public event ItemHolderChangeEvent OnHolderChanged;

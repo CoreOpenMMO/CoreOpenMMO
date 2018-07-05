@@ -4,12 +4,12 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using COMMO.Data.Contracts;
+
 namespace COMMO.Data.Models
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using COMMO.Data.Contracts;
-
     [Table("houses", Schema = "opentibia_classic")]
     public class AssignedHouse : IAssignedHouse
     {

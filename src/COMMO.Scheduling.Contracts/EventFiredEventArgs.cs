@@ -4,17 +4,14 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using COMMO.Common.Helpers;
 
-namespace COMMO.Scheduling.Contracts
-{
-    using System;
-    using COMMO.Common.Helpers;
-
-    /// <summary>
-    /// Class that represents the event arguments of an EventFired event.
-    /// </summary>
-    public class EventFiredEventArgs : EventArgs
+namespace COMMO.Scheduling.Contracts {
+	/// <summary>
+	/// Class that represents the event arguments of an EventFired event.
+	/// </summary>
+	public class EventFiredEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EventFiredEventArgs"/> class.

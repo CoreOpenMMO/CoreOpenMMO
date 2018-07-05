@@ -4,11 +4,11 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Net;
+using COMMO.Data.Contracts;
+
 namespace COMMO.Configuration
 {
-    using System.Net;
-    using COMMO.Data.Contracts;
-
     public class ServiceConfiguration
     {
         public WorldType WorldType { get; set; }
@@ -51,18 +51,18 @@ namespace COMMO.Configuration
 
         public string WorldName { get; set; }
 
-        private static readonly object ConfigLock = new object();
-        private static ServiceConfiguration config;
+        private static readonly object _configLock = new object();
+        private static ServiceConfiguration _config;
 
         public static ServiceConfiguration GetConfiguration()
         {
-            if (config == null)
+            if (_config == null)
             {
-                lock (ConfigLock)
+                lock (_configLock)
                 {
-                    if (config == null)
+                    if (_config == null)
                     {
-                        config = new ServiceConfiguration
+                        _config = new ServiceConfiguration
                         {
                             UsingCipsoftRsaKeys = true,
                             GameVersionInt = 10,
@@ -89,7 +89,7 @@ namespace COMMO.Configuration
                 }
             }
 
-            return config;
+            return _config;
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿// <copyright file="EventGrammar.cs" company="2Dudes">
+// <copyright file="EventGrammar.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Linq;
+using COMMO.Data.Contracts;
+using Sprache;
+
 namespace COMMO.Server.Parsing.Grammar
 {
-    using System;
-    using System.Linq;
-    using COMMO.Data.Contracts;
-    using Sprache;
-
     public class EventGrammar
     {
         public static readonly Parser<MoveUseEvent> Event =

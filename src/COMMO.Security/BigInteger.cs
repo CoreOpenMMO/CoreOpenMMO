@@ -1,13 +1,13 @@
-﻿// <copyright file="BigInteger.cs" company="2Dudes">
+// <copyright file="BigInteger.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+
 namespace COMMO.Security
 {
-    using System;
-
     /**
         * Copyright (c) 2002 Chew Keong TAN
         * All rights reserved

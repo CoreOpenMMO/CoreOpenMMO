@@ -1,20 +1,20 @@
-﻿// <copyright file="ItemMoveHandler.cs" company="2Dudes">
+// <copyright file="ItemMoveHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Linq;
+using COMMO.Communications;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Server.Actions;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Handlers
 {
-    using System.Linq;
-    using COMMO.Communications;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Actions;
-    using COMMO.Server.Data;
-    using COMMO.Server.Data.Models.Structs;
-
     internal class ItemMoveHandler : IncomingPacketHandler
     {
         public override void HandleMessageContents(NetworkMessage message, Connection connection)

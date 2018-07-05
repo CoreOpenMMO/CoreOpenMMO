@@ -1,14 +1,14 @@
-﻿// <copyright file="ConditionalActionRule.cs" company="2Dudes">
+// <copyright file="ConditionalActionRule.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace COMMO.Server.Parsing
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class ConditionalActionRule
     {
         public IList<string> ConditionSet { get; }

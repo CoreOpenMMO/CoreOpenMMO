@@ -1,18 +1,18 @@
-﻿// <copyright file="AuthenticationHandler.cs" company="2Dudes">
+// <copyright file="AuthenticationHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Common.Helpers;
+using COMMO.Communications;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Configuration;
+using COMMO.Server.Data;
+
 namespace COMMO.Server.Handlers.Management
 {
-    using COMMO.Common.Helpers;
-    using COMMO.Communications;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Configuration;
-    using COMMO.Server.Data;
-
     /// <summary>
     /// Class that represents an authentication request handler for the management service
     /// </summary>

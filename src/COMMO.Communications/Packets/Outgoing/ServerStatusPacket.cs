@@ -4,8 +4,6 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using COMMO.Utilities;
-
 using COMMO.Server.Data;
 using COMMO.Server.Data.Interfaces;
 using COMMO.Utilities;

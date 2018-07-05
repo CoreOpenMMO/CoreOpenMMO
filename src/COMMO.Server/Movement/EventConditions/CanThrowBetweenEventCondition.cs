@@ -1,14 +1,14 @@
-﻿// <copyright file="CanThrowBetweenEventCondition.cs" company="2Dudes">
+// <copyright file="CanThrowBetweenEventCondition.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Movement.EventConditions
 {
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Models.Structs;
-
     /// <summary>
     /// Class that represents a condition that evaluates whether a throw from A to B makes sense.
     /// </summary>

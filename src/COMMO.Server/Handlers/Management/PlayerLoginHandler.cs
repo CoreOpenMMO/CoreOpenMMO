@@ -4,21 +4,21 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using COMMO.Communications;
+using COMMO.Communications.Interfaces;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data;
+using COMMO.Data.Contracts;
+using COMMO.Data.Models;
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Server.Handlers.Management
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using COMMO.Communications;
-    using COMMO.Communications.Interfaces;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data;
-    using COMMO.Data.Contracts;
-	using COMMO.Data.Models;
-	using COMMO.Server.Data;
-    using COMMO.Server.Data.Interfaces;
-
     internal class PlayerLoginHandler : IIncomingPacketHandler
     {
         public IList<IPacketOutgoing> ResponsePackets { get; private set; }

@@ -4,10 +4,10 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+
 namespace COMMO.Security.Encryption
 {
-    using System;
-
     public static class Xtea
     {
         public static unsafe bool Encrypt(ref byte[] buffer, ref int length, int index, uint[] key)

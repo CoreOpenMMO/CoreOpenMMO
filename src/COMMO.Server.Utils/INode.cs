@@ -1,4 +1,4 @@
-﻿// <copyright file="INode.cs" company="2Dudes">
+// <copyright file="INode.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -30,10 +30,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Collections.Generic;
+
 namespace COMMO.Utilities
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// The A* algorithm takes a starting node and a goal node and searchings from
     /// start to the goal.

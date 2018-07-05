@@ -1,17 +1,17 @@
-﻿// <copyright file="CreatureMovementOnMap.cs" company="2Dudes">
+// <copyright file="CreatureMovementOnMap.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Movement.EventConditions;
+
 namespace COMMO.Server.Movement
 {
-    using System;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Movement.EventConditions;
-
     internal class CreatureMovementOnMap : ThingMovementOnMap
     {
         public Direction AttemptedDirection { get; }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Data", "src\CO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Data", "src\COMMO.Data\COMMO.Data.csproj", "{CF5104C6-961E-4226-AE7D-51965D6E14C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Utils", "src\COMMO.Server.Utils\COMMO.Server.Utils.csproj", "{FC7AF8BE-AC97-4689-8EFD-7103B312BA65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Utilities", "src\COMMO.Server.Utils\COMMO.Utilities.csproj", "{FC7AF8BE-AC97-4689-8EFD-7103B312BA65}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Configuration", "src\COMMO.Configuration\COMMO.Configuration.csproj", "{B7FE78FC-35BD-46F4-B23C-368ABF3EA0DA}"
 EndProject

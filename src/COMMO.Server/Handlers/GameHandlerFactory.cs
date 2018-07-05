@@ -1,16 +1,15 @@
-﻿// <copyright file="GameHandlerFactory.cs" company="2Dudes">
+// <copyright file="GameHandlerFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace COMMO.Server.Handlers
-{
-    using COMMO.Communications.Interfaces;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data;
+using COMMO.Communications.Interfaces;
+using COMMO.Data.Contracts;
 
-    public class GameHandlerFactory : IHandlerFactory
+namespace COMMO.Server.Handlers {
+	public class GameHandlerFactory : IHandlerFactory
     {
         public IIncomingPacketHandler CreateIncommingForType(byte packeType)
         {

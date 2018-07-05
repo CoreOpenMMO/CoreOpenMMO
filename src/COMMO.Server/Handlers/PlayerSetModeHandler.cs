@@ -1,16 +1,16 @@
-﻿// <copyright file="PlayerSetModeHandler.cs" company="2Dudes">
+// <copyright file="PlayerSetModeHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using COMMO.Communications;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data;
+
 namespace COMMO.Server.Handlers
 {
-    using System;
-    using COMMO.Communications;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data;
-
     internal class PlayerSetModeHandler : IncomingPacketHandler
     {
         public override void HandleMessageContents(NetworkMessage message, Connection connection)

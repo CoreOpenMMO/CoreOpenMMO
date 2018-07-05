@@ -11,17 +11,16 @@ using COMMO.Server.Handlers;
 using COMMO.Server.Handlers.Management;
 using COMMO.Server.Items;
 using COMMO.Server.Monsters;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace COMMO.Server.Standalone
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public class Program
     {
-        private static IOpenTibiaListener loginListener;
-        private static IOpenTibiaListener gameListener;
+        private static IOpenTibiaListener _loginListener;
+        private static IOpenTibiaListener _gameListener;
 
         // private static IOpenTibiaListener managementListener;
         static void Main()
@@ -36,8 +35,8 @@ namespace COMMO.Server.Standalone
             // Set the persistence storage source (database)
 
             // Initilize client listening pipeline (but reject game connections)
-            loginListener = new LoginListener(new ManagementHandlerFactory(), 7171);
-            gameListener = new GameListener(new GameHandlerFactory(), 7172);
+            _loginListener = new LoginListener(new ManagementHandlerFactory(), 7171);
+            _gameListener = new GameListener(new GameHandlerFactory(), 7172);
             // managementListener = new ManagementListener(new ManagementHandlerFactory());
             var listeningTask = RunAsync(cancellationTokenSource.Token);
 
@@ -50,9 +49,9 @@ namespace COMMO.Server.Standalone
 
         private static async Task RunAsync(CancellationToken cancellationToken)
         {
-            loginListener.BeginListening();
+            _loginListener.BeginListening();
             // managementListener.BeginListening();
-            gameListener.BeginListening();
+            _gameListener.BeginListening();
 
             while (!cancellationToken.IsCancellationRequested)
             {

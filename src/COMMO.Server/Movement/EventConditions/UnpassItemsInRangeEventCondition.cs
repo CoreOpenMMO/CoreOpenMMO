@@ -1,16 +1,16 @@
-﻿// <copyright file="UnpassItemsInRangeEventCondition.cs" company="2Dudes">
+// <copyright file="UnpassItemsInRangeEventCondition.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Data.Contracts;
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Movement.EventConditions
 {
-    using COMMO.Data.Contracts;
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-
     /// <summary>
     /// Class that represents an event condition that evaluates whether an item with the unpass flag is being moved within range.
     /// </summary>

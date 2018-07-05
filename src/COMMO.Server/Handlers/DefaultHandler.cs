@@ -1,17 +1,17 @@
-﻿// <copyright file="DefaultHandler.cs" company="2Dudes">
+// <copyright file="DefaultHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Text;
+using COMMO.Communications;
+using COMMO.Communications.Packets.Incoming;
+using COMMO.Server.Data;
+
 namespace COMMO.Server.Handlers
 {
-    using System;
-    using System.Text;
-    using COMMO.Communications;
-    using COMMO.Communications.Packets.Incoming;
-    using COMMO.Server.Data;
-
     internal class DefaultHandler : IncomingPacketHandler
     {
         public byte IncomingPacketType { get; }

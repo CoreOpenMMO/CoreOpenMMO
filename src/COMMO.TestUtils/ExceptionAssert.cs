@@ -1,8 +1,8 @@
-﻿namespace COMMO.TestUtils
-{
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace COMMO.TestUtils
+{
     /// <summary>
     /// Class that contains extensions for asserting exceptions.
     /// </summary>

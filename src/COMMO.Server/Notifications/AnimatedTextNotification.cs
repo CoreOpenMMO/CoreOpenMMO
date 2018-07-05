@@ -1,17 +1,17 @@
-﻿// <copyright file="AnimatedTextNotification.cs" company="2Dudes">
+// <copyright file="AnimatedTextNotification.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Common.Helpers;
+using COMMO.Communications;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Notifications
 {
-    using COMMO.Common.Helpers;
-    using COMMO.Communications;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Models.Structs;
-
     internal class AnimatedTextNotification : Notification
     {
         public Location Location { get; }

@@ -4,14 +4,14 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using COMMO.Scheduling.Contracts;
+using Priority_Queue;
+
 namespace COMMO.Scheduling
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using COMMO.Scheduling.Contracts;
-    using Priority_Queue;
-
     /// <summary>
     /// Abstract class that represents the base event for scheduling.
     /// </summary>

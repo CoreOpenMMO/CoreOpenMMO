@@ -1,16 +1,16 @@
-﻿// <copyright file="ItemFactory.cs" company="2Dudes">
+// <copyright file="ItemFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using COMMO.Data.Contracts;
+
 namespace COMMO.Server.Items
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using COMMO.Data.Contracts;
-
     public static class ItemFactory
     {
         public static object InitLock = new object();

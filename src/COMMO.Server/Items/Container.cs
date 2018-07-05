@@ -1,19 +1,19 @@
-﻿// <copyright file="Container.cs" company="2Dudes">
+// <copyright file="Container.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Parsing;
+
 namespace COMMO.Server.Items
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Parsing;
-
     public class Container : Item, IContainer
     {
         public event OnContentAdded OnContentAdded;

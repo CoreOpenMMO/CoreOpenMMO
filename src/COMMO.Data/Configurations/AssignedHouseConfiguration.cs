@@ -4,12 +4,12 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using COMMO.Data.Models;
+
 namespace COMMO.Data.Configurations
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using COMMO.Data.Models;
-
     public class AssignedHouseConfiguration : IEntityTypeConfiguration<AssignedHouse>
     {
         public void Configure(EntityTypeBuilder<AssignedHouse> builder)

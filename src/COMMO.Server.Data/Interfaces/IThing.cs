@@ -1,13 +1,13 @@
-﻿// <copyright file="IThing.cs" company="2Dudes">
+// <copyright file="IThing.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Data.Interfaces
 {
-    using COMMO.Server.Data.Models.Structs;
-
     public delegate void OnThingStateChanged(IThing thingThatChanged, ThingStateChangedEventArgs eventArgs);
 
     public interface IThing

@@ -1,25 +1,25 @@
-﻿// <copyright file="Functions.cs" company="2Dudes">
+// <copyright file="Functions.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using COMMO.Communications.Packets.Outgoing;
+using COMMO.Data.Contracts;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Items;
+using COMMO.Server.Monsters;
+using COMMO.Server.Movement;
+using COMMO.Server.Notifications;
+
 namespace COMMO.Server.Scripting
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using COMMO.Communications.Packets.Outgoing;
-    using COMMO.Data.Contracts;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Items;
-    using COMMO.Server.Monsters;
-    using COMMO.Server.Movement;
-    using COMMO.Server.Notifications;
-
     public static class Functions
     {
         public const string ThingOneIdentifier = "Obj1";

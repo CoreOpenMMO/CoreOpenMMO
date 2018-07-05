@@ -1,13 +1,13 @@
-﻿// <copyright file="Rsa.cs" company="2Dudes">
+// <copyright file="Rsa.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+
 namespace COMMO.Security.Encryption
 {
-    using System;
-
     public static class Rsa
     {
         static readonly BigInteger OtServerP = new BigInteger("14299623962416399520070177382898895550795403345466153217470516082934737582776038882967213386204600674145392845853859217990626450972452084065728686565928113", 10);

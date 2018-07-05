@@ -1,13 +1,13 @@
-﻿// <copyright file="ISkill.cs" company="2Dudes">
+// <copyright file="ISkill.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Data.Contracts;
+
 namespace COMMO.Server.Data.Interfaces
 {
-    using COMMO.Data.Contracts;
-
     public delegate void OnLevelAdvance(SkillType skillType);
 
     public interface ISkill

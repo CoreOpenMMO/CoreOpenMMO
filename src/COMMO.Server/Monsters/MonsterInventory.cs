@@ -1,18 +1,18 @@
-﻿// <copyright file="MonsterInventory.cs" company="2Dudes">
+// <copyright file="MonsterInventory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.Items;
+
 namespace COMMO.Server.Monsters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using COMMO.Server.Data.Interfaces;
-    using COMMO.Server.Data.Models.Structs;
-    using COMMO.Server.Items;
-
     internal class MonsterInventory : IInventory
     {
         private Dictionary<byte, Tuple<IItem, ushort>> inventory;

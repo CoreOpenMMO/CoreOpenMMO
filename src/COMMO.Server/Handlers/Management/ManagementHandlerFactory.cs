@@ -1,16 +1,14 @@
-﻿// <copyright file="ManagementHandlerFactory.cs" company="2Dudes">
+// <copyright file="ManagementHandlerFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace COMMO.Server.Handlers.Management
-{
-    using COMMO.Communications;
-    using COMMO.Communications.Interfaces;
-    using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data;
+using COMMO.Communications.Interfaces;
 
-    public class ManagementHandlerFactory : IHandlerFactory
+namespace COMMO.Server.Handlers.Management {
+	public class ManagementHandlerFactory : IHandlerFactory
     {
         public IIncomingPacketHandler CreateIncommingForType(byte packeType)
         {

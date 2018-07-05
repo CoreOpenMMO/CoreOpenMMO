@@ -1,15 +1,15 @@
-﻿// <copyright file="GenericEvent.cs" company="2Dudes">
+// <copyright file="GenericEvent.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Scheduling;
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Interfaces;
+
 namespace COMMO.Server
 {
-    using COMMO.Scheduling;
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Interfaces;
-
     /// <summary>
     /// Class that represents a generic event.
     /// </summary>

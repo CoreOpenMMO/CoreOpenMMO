@@ -1,14 +1,14 @@
-﻿// <copyright file="LocationsAreDistantByEventCondition.cs" company="2Dudes">
+// <copyright file="LocationsAreDistantByEventCondition.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Scheduling.Contracts;
+using COMMO.Server.Data.Models.Structs;
+
 namespace COMMO.Server.Movement.EventConditions
 {
-    using COMMO.Scheduling.Contracts;
-    using COMMO.Server.Data.Models.Structs;
-
     /// <summary>
     /// Class that represents an event condition that evaluates whether two locations are distant by at least a value, and if they should be on the same floor.
     /// </summary>

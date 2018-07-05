@@ -10,7 +10,7 @@
     <ProjectReference Include="..\COMMO.Configuration\COMMO.Configuration.csproj" />
     <ProjectReference Include="..\COMMO.Data\COMMO.Data.csproj" />
     <ProjectReference Include="..\COMMO.Server.Data\COMMO.Server.Data.csproj" />
-    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Server.Utils.csproj" />
+    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

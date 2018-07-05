@@ -1,14 +1,14 @@
-﻿// <copyright file="Hash.cs" company="2Dudes">
+// <copyright file="Hash.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Security.Cryptography;
+using System.Text;
+
 namespace COMMO.Security.Encryption
 {
-    using System.Security.Cryptography;
-    using System.Text;
-
     public static class Hash
     {
         private static readonly SHA256 Sha = new SHA256Managed();

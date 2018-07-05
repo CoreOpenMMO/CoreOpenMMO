@@ -1,15 +1,15 @@
-﻿// <copyright file="CipGrammar.cs" company="2Dudes">
+// <copyright file="CipGrammar.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Linq;
+using Sprache;
+
 namespace COMMO.Server.Parsing.Grammar
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Sprache;
-
     public class CipGrammar
     {
         private static readonly Parser<char> EqualSign = Parse.Char('=');
