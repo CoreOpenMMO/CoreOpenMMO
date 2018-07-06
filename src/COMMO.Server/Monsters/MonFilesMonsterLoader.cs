@@ -90,7 +90,7 @@ namespace COMMO.Server.Monsters
                 throw new ArgumentNullException(nameof(loadFromFile));
             }
 
-            var monsFilePattern = "OpenTibia.Server.Data." + ServerConfiguration.MonsterFilesDirectory;
+            var monsFilePattern = "COMMO.Server.Data." + ServerConfiguration.MonsterFilesDirectory;
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -243,7 +243,7 @@ namespace COMMO.Server.Monsters
             }
 
             var spawns = new List<Spawn>();
-            var spawnsFilePath = "OpenTibia.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + spawnsFileName;
+            var spawnsFilePath = "COMMO.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + spawnsFileName;
 
             var assembly = Assembly.GetExecutingAssembly();
 
