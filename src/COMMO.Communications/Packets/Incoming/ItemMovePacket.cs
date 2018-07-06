@@ -1,0 +1,47 @@
+// <copyright file="ItemMovePacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using COMMO.Server.Data;
+using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+
+namespace COMMO.Communications.Packets.Incoming
+{
+    public class ItemMovePacket : IPacketIncoming
+    {
+        public ItemMovePacket(NetworkMessage message)
+        {
+			FromLocation = new Location
+            {
+                X = message.GetUInt16(),
+                Y = message.GetUInt16(),
+                Z = (sbyte)message.GetByte()
+            };
+
+			ClientId = message.GetUInt16();
+			FromStackPos = message.GetByte();
+
+			ToLocation = new Location
+            {
+                X = message.GetUInt16(),
+                Y = message.GetUInt16(),
+                Z = (sbyte)message.GetByte()
+            };
+
+			Count = message.GetByte();
+        }
+
+        public Location FromLocation { get; private set; }
+
+        public Location ToLocation { get; private set; }
+
+        public byte FromStackPos { get; private set; }
+
+        public ushort ClientId { get; private set; }
+
+        public byte Count { get; private set; }
+    }
+}
