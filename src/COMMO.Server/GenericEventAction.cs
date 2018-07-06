@@ -18,7 +18,7 @@ namespace COMMO.Server
         {
             action.ThrowIfNull();
 
-            action = action;
+            this.action = action;
         }
 
         public void Execute()

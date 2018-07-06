@@ -37,7 +37,7 @@ namespace COMMO.Server.Items
             }
 
             var itemDictionary = new Dictionary<ushort, ItemType>();
-            var objectsFilePath = "OpenTibia.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + objectsFileName;
+            var objectsFilePath = "COMMO.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + objectsFileName;
 
             var assembly = Assembly.GetExecutingAssembly();
 

@@ -14,6 +14,7 @@ using COMMO.Communications.Packets.Incoming;
 using COMMO.Communications.Packets.Outgoing;
 using COMMO.Configuration;
 using COMMO.Data;
+using COMMO.Data.Models;
 using COMMO.Server.Data;
 using COMMO.Server.Data.Interfaces;
 
@@ -96,6 +97,62 @@ namespace COMMO.Communications
 
             using (var otContext = new OpenTibiaDbContext())
             {
+	            if (!otContext.Users.Any()) {
+		            var u = new User()
+		            {
+						Id = 1,
+			            Email = "1",
+			            Login = 1,
+			            Passwd = "1",
+						Userlevel = 255,
+						Premium = 1,
+						Premium_Days = 100
+		            };
+
+		            otContext.Users.Add(u);
+		            otContext.SaveChanges();
+
+		            var p = new PlayerModel()
+		            {
+			            Account_Id = 1,
+			            Player_Id = 1,
+			            Account_Nr = 1,
+			            Charname = "MUNIZ",
+						Level = 10,
+						Comment = "Felipe Muniz"
+		            };
+
+		            otContext.Players.Add(p);
+		            otContext.SaveChanges();
+
+		            var u2 = new User()
+		            {
+			            Id = 2,
+			            Email = "2",
+			            Login = 2,
+			            Passwd = "2",
+			            Userlevel = 50,
+			            Premium = 1,
+			            Premium_Days = 100
+		            };
+
+		            otContext.Users.Add(u2);
+		            otContext.SaveChanges();
+
+		            var p2 = new PlayerModel()
+		            {
+			            Account_Id = 2,
+			            Player_Id = 2,
+			            Account_Nr = 2,
+			            Charname = "FELIPE",
+			            Level = 10,
+			            Comment = "Felipe"
+		            };
+
+		            otContext.Players.Add(p2);
+		            otContext.SaveChanges();
+	            }
+
                 // validate credentials.
                 var user = otContext.Users.FirstOrDefault(u => u.Login == loginPacket.AccountNumber && u.Passwd.Equals(loginPacket.Password));
 

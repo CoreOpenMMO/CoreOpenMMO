@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Platforms>x64</Platforms>
     <Configurations>Debug;Release</Configurations>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>

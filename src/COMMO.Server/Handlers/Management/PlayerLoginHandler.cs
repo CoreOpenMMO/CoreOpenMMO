@@ -30,12 +30,7 @@ namespace COMMO.Server.Handlers.Management
 
             using (var otContext = new OpenTibiaDbContext())
             {
-				Console.WriteLine("var otContext = new OpenTibiaDbContext()");
-
 				if (!otContext.Users.Any()) {
-
-					Console.WriteLine("!otContext.Users.Any()");
-
 					var user = new User()
 					{
 						Email = "1",
@@ -45,8 +40,6 @@ namespace COMMO.Server.Handlers.Management
 
 					otContext.Users.Add(user);
 				}
-
-				Console.WriteLine("!otContext.Users.Any()");
 
                 var userRecord = otContext.Users.Where(u => u.Login == playerLoginPacket.AccountNumber && u.Passwd.Equals(playerLoginPacket.Password)).FirstOrDefault();
                 var playerRecord = otContext.Players.Where(p => p.Account_Nr == playerLoginPacket.AccountNumber && p.Charname.Equals(playerLoginPacket.CharacterName)).FirstOrDefault();
