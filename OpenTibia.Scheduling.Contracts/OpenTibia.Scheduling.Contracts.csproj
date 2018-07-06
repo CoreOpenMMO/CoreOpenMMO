@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj" />
   </ItemGroup>
 

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="OptimizedPriorityQueue" Version="4.1.1" />
   </ItemGroup>
 

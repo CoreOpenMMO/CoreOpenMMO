@@ -217,10 +217,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Data\dat\circles.dat" />
     <EmbeddedResource Include="Data\dat\houseareas.dat" />
     <EmbeddedResource Include="Data\dat\houses.dat" />

@@ -1,4 +1,4 @@
-﻿// <copyright file="SectorMapLoader.cs" company="2Dudes">
+// <copyright file="SectorMapLoader.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -16,7 +16,7 @@ namespace OpenTibia.Server.Map
     public class SectorMapLoader : IMapLoader
     {
         // TODO: to configuration
-        private static readonly Lazy<ConnectionMultiplexer> CacheConnectionInstance = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect("<redis connection string>"));
+        private static readonly Lazy<ConnectionMultiplexer> CacheConnectionInstance = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect("127.0.0.1:6379"));
 
         public static ConnectionMultiplexer CacheConnection => CacheConnectionInstance.Value;
 

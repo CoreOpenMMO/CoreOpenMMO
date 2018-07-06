@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Sprache" Version="2.1.2" />
   </ItemGroup>
 
