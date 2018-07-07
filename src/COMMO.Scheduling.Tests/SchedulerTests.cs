@@ -4,13 +4,11 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
-using System.Threading.Tasks;
+using COMMO.Scheduling.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using COMMO.TestUtils;
-using COMMO.Scheduling.Contracts;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System;
+using System.Threading.Tasks;
 
 namespace COMMO.Scheduling.Tests {
 	/// <summary>
@@ -70,23 +68,23 @@ namespace COMMO.Scheduling.Tests {
 
 	        var scheduler = new Scheduler(anyNonDefaultDateTime);
 
-            ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, validRunAtDateTime), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
+			ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, validRunAtDateTime), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
 
-	        var eventMock = new Mock<IEvent>();
+			var eventMock = new Mock<IEvent>();
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, validRunAtDateTime), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
+			ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, validRunAtDateTime), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
 
-	        var bEventMock = new Mock<BaseEvent>();
+			var bEventMock = new Mock<BaseEvent>();
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, defaultDateTime), $"Parameter runAt has the default value.");
+			ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, defaultDateTime), $"Parameter runAt has the default value.");
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, invalidRunAtDateTime), $"Value cannot be earlier than the reference time of the scheduler: {anyNonDefaultDateTime}.{Environment.NewLine}Parameter name: runAt");
+			ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, invalidRunAtDateTime), $"Value cannot be earlier than the reference time of the scheduler: {anyNonDefaultDateTime}.{Environment.NewLine}Parameter name: runAt");
 
-            // schedule twice
-            scheduler.ScheduleEvent(bEventMock.Object, twoSecondsFromNowDateTime);
+			// schedule twice
+			scheduler.ScheduleEvent(bEventMock.Object, twoSecondsFromNowDateTime);
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ImmediateEvent(bEventMock.Object), $"The event is already scheduled.{Environment.NewLine}Parameter name: eventToSchedule");
-        }
+			ExceptionAssert.Throws<ArgumentException>(() => scheduler.ImmediateEvent(bEventMock.Object), $"The event is already scheduled.{Environment.NewLine}Parameter name: eventToSchedule");
+		}
 
         /// <summary>
         /// Checks that <see cref="Scheduler.CancelEvent(string)"/> does what it should.

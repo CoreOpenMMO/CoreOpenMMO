@@ -5,28 +5,26 @@
 // </copyright>
 
 using System;
-using COMMO.Common.Helpers;
 
 namespace COMMO.Scheduling.Contracts {
 	/// <summary>
 	/// Class that represents the event arguments of an EventFired event.
 	/// </summary>
-	public class EventFiredEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventFiredEventArgs"/> class.
-        /// </summary>
-        /// <param name="evt">The event to include as the event fired.</param>
-        public EventFiredEventArgs(IEvent evt)
-        {
-            evt.ThrowIfNull(nameof(evt));
+	public class EventFiredEventArgs : EventArgs {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EventFiredEventArgs"/> class.
+		/// </summary>
+		/// <param name="evt">The event to include as the event fired.</param>
+		public EventFiredEventArgs(IEvent evt) {
+			if (evt == null)
+				throw new ArgumentNullException(nameof(evt));
 
-            Event = evt;
-        }
+			Event = evt;
+		}
 
-        /// <summary>
-        /// Gets the event that was fired.
-        /// </summary>
-        public IEvent Event { get; }
-    }
+		/// <summary>
+		/// Gets the event that was fired.
+		/// </summary>
+		public IEvent Event { get; }
+	}
 }

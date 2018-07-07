@@ -4,35 +4,31 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using COMMO.Common.Helpers;
 using COMMO.Communications;
 using COMMO.Communications.Packets.Incoming;
 using COMMO.Communications.Packets.Outgoing;
 using COMMO.Configuration;
 using COMMO.Server.Data;
 
-namespace COMMO.Server.Handlers.Management
-{
-    /// <summary>
-    /// Class that represents an authentication request handler for the management service
-    /// </summary>
-    internal class AuthenticationHandler : IncomingPacketHandler
-    {
-        /// <inheritdoc/>
-        public override void HandleMessageContents(NetworkMessage message, Connection connection)
-        {
-            connection.ThrowIfNull(nameof(connection));
+namespace COMMO.Server.Handlers.Management {
+	/// <summary>
+	/// Class that represents an authentication request handler for the management service
+	/// </summary>
+	internal class AuthenticationHandler : IncomingPacketHandler {
+		/// <inheritdoc/>
+		public override void HandleMessageContents(NetworkMessage message, Connection connection) {
+			if (connection == null)
+				throw new System.ArgumentNullException(nameof(connection));
 
-            var authPacket = new AuthenticationPacket(message);
+			var authPacket = new AuthenticationPacket(message);
 
-            var result = authPacket.Password.Equals(ServiceConfiguration.GetConfiguration().QueryManagerPassword);
+			var result = authPacket.Password.Equals(ServiceConfiguration.GetConfiguration().QueryManagerPassword);
 
-            connection.IsAuthenticated = result;
+			connection.IsAuthenticated = result;
 
-            ResponsePackets.Add(new AuthenticationResultPacket
-            {
-                HadError = !result
-            });
-        }
-    }
+			ResponsePackets.Add(new AuthenticationResultPacket {
+				HadError = !result
+			});
+		}
+	}
 }

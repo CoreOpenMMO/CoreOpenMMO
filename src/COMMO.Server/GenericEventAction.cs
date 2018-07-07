@@ -4,26 +4,22 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
-using COMMO.Common.Helpers;
 using COMMO.Scheduling.Contracts;
+using System;
 
-namespace COMMO.Server
-{
-    internal class GenericEventAction : IEventAction
-    {
-        private Action action;
+namespace COMMO.Server {
+	internal class GenericEventAction : IEventAction {
+		private readonly Action _action;
 
-        public GenericEventAction(Action action)
-        {
-            action.ThrowIfNull();
+		public GenericEventAction(Action action) {
+			if (action == null)
+				throw new ArgumentNullException(nameof(action));
 
-            this.action = action;
-        }
+			_action = action;
+		}
 
-        public void Execute()
-        {
-            action();
-        }
-    }
+		public void Execute() {
+			_action();
+		}
+	}
 }

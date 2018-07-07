@@ -6,8 +6,4 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\COMMO.Common.Helpers\COMMO.Common.Helpers.csproj" />
-  </ItemGroup>
-
 </Project>

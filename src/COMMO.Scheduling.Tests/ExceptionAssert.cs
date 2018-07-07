@@ -1,8 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace COMMO.TestUtils
-{
+namespace COMMO.Scheduling.Tests {
     /// <summary>
     /// Class that contains extensions for asserting exceptions.
     /// </summary>

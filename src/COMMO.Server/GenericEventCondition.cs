@@ -4,29 +4,25 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
-using COMMO.Common.Helpers;
 using COMMO.Scheduling.Contracts;
+using System;
 
-namespace COMMO.Server
-{
-    internal class GenericEventCondition : IEventCondition
-    {
-        private Func<bool> condition;
+namespace COMMO.Server {
+	internal class GenericEventCondition : IEventCondition {
+		private readonly Func<bool> _condition;
 
-        public GenericEventCondition(Func<bool> condition, string errorMsg = "")
-        {
-            condition.ThrowIfNull();
+		public GenericEventCondition(Func<bool> condition, string errorMsg = "") {
+			if (condition == null)
+				throw new ArgumentNullException(nameof(condition));
 
-            condition = condition;
-            ErrorMessage = errorMsg;
-        }
+			_condition = condition;
+			ErrorMessage = errorMsg;
+		}
 
-        public string ErrorMessage { get; }
+		public string ErrorMessage { get; }
 
-        public bool Evaluate()
-        {
-            return condition();
-        }
-    }
+		public bool Evaluate() {
+			return _condition();
+		}
+	}
 }

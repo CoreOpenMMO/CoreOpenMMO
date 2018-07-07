@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\COMMO.Scheduling\COMMO.Scheduling.csproj" />
-    <ProjectReference Include="..\COMMO.TestUtils\COMMO.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>
