@@ -19,4 +19,8 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\COMMO.Server.Utils\COMMO.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
