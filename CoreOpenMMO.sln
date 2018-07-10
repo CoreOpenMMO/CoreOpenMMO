@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Scheduling.Contracts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Parsing", "src\COMMO.Server.Parsing\COMMO.Server.Parsing.csproj", "{96F706FE-5077-47FA-89EE-423B8E99F173}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.OTB", "src\COMMO.OTB\COMMO.OTB.csproj", "{EC2F9080-3291-480A-AD4A-77B688B996D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +89,10 @@ Global
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Debug|x64.Build.0 = Debug|x64
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|x64.ActiveCfg = Release|x64
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|x64.Build.0 = Release|x64
+		{EC2F9080-3291-480A-AD4A-77B688B996D5}.Debug|x64.ActiveCfg = Debug|x64
+		{EC2F9080-3291-480A-AD4A-77B688B996D5}.Debug|x64.Build.0 = Debug|x64
+		{EC2F9080-3291-480A-AD4A-77B688B996D5}.Release|x64.ActiveCfg = Release|x64
+		{EC2F9080-3291-480A-AD4A-77B688B996D5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
