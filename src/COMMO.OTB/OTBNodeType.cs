@@ -1,5 +1,8 @@
 namespace COMMO.OTB {
 
+	/// <summary>
+	/// Represents the types of a <see cref="OTBNode"/>.
+	/// </summary>
 	public enum OTBNodeType : byte {
 		NotSetYet = 0,          // Added on C# version
 		RootVersion1 = 1,       // OTBM_ROOTV1
