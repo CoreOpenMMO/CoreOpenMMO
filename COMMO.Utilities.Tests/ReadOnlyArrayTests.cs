@@ -11,11 +11,14 @@ namespace COMMO.Utilities.Tests {
 		/// </summary>
 		[Fact]
 		public void WrapNullReference() {
-			Assert.Throws<ArgumentNullException>(() => {
+			Assert.ThrowsAny<ArgumentNullException>(() => {
 				var readOnlyArray = ReadOnlyArray<int>.WrapCollection(null);
 			});
 		}
-
+		
+		/// <summary>
+		/// Checks whether the indexer throws when provided with out-of-bounds argument.
+		/// </summary>
 		[Theory]
 		[InlineData(0, 0)]
 		[InlineData(0, -1)]
