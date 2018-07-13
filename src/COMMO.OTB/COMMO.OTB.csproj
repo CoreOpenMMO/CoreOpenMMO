@@ -10,4 +10,8 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
