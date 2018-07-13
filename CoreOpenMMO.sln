@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.OTB", "src\COMMO.OTB\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Utilities.Tests", "src\COMMO.Utilities.Tests\COMMO.Utilities.Tests.csproj", "{4C05C9E0-1453-498D-A9E5-15A94DDBC298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMO.OTB.Tests", "COMMO.OTB.Tests\COMMO.OTB.Tests.csproj", "{25AE710E-7309-40FB-B002-F40675C8BBCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMO.OTB.Tests", "src\COMMO.OTB.Tests\COMMO.OTB.Tests.csproj", "{25AE710E-7309-40FB-B002-F40675C8BBCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
