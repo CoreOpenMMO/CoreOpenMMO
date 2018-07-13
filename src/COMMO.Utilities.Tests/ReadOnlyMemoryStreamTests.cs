@@ -11,7 +11,7 @@ namespace COMMO.Utilities.Tests {
 		[InlineData(1, 1, 0)]
 		[InlineData(2, 0, 2)]
 		[InlineData(2, 2, 0)]
-		public void BytesLeftToRead_ReturningCorrectValueAfter_Constructor(
+		public void BytesLeftToRead_ReturnsCorrectValueAfter_Constructor(
 			int bufferLength,
 			int startPosition,
 			int bytesLeft
@@ -25,7 +25,7 @@ namespace COMMO.Utilities.Tests {
 		}
 
 		[Fact]
-		public void BytesLeftToRead_ReturningCorrectValueAfter_ReadByte() {
+		public void BytesLeftToRead_ReturnsCorrectValueAfter_ReadByte() {
 			var stream = new ReadOnlyMemoryStream(buffer: new byte[10]);
 
 			var oldLeft = stream.BytesLeftToRead;
