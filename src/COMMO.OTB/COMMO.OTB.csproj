@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\COMMO.Server.Utils\COMMO.Utilities.csproj" />
+    <ProjectReference Include="..\COMMO.Utilities\COMMO.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

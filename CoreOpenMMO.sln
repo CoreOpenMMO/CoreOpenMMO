@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Data", "src\CO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Data", "src\COMMO.Data\COMMO.Data.csproj", "{CF5104C6-961E-4226-AE7D-51965D6E14C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Utilities", "src\COMMO.Server.Utils\COMMO.Utilities.csproj", "{FC7AF8BE-AC97-4689-8EFD-7103B312BA65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Utilities", "src\COMMO.Utilities\COMMO.Utilities.csproj", "{FC7AF8BE-AC97-4689-8EFD-7103B312BA65}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Configuration", "src\COMMO.Configuration\COMMO.Configuration.csproj", "{B7FE78FC-35BD-46F4-B23C-368ABF3EA0DA}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Parsing", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.OTB", "src\COMMO.OTB\COMMO.OTB.csproj", "{EC2F9080-3291-480A-AD4A-77B688B996D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMO.Utilities.Tests", "COMMO.Utilities.Tests\COMMO.Utilities.Tests.csproj", "{4C05C9E0-1453-498D-A9E5-15A94DDBC298}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMO.Utilities.Tests", "src\COMMO.Utilities.Tests\COMMO.Utilities.Tests.csproj", "{4C05C9E0-1453-498D-A9E5-15A94DDBC298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

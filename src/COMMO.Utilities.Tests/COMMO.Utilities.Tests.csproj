@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\COMMO.Server.Utils\COMMO.Utilities.csproj" />
+    <ProjectReference Include="..\COMMO.Utilities\COMMO.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
