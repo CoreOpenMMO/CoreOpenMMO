@@ -18,7 +18,7 @@ namespace COMMO.Server.Map
 {
     public class Map
     {
-        private static readonly TimeSpan MapLoadPercentageReportDelay = TimeSpan.FromSeconds(7);
+        private static readonly TimeSpan _mapLoadPercentageReportDelay = TimeSpan.FromSeconds(7);
 
         // Start positions
         public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
@@ -91,15 +91,15 @@ namespace COMMO.Server.Map
         // Depot = (6,"Venore",1000)
         // Depot = (7,"Ankrahmun",1000)
         // Depot = (8,"Port Hope",1000)
-        private readonly ConcurrentDictionary<Location, ITile> mapTiles;
+        private readonly ConcurrentDictionary<Location, ITile> _mapTiles;
 
         // private Location Mininum2DLocation { get; set; }
 
         // private Location Maximum2DLocation { get; set; }
-        public ConcurrentDictionary<Location, ITile> Tiles => mapTiles;
+        public ConcurrentDictionary<Location, ITile> Tiles => _mapTiles;
 
         // public bool Initialized { get; private set; }
-        private IMapLoader Loader { get; }
+        private IMapLoader _loader { get; }
 
         public Map(IMapLoader mapLoader)
         {
@@ -108,9 +108,9 @@ namespace COMMO.Server.Map
                 throw new ArgumentNullException(nameof(mapLoader));
             }
 
-            Loader = mapLoader;
+            _loader = mapLoader;
             // Initialized = false;
-            mapTiles = new ConcurrentDictionary<Location, ITile>();
+            _mapTiles = new ConcurrentDictionary<Location, ITile>();
         }
 
         public void Load(Location atLocation)
@@ -124,18 +124,18 @@ namespace COMMO.Server.Map
             {
                 var zByte = Convert.ToByte(z);
 
-                if (Loader.HasLoaded(sectorX, sectorY, zByte))
+                if (_loader.HasLoaded(sectorX, sectorY, zByte))
                 {
                     continue;
                 }
 
-                var loadedTiles = Loader.Load(sectorX, sectorX, sectorY, sectorY, zByte, zByte);
+                var loadedTiles = _loader.Load(sectorX, sectorX, sectorY, sectorY, zByte, zByte);
 
                 foreach (var tile in loadedTiles)
                 {
                     if (tile != null)
                     {
-                        mapTiles[tile.Location] = tile;
+                        _mapTiles[tile.Location] = tile;
                     }
                 }
             }
@@ -156,18 +156,18 @@ namespace COMMO.Server.Map
                         {
                             var zByte = Convert.ToByte(z);
 
-                            if (Loader.HasLoaded(x, y, zByte))
+                            if (_loader.HasLoaded(x, y, zByte))
                             {
                                 continue;
                             }
 
-                            var loadedTiles = Loader.Load(x, x, y, y, zByte, zByte);
+                            var loadedTiles = _loader.Load(x, x, y, y, zByte, zByte);
 
                             foreach (var tile in loadedTiles)
                             {
                                 if (tile != null)
                                 {
-                                    mapTiles[tile.Location] = tile;
+                                    _mapTiles[tile.Location] = tile;
                                 }
                             }
                         }
@@ -185,8 +185,8 @@ namespace COMMO.Server.Map
             {
                 while (!cts.IsCancellationRequested)
                 {
-                    Console.WriteLine($"Map loading is {Loader.PercentageComplete}% complete.");
-                    Thread.Sleep(MapLoadPercentageReportDelay);
+                    Console.WriteLine($"Map loading is {_loader.PercentageComplete}% complete.");
+                    Thread.Sleep(_mapLoadPercentageReportDelay);
                 }
             }, cts.Token);
 
@@ -204,13 +204,13 @@ namespace COMMO.Server.Map
                     throw new ArgumentException("Invalid map reload range.");
                 }
 
-                var loadedTiles = Loader.Load(fromX, toX, fromY, toY, fromZ, toZ);
+                var loadedTiles = _loader.Load(fromX, toX, fromY, toY, fromZ, toZ);
 
                 foreach (var tile in loadedTiles)
                 {
                     if (tile != null)
                     {
-                        mapTiles[tile.Location] = tile;
+                        _mapTiles[tile.Location] = tile;
                     }
                 }
 
@@ -274,7 +274,7 @@ namespace COMMO.Server.Map
                 // {
                 //    return null;
                 // }
-                if (!Loader.HasLoaded(location.X, location.Y, (byte)location.Z))
+                if (!_loader.HasLoaded(location.X, location.Y, (byte)location.Z))
                 {
                     Load(location);
                 }

@@ -103,7 +103,7 @@ namespace COMMO.Scheduling
                 int i = 1;
                 foreach (var action in ActionsOnPass)
                 {
-                    Stopwatch sw = Stopwatch.StartNew();
+                    var sw = Stopwatch.StartNew();
                     action.Execute();
                     sw.Stop();
 
