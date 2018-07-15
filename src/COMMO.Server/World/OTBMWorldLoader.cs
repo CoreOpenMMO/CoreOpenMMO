@@ -1,16 +1,21 @@
 namespace COMMO.Server.World {
-	using COMMO.Server.Data.Interfaces;
-	using COMMO.Server.Map;
 	using System;
+	using System.IO;
 
-	public sealed class OTBMWorldLoader : IMapLoader {
-		public byte PercentageComplete => throw new NotImplementedException();
+	/// <summary>
+	/// This class contains the methods necessary to load a .otbm file.
+	/// </summary>
+	public static partial class OTBMWorldLoader {
 
-		public bool HasLoaded(int x, int y, byte z) {
-			throw new NotImplementedException();
-		}
+		/// <summary>
+		/// Loads a .otbm file, parse it's contents and returns a <see cref="COMMO.Server.World.World"/>.
+		/// </summary>
+		public static World LoadWorld(string filename) {
+			if (filename == null)
+				throw new ArgumentNullException(nameof(filename));
 
-		public ITile[,,] Load(int fromSectorX, int toSectorX, int fromSectorY, int toSectorY, byte fromSectorZ, byte toSectorZ) {
+			var serializedWorldData = File.ReadAllBytes(filename);
+
 			throw new NotImplementedException();
 		}
 	}
