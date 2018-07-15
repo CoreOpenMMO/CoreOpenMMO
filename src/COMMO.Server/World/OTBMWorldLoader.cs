@@ -1,5 +1,6 @@
-namespace COMMO.Server.Map {
+namespace COMMO.Server.World {
 	using COMMO.Server.Data.Interfaces;
+	using COMMO.Server.Map;
 	using System;
 
 	public sealed class OTBMWorldLoader : IMapLoader {
