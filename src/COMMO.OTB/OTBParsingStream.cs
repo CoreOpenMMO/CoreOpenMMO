@@ -6,7 +6,7 @@ namespace COMMO.OTB {
 	/// <summary>
 	/// This class is used to parse .otb files.
 	/// </summary>
-	public ref struct OTBParsingStream {
+	public sealed class OTBParsingStream {
 		public readonly ReadOnlyMemoryStream UnderlayingStream;
 		public int CurrentPosition => UnderlayingStream.Position;
 
@@ -15,7 +15,7 @@ namespace COMMO.OTB {
 		/// <summary>
 		/// Creates a new instace of <see cref="OTBParsingStream"/>.
 		/// </summary>
-		public OTBParsingStream(ReadOnlySpan<byte> otbData) {
+		public OTBParsingStream(ReadOnlyMemory<byte> otbData) {
 			UnderlayingStream = new ReadOnlyMemoryStream(otbData);
 
 			// The buffer must be at least as big as the largest non-string

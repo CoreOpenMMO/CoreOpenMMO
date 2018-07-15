@@ -4,8 +4,8 @@ namespace COMMO.Utilities {
 	/// <summary>
 	/// This struct is used to allow stream-like reading of <see cref="Span{T}"/>.
 	/// </summary>
-	public ref struct ReadOnlyMemoryStream {
-		private readonly ReadOnlySpan<Byte> _buffer;
+	public sealed class ReadOnlyMemoryStream {
+		private readonly ReadOnlyMemory<Byte> _buffer;
 		public int Position { get; private set; }
 
 		/// <summary>
@@ -13,7 +13,7 @@ namespace COMMO.Utilities {
 		/// </summary>
 		/// <param name="buffer"></param>
 		/// <param name="position"></param>
-		public ReadOnlyMemoryStream(ReadOnlySpan<Byte> buffer, int position = 0) {
+		public ReadOnlyMemoryStream(ReadOnlyMemory<Byte> buffer, int position = 0) {
 			if (position < 0 || position > buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(position));
 
@@ -40,7 +40,7 @@ namespace COMMO.Utilities {
 			if (IsOver)
 				throw new InvalidOperationException();
 
-			return _buffer[Position];
+			return _buffer.Span[Position];
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace COMMO.Utilities {
 			if (IsOver)
 				throw new InvalidOperationException();
 
-			var data = _buffer[Position];
+			var data = _buffer.Span[Position];
 			Position += sizeof(byte);
 			return data;
 		}
@@ -66,7 +66,7 @@ namespace COMMO.Utilities {
 				start: Position,
 				length: sizeof(UInt16));
 
-			var parsedData = BitConverter.ToUInt16(rawData);
+			var parsedData = BitConverter.ToUInt16(rawData.Span);
 			Position += sizeof(UInt16);
 			return parsedData;
 		}
@@ -82,7 +82,7 @@ namespace COMMO.Utilities {
 				start: Position,
 				length: sizeof(UInt32));
 
-			var parsedData = BitConverter.ToUInt32(rawData);
+			var parsedData = BitConverter.ToUInt32(rawData.Span);
 			Position += sizeof(UInt32);
 			return parsedData;
 		}
