@@ -13,9 +13,10 @@ Licensed under the MIT license.
 See LICENSE file in the project root for full license information.
 */
 
-using System.Collections.Generic;
+namespace COMMO.Server {
+	using COMMO.Utilities;
+	using System.Collections.Generic;
 
-namespace COMMO.Utilities {
 	/// <summary>
 	/// Interface to setup and run the AStar algorithm.
 	/// </summary>
