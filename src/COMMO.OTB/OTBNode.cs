@@ -1,13 +1,10 @@
-using System;
-
 namespace COMMO.OTB {
+	using COMMO.Utilities;
+	using System;
 
 	/// <summary>
 	/// Represents a node in the tree-like .otb format.
 	/// </summary>
-	/// <remarks>
-	/// Objets of this class are used to parse .otb files.
-	/// </remarks>
 	public sealed class OTBNode {
 		/// <summary>
 		/// The type of the node.
@@ -17,7 +14,7 @@ namespace COMMO.OTB {
 		/// <summary>
 		/// The children of this node.
 		/// </summary>
-		public readonly ReadOnlyMemory<OTBNode> Children;
+		public readonly ReadOnlyArray<OTBNode> Children;
 
 		/// <summary>
 		/// The data of this node.
@@ -27,7 +24,10 @@ namespace COMMO.OTB {
 		/// <summary>
 		/// Creates a new instance of a <see cref="OTBNode"/>.
 		/// </summary>
-		public OTBNode(OTBNodeType type, ReadOnlyMemory<OTBNode> children, ReadOnlyMemory<byte> data) {
+		public OTBNode(OTBNodeType type, ReadOnlyArray<OTBNode> children, ReadOnlyMemory<byte> data) {
+			if (children == null)
+				throw new ArgumentNullException(nameof(children));
+
 			Type = type;
 			Children = children;
 			Data = data;
