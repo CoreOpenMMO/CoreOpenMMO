@@ -2,6 +2,7 @@ namespace COMMO.Utilities.Tests {
 	using COMMO.Utilities;
 	using Xunit;
 	using System;
+	using System.Collections.Generic;
 
 	public sealed class ReadOnlyMemoryStreamTests {
 
@@ -58,20 +59,30 @@ namespace COMMO.Utilities.Tests {
 		}
 
 		[Theory]
-		[InlineData((byte)2)]
-		[InlineData((byte)3, (byte)17)]
-		public void ReadByte_ReturnsCorrectValues(params byte[] bufferData) {
-			// Copying to make sure that if ReadByte screws the underlaying array, I
-			// still have the original values
-			var buffer = new byte[bufferData.Length];
-			Array.Copy(sourceArray: bufferData, destinationArray: buffer, length: bufferData.Length);
-
+		[InlineData(
+			new byte[] { },
+			new byte[] { })]
+		[InlineData(
+			new byte[] { 0 },
+			new byte[] { 0 })]
+		[InlineData(
+			new byte[] { 1 },
+			new byte[] { 1 })]
+		[InlineData(
+			new byte[] { 1, 3 },
+			new byte[] { 1, 3 })]
+		public void ReadByte_ReturnsCorrectValues(byte[] buffer, byte[] expectedBytes) {
 			var stream = new ReadOnlyMemoryStream(buffer);
 
-			for (int i = 0; i < buffer.Length; i++) {
-				Assert.Equal(expected: bufferData[i],
-					actual: stream.ReadByte());
-			}
+			var bytesRead = new List<byte>();
+			while (!stream.IsOver)
+				bytesRead.Add(stream.ReadByte());
+
+			var actualBytes = bytesRead.ToArray();
+
+			Assert.Equal(
+				expected: expectedBytes,
+				actual: actualBytes);
 		}
 	}
 }
