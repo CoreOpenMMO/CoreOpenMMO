@@ -1,7 +1,10 @@
 namespace COMMO.Server.World {
 	using System;
 
-	public enum OTBTileFlag : UInt32 {
+	/// <summary>
+	/// This enum contains the values used in .otbm format to represent tile flags.
+	/// </summary>
+	public enum OTBMTileFlag : UInt32 {
 		ProtectionZone = 0b0001, // OTBM_TILEFLAG_PROTECTIONZONE
 		NoPvpZone = 0b0010, // OTBM_TILEFLAG_NOPVPZONE
 		NoLogout = 0b0100, // OTBM_TILEFLAG_NOLOGOUT
