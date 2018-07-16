@@ -22,7 +22,7 @@ using COMMO.Server.Monsters;
 using COMMO.Server.Movement;
 using COMMO.Server.Notifications;
 using COMMO.Server.Scripting;
-using COMMO.Utilities;
+using COMMO.Server.World.PathFinding;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@
 
 using COMMO.Server.Data.Interfaces;
 using COMMO.Server.Data.Models.Structs;
-using COMMO.Utilities;
+using COMMO.Server.World.PathFinding;
 using System;
 using System.Collections.Generic;
 

@@ -13,7 +13,7 @@ Licensed under the MIT license.
 See LICENSE file in the project root for full license information.
 */
 
-namespace COMMO.Server {
+namespace COMMO.Server.World.PathFinding {
 	using COMMO.Utilities;
 	using System.Collections.Generic;
 

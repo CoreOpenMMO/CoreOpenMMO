@@ -31,7 +31,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 namespace COMMO.Server {
-	using COMMO.Utilities;
+	using COMMO.Server.World.PathFinding;
 	using System.Collections.Generic;
 
 	/// <summary>
