@@ -4,29 +4,24 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
+namespace COMMO.Utilities {
+	using System;
 
-namespace COMMO.Utilities
-{
-    public class GcNotifier
-    {
-        public static event EventHandler GarbageCollected;
+	public class GcNotifier {
+		public static event EventHandler GarbageCollected;
 
-        ~GcNotifier()
-        {
-            if (Environment.HasShutdownStarted || AppDomain.CurrentDomain.IsFinalizingForUnload())
-            {
-                return;
-            }
+		~GcNotifier() {
+			if (Environment.HasShutdownStarted || AppDomain.CurrentDomain.IsFinalizingForUnload()) {
+				return;
+			}
 
-            new GcNotifier();
+			new GcNotifier();
 
-            GarbageCollected?.Invoke(null, EventArgs.Empty);
-        }
+			GarbageCollected?.Invoke(null, EventArgs.Empty);
+		}
 
-        public static void Start()
-        {
-            new GcNotifier();
-        }
-    }
+		public static void Start() {
+			new GcNotifier();
+		}
+	}
 }
