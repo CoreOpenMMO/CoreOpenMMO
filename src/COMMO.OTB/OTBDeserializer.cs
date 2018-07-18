@@ -31,10 +31,9 @@ namespace COMMO.OTB {
 					continue;
 				}
 
-				var nodeType = (OTBNodeType)stream.ReadByte();
-
 				switch (currentMark) {
 					case OTBMarkupByte.Start:
+					var nodeType = (OTBNodeType)stream.ReadByte();
 					treeBuilder.AddNodeDataBegin(
 						start: stream.Position,
 						type: nodeType);

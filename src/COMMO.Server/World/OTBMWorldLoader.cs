@@ -23,9 +23,12 @@ namespace COMMO.Server.World {
 		public static World LoadWorld(ReadOnlyMemory<byte> serializedWorldData) {
 
 			var world = new World();
-			var otbTree = OTBDeserializer.DeserializeOTBData(serializedWorldData);
 
-			ParseOTBTreeRootNode(otbTree);
+			var rootNode = OTBDeserializer.DeserializeOTBData(serializedWorldData);
+			ParseOTBTreeRootNode(rootNode);
+
+			var worldDataNode = rootNode.Children[0];
+			ParseWorldDataNode(worldDataNode, world);
 
 			throw new NotImplementedException();
 		}
@@ -58,10 +61,118 @@ namespace COMMO.Server.World {
 
 			// TODO: use decent loggin methods
 			Console.WriteLine($"OTBM header version: {headerVersion}");
-			Console.WriteLine($"World width: {parsingStream.ReadUInt16()}");
-			Console.WriteLine($"World height: {parsingStream.ReadUInt16()}");
-			Console.WriteLine($"Item encoding major version: {parsingStream.ReadUInt32()}");
-			Console.WriteLine($"Item encoding minor version: {parsingStream.ReadUInt32()}");
+			Console.WriteLine($"World width: {worldWidth}");
+			Console.WriteLine($"World height: {worldHeight}");
+			Console.WriteLine($"Item encoding major version: {itemEncodingMajorVersion}");
+			Console.WriteLine($"Item encoding minor version: {itemEncodingMinorVersion}");
+		}
+
+		/// <summary>
+		/// Updates the <paramref name="world"/> with the data contained
+		/// in <paramref name="worldDataNode"/>.
+		/// </summary>
+		private static void ParseWorldDataNode(OTBNode worldDataNode, World world) {
+			if (worldDataNode == null)
+				throw new ArgumentNullException(nameof(worldDataNode));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+			if (worldDataNode.Type != OTBNodeType.WorldData)
+				throw new InvalidOperationException();
+
+			foreach (var child in worldDataNode.Children) {
+				switch (child.Type) {
+					case OTBNodeType.TileArea:
+					ParseTileAreaNode(child, world);
+					break;
+
+					case OTBNodeType.TownCollection:
+					ParseTownCollectionNode(child, world);
+					break;
+
+					case OTBNodeType.WayPointCollection:
+					ParseWaypointCollectionNode(child, world);
+					break;
+
+					case OTBNodeType.ItemDefinition:
+					throw new NotImplementedException("TFS didn't implement this. So didn't we.");
+
+					default:
+					throw new InvalidOperationException();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Updates the <paramref name="world"/> with the data contained
+		/// in <paramref name="tileAreaNode"/>.
+		/// </summary>
+		private static void ParseTileAreaNode(OTBNode tileAreaNode, World world) {
+			if (tileAreaNode == null)
+				throw new ArgumentNullException(nameof(tileAreaNode));
+			if (tileAreaNode.Type != OTBNodeType.TileArea)
+				throw new InvalidOperationException();
+
+			var stream = new OTBParsingStream(tileAreaNode.Data);
+
+			var areaStartX = stream.ReadUInt16();
+			var areaStartY = stream.ReadUInt16();
+			var areaZ = (sbyte)stream.ReadByte();
+
+			var areaStartPosition = new Coordinate(
+				x: areaStartX,
+				y: areaStartY,
+				z: areaZ);
+
+			foreach (var tileNode in tileAreaNode.Children) {
+				ParseTileNode(
+					tilesAreaStartPosition: areaStartPosition,
+					tileNode: tileNode,
+					world: world);
+			}
+		}
+
+		/// <summary>
+		/// Updates the <paramref name="world"/> with the data contained
+		/// in <paramref name="tileNode"/>.
+		/// </summary>
+		private static void ParseTileNode(
+			in Coordinate tilesAreaStartPosition,
+			OTBNode tileNode,
+			World world
+			) {
+			if (tileNode == null)
+				throw new ArgumentNullException(nameof(tileNode));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+			if (tileNode.Type != OTBNodeType.HouseTile && tileNode.Type != OTBNodeType.NormalTile)
+				throw new InvalidOperationException();
+
+			var stream = new OTBParsingStream(tileNode.Data);
+
+			// Finding the tiles "absolute coordinates"
+			var xOffset = stream.ReadUInt16();
+			var yOffset = stream.ReadUInt16();
+			var tilePosition = tilesAreaStartPosition.Translate(
+				xOffset: xOffset,
+				yOffset: yOffset);
+
+			throw new NotImplementedException();
+		}
+		
+		/// <summary>
+		/// Updates the <paramref name="world"/> with the data contained
+		/// in <paramref name="tileNode"/>.
+		/// </summary>
+		private static void ParseTownCollectionNode(OTBNode child, World world) {
+			throw new NotImplementedException();
+		}
+		
+		/// <summary>
+		/// Updates the <paramref name="world"/> with the data contained
+		/// in <paramref name="tileNode"/>.
+		/// </summary>
+		private static void ParseWaypointCollectionNode(OTBNode child, World world) {
+			throw new NotImplementedException();
 		}
 	}
 }
