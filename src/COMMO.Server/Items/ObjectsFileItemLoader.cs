@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using COMMO.Data.Contracts;
 using COMMO.Server.Parsing;
+using COMMO.OTB;
 
 namespace COMMO.Server.Items
 {
@@ -145,5 +146,123 @@ namespace COMMO.Server.Items
 
             return itemDictionary;
         }
+
+    public Dictionary<ushort, ItemType> LoadOTItems()
+    {
+        var itemDictionary = new Dictionary<UInt16, ItemType>();
+
+        var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
+        var itemFilePath = baseDataDir + "/items/items.otb";
+        var itemExtensionFilePath = baseDataDir + "/items/items.xml";
+
+        if (!File.Exists(itemFilePath))
+        {
+            throw new Exception($"Failed to load {itemFilePath}.");
+        }
+
+        var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)));
+        foreach (var itemChildren in fileTree.Children) {
+            var current = new ItemType();
+            var itemStream = new OTBParsingStream(itemChildren.Data);
+
+            var flags = itemStream.ReadUInt32();
+            current.ParseFlags(flags);
+
+            while (!itemStream.IsOver)
+            {
+                var attr = itemStream.ReadByte();
+                var dataSize = itemStream.ReadUInt16();
+
+                switch (attr)
+                {
+                    case 0x10: // ServerID 0x10 = 16
+                        current.SetId(itemStream.ReadUInt16());
+                        break;
+
+                    // ClientId 0x11 = 17 -- unused
+
+                    /*case 0x12: // Name 0x12 = 18
+                        current.SetName(itemStream.ReadString());
+                        break;*/
+
+                    /*case 0x13: // Description 0x13 = 19
+                        current.SetDescription(itemStream.ReadString());
+                        break;*/
+
+                    // Speed 0x14 = 20
+
+                    // Slot 0x15 = 21
+
+                    // MaxItems 0x16 = 22
+
+                    /*case 0x17: // Weight 0x17 = 23
+                        current.SetAttribute(ItemAttribute.Weight, itemStream.ReadUInt16());
+                        break;*/
+
+                    // Weapon 0x18 = 24
+
+                    // Amunition 0x19 = 25
+
+                    // Armor 0x1A = 26
+
+                    // MagicLevel 0x1B = 27
+
+                    // MagicFieldType 0x1C = 28
+
+                    // Writeable 0x1D = 29
+
+                    // RotateTo 0x1E = 30
+
+                    // Decay 0x1F = 31
+
+                    // SpriteHash 0x20 = 32
+
+                    // MinimapColor 0x21 = 33
+
+                    // 07? 0x22 = 34
+
+                    // 08? 0x23 = 35
+
+                    // Light 0x24 = 36
+
+                    //>> 1-byte aligned
+                    // Decay2 0x25 = 37  -- deprecated
+
+                    // Weapon2 0x26 = 38 -- deprecated
+
+                    // Amunition2 0x27 = 39 -- deprecated
+
+                    // Armor2 0x28 = 40 -- deprecated
+
+                    // Writeable2 0x29 = 41 -- deprecated
+
+                    /*case 0x2A: // Light2 0x2A = 42
+                        current.SetAttribute(ItemAttribute.Brightness, itemStream.ReadByte());
+                        current.SetAttribute(ItemAttribute.LightColor, itemStream.ReadByte());
+                        break;*/
+
+                    // TopOrder 0x2B = 43
+
+                    // Writeable3 0x2C = 44 -- deprecated
+                    //>> end of 1-byte aligned attributes
+
+                    // WareId 0x2D = 45
+
+                    default:
+                        itemStream.Skip(dataSize);
+                        break;
+                }
+            }
+            itemDictionary.Add(current.TypeId, current);
+        }
+
+        foreach (var type in itemDictionary)
+        {
+            type.Value.LockChanges();
+        }
+
+        return itemDictionary;
+    }
+
     }
 }
