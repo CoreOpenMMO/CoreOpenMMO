@@ -1,6 +1,7 @@
 namespace COMMO.Server.Tests {
 	using COMMO.Server.World;
 	using NUnit.Framework;
+	using System;
 
 	[TestFixture]
 	public sealed class CoordinateTests {
@@ -67,6 +68,39 @@ namespace COMMO.Server.Tests {
 			Assert.AreEqual(
 				expected: expectedZ,
 				actual: translatedCoord.Z);
+		}
+
+		[Test, Combinatorial]
+		public void FromTFSCoordinates(
+			[Values((UInt16)0, (UInt16)100)] UInt16 x,
+			[Values((UInt16)0, (UInt16)100)] UInt16 y,
+			[Values((byte)0, (byte)15)] byte z
+			) {
+
+			var coordinate = Coordinate.FromTFSCoordinates(
+				x: x,
+				y: y,
+				z: z);
+
+			int expectedX = x;
+			int expectedY = -y;
+			
+			// In TFS / OTBM, the 'lowest' Z coordinate is 15.
+			// 7 is the ground floor
+			// and 0 is the 'highest' Z coordinate.
+			sbyte expectedZ = (sbyte)-((sbyte)z - Coordinate.TFSGroundFloorZCoordinate);
+
+			Assert.AreEqual(
+				expected: expectedX,
+				actual: coordinate.X);
+
+			Assert.AreEqual(
+				expected: expectedY,
+				actual: coordinate.Y);
+
+			Assert.AreEqual(
+				expected: expectedZ,
+				actual: coordinate.Z);
 		}
 	}
 }

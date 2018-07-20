@@ -5,14 +5,7 @@ namespace COMMO.Server.World {
 
 	public static partial class OTBMWorldLoader {
 
-		private static Item ParseTilesItemNode(OTBNode itemNode) {
-			if (itemNode == null)
-				throw new ArgumentNullException(nameof(itemNode));
-			if (itemNode.Type != OTBNodeType.Item)
-				throw new InvalidOperationException();
-
-			var stream = new OTBParsingStream(itemNode.Data);
-
+		private static Item ParseItemData(OTBParsingStream stream) {
 			var newItemId = GetItemIdAndConvertPvpFieldsToPermanentFields(stream);
 
 			var item = ItemFactory.Create(newItemId);
@@ -184,7 +177,7 @@ namespace COMMO.Server.World {
 						}
 					}
 					break;
-					
+
 					case OTBMWorldItemAttribute.AnotherDescription:
 					throw new InvalidOperationException("TFS didn't implement this.");
 

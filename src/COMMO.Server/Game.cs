@@ -17,11 +17,11 @@ using COMMO.Server.Data.Interfaces;
 using COMMO.Server.Data.Models.Structs;
 using COMMO.Server.Events;
 using COMMO.Server.Items;
-using COMMO.Server.Map;
 using COMMO.Server.Monsters;
 using COMMO.Server.Movement;
 using COMMO.Server.Notifications;
 using COMMO.Server.Scripting;
+using COMMO.Server.World;
 using COMMO.Server.World.PathFinding;
 using System;
 using System.Collections.Concurrent;
@@ -44,12 +44,12 @@ namespace COMMO.Server {
 		/// <summary>
 		/// Singleton instance of the <see cref="Game"/> class.
 		/// </summary>
-		private static readonly Lazy<Game> _gameInstance = new Lazy<Game>(() => new Game());
+		private static readonly Game _gameInstance = new Game();
 
 		/// <summary>
 		/// Gets the singleton instance of the <see cref="Game"/> class.
 		/// </summary>
-		public static Game Instance => Game._gameInstance.Value;
+		public static Game Instance => Game._gameInstance;
 
 		private readonly object _attackLock;
 		private readonly object _walkLock;
@@ -77,8 +77,9 @@ namespace COMMO.Server {
 			// Initialize the map
 			// _map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
 			var otbmWorldData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
-			var pseudoWorldLoader = World.OTBMWorldLoader.LoadWorld(otbmWorldData);
-			_map = new Map.Map(pseudoWorldLoader);
+			var relevantData = new Memory<byte>(otbmWorldData).Slice(4, otbmWorldData.Length - 4);
+			var lazyWorldLoaderWrapper = new LazyWorldWrapper(relevantData);
+			_map = new Map.Map(lazyWorldLoaderWrapper);
 
 			// Initialize game vars.
 			Status = WorldState.Creating;

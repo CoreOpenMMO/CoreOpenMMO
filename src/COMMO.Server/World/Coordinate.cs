@@ -27,7 +27,7 @@ namespace COMMO.Server.World {
 	/// Be careful when converting between the two systems (e.g.: when parsing a .otbm map).
 	/// </remarks>
 	public readonly struct Coordinate : IEquatable<Coordinate> {
-		private const byte TFSGroundFloorZCoordinate = 7;
+		public const byte TFSGroundFloorZCoordinate = 7;
 
 		/// <summary>
 		/// The x coordinate of this instance.

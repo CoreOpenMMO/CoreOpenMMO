@@ -109,7 +109,7 @@ namespace COMMO.OTB {
 				_parsingBuffer[i] = ReadByte();
 
 			// When in C land, use C encoding...
-			return Encoding.ASCII.GetString(_parsingBuffer);
+			return Encoding.ASCII.GetString(bytes: _parsingBuffer, index: 0, count: stringLength);
 		}
 
 		/// <summary>

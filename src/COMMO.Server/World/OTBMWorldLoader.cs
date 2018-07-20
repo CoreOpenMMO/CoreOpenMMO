@@ -41,7 +41,7 @@ namespace COMMO.Server.World {
 			var worldDataNode = rootNode.Children[0];
 			ParseWorldDataNode(worldDataNode, world);
 
-			throw new NotImplementedException();
+			return world;
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace COMMO.Server.World {
 			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
 			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
 				throw new InvalidOperationException();
-      
+
 			_logger.Info($"OTBM header version: {headerVersion}.");
 			_logger.Info($"World width: {worldWidth}.");
 			_logger.Info($"World height: {worldHeight}.");
@@ -160,8 +160,8 @@ namespace COMMO.Server.World {
 			var stream = new OTBParsingStream(tileNode.Data);
 
 			// Finding the tiles "absolute coordinates"
-			var xOffset = stream.ReadUInt16();
-			var yOffset = stream.ReadUInt16();
+			var xOffset = stream.ReadByte();
+			var yOffset = stream.ReadByte();
 			var tilePosition = tilesAreaStartPosition.Translate(
 				xOffset: xOffset,
 				yOffset: yOffset);
@@ -192,7 +192,7 @@ namespace COMMO.Server.World {
 				break;
 
 				case OTBMWorldNodeAttribute.Item:
-				var item = ParseTilesItemNode(tileNode);
+				var item = ParseItemData(stream);
 #warning Not sure if this is the proper method
 				tile.AddContent(item);
 				break;
@@ -201,7 +201,11 @@ namespace COMMO.Server.World {
 				throw new Exception("TFS just threw a exception here, so shall we... Reason: unknown tile attribute.");
 			}
 
-			var items = tileNode.Children.Select(node => ParseTilesItemNode(node));
+			// var items = tileNode.Children.Select(node => ParseTilesItemNode(node));
+			var items = tileNode
+				.Children
+				.Select(node => new OTBParsingStream(node.Data))
+				.Select(nodeStream => ParseItemData(nodeStream));
 
 			foreach (var i in items) {
 #warning Not sure if this is the proper method
@@ -227,8 +231,8 @@ namespace COMMO.Server.World {
 
 			return oldFlags;
 		}
-    
-    
+
+
 		/// <summary>
 		/// Updates the <paramref name="world"/> with the data contained
 		/// in <paramref name="tileNode"/>.
@@ -253,11 +257,11 @@ namespace COMMO.Server.World {
 
 				var townTempleX = stream.ReadUInt16();
 				var townTempleY = stream.ReadUInt16();
-				var townTempleZ = stream.ReadBool();
+				var townTempleZ = stream.ReadByte();
 				// Set town's temple
 			}
 		}
-    
+
 		/// <summary>
 		/// Updates the <paramref name="world"/> with the data contained
 		/// in <paramref name="tileNode"/>.
