@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml;
 using System.Reflection;
 using COMMO.Data.Contracts;
 using COMMO.Server.Parsing;
@@ -168,7 +169,7 @@ namespace COMMO.Server.Items
             var itemStream = new OTBParsingStream(itemChildren.Data);
 
             var flags = itemStream.ReadUInt32();
-            current.ParseFlags(flags);
+            current.ParseOTFlags(flags);
 
             while (!itemStream.IsOver)
             {
@@ -263,7 +264,7 @@ namespace COMMO.Server.Items
             throw new Exception($"Failed to load {itemFilePath}.");
         }
 
-        var rootElement = XElement.Load(itemExtensionFilePath);
+        var rootElement = XElement.Load(itemExtensionFilePath, LoadOptions.SetLineInfo);
 
         foreach (var element in rootElement.Elements("item"))
         {
@@ -301,9 +302,60 @@ namespace COMMO.Server.Items
                 if (name != null)
                     current.SetName(name.Value);
 
-                foreach (var attribute in element.Elements())
+                foreach (var attribute in element.Elements("attribute"))
                 {
-                    // Attributes
+                    var attrName = attribute.Attribute("key");
+                    var attrValue = attribute.Attribute("value");
+
+                    if (attrName == null || attrValue == null)
+                        continue;
+
+                    if (attrName.Value == "description")
+                    {
+                        current.SetDescription(attrValue.Value);
+                        continue;
+                    }
+
+                    var lineInfo = (IXmlLineInfo) attribute;
+                    bool success;
+                    var attr = OpenTibiaTranslationMap.TranslateAttributeName(attrName.Value, out success);
+
+                    if (success)
+                    {
+                        int value = -1;
+                        bool setAttr = true;
+                        switch (attrName.Value)
+                        {
+                            case "weaponType":
+                                success = current.ParseOTWeaponType(attrValue.Value);
+                                setAttr = false;
+                                break;
+
+                            case "fluidSource":
+                                value = OpenTibiaTranslationMap.TranslateLiquidType(attrValue.Value, out success);
+                                break;
+
+                            case "corpseType":
+                                value = OpenTibiaTranslationMap.TranslateCorpseType(attrValue.Value, out success);
+                                break;
+
+                            case "slotType":
+                                value = OpenTibiaTranslationMap.TranslateSlotType(attrValue.Value, out success);
+                                break;
+
+                            default:
+                                success = int.TryParse(attrValue.Value, out value);
+                                break;
+                        }
+
+                        if (!success)
+                            Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] \"{attrValue.Value}\" is not a valid value for attribute \"{attrName.Value}\"");
+                        else if (setAttr)
+                            current.SetAttribute(attr, value);
+
+                    }
+                    else
+                        Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] Attribute \"{attrName.Value}\" is not supported!");
                 }
 
             }
