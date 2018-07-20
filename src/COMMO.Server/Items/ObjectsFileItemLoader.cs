@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using System.Reflection;
 using COMMO.Data.Contracts;
 using COMMO.Server.Parsing;
@@ -161,7 +162,8 @@ namespace COMMO.Server.Items
         }
 
         var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)));
-        foreach (var itemChildren in fileTree.Children) {
+        foreach (var itemChildren in fileTree.Children)
+        {
             var current = new ItemType();
             var itemStream = new OTBParsingStream(itemChildren.Data);
 
@@ -254,6 +256,57 @@ namespace COMMO.Server.Items
                 }
             }
             itemDictionary.Add(current.TypeId, current);
+        }
+
+        if (!File.Exists(itemExtensionFilePath))
+        {
+            throw new Exception($"Failed to load {itemFilePath}.");
+        }
+
+        var rootElement = XElement.Load(itemExtensionFilePath);
+
+        foreach (var element in rootElement.Elements("item"))
+        {
+            var id = element.Attribute("id");
+            var fromId = element.Attribute("fromid");
+            var toId = element.Attribute("toid");
+
+            // Malformed element, missing id information, ignore it
+            if (id == null && (fromId == null || toId == null))
+                continue;
+
+            ushort serverId = 0;
+            ushort aplyTo = 1;
+            if (id == null)
+            {
+                // Ignore if can't parse the values or if fromId >= toId
+                if (!ushort.TryParse(fromId.Value, out serverId) || !ushort.TryParse(toId.Value, out aplyTo) || serverId >= aplyTo)
+                    continue;
+
+                aplyTo -= serverId;
+            }
+            else
+            {
+                if (!ushort.TryParse(id.Value, out serverId))
+                    continue;
+            }
+
+            for (ushort key = serverId; key < serverId + aplyTo; key++)
+            {
+                ItemType current;
+                if (!itemDictionary.TryGetValue(key, out current))
+                    continue;
+
+                var name = element.Attribute("name");
+                if (name != null)
+                    current.SetName(name.Value);
+
+                foreach (var attribute in element.Elements())
+                {
+                    // Attributes
+                }
+
+            }
         }
 
         foreach (var type in itemDictionary)
