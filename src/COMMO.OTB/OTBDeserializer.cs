@@ -40,7 +40,7 @@ namespace COMMO.OTB {
 					break;
 
 					case OTBMarkupByte.End:
-					treeBuilder.AddNodeEnd(stream.Position);
+					treeBuilder.AddNodeEnd(stream.Position - 1);
 					break;
 
 					case OTBMarkupByte.Escape:

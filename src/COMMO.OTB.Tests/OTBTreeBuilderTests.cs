@@ -1,11 +1,11 @@
 namespace COMMO.OTB.Tests {
-	using Xunit;
+	using NUnit.Framework;
 
 	public sealed class OTBTreeBuilderTests {
 
-		[Fact]
+		[Test]
 		public void WeNeedToWriteTestsForThis() {
-			Assert.True(false);
+			Assert.Fail("WeNeedToWriteTestsForThis");
 		}
 	}
 }

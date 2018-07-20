@@ -19,8 +19,8 @@ namespace COMMO.OTB {
 			UnderlayingStream = new ReadOnlyMemoryStream(otbData);
 
 			// The buffer must be at least as big as the largest non-string
-			// object we can parse. Currently it's a UInt32.
-			_parsingBuffer = new byte[sizeof(UInt32)];
+			// object we can parse. Currently it's a UInt64.
+			_parsingBuffer = new byte[sizeof(UInt64)];
 		}
 
 		/// <summary>
@@ -39,6 +39,14 @@ namespace COMMO.OTB {
 				return value;
 			else
 				return UnderlayingStream.ReadByte();
+		}
+
+		/// <summary>
+		/// Reads a byte and converts it to a bool using C++ rules.
+		/// </summary>
+		public bool ReadBool() {
+			var value = ReadByte();
+			return value != 0;
 		}
 
 		/// <summary>
@@ -61,6 +69,28 @@ namespace COMMO.OTB {
 				_parsingBuffer[i] = ReadByte();
 
 			return BitConverter.ToUInt32(_parsingBuffer, 0);
+		}
+
+		/// <summary>
+		/// Reads a bytes from the underlaying stream, considering OTB's escape values,
+		/// until enough bytes were read to parse them as a UInt64.
+		/// </summary>
+		public UInt64 ReadUInt64() {
+			for (var i = 0; i < sizeof(UInt64); i++)
+				_parsingBuffer[i] = ReadByte();
+
+			return BitConverter.ToUInt64(_parsingBuffer, 0);
+		}
+
+		/// <summary>
+		/// Reads a bytes from the underlaying stream, considering OTB's escape values,
+		/// until enough bytes were read to parse them as a double.
+		/// </summary>
+		public double ReadDouble() {
+			for (var i = 0; i < sizeof(double); i++)
+				_parsingBuffer[i] = ReadByte();
+
+			return BitConverter.ToDouble(_parsingBuffer, 0);
 		}
 
 		/// <summary>

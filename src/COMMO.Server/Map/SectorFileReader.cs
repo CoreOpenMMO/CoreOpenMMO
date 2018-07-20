@@ -66,19 +66,15 @@ namespace COMMO.Server.Map
                         }
                         else
                         {
-                            // it's a flag
-                            TileFlag flagMatch;
+							// it's a flag
 
-                            if (Enum.TryParse(attribute.Name, out flagMatch))
-                            {
-                                newTile.SetFlag(flagMatch);
-                            }
-                            else
-                            {
-                                // TODO: proper logging.
-                                Console.WriteLine($"Unknown flag [{attribute.Name}] found on tile at location {newTile.Location}.");
-                            }
-                        }
+							if (Enum.TryParse(attribute.Name, out TileFlag flagMatch)) {
+								newTile.SetFlag(flagMatch);
+							} else {
+								// TODO: proper logging.
+								Console.WriteLine($"Unknown flag [{attribute.Name}] found on tile at location {newTile.Location}.");
+							}
+						}
                     }
                 }
 

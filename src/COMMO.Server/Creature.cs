@@ -17,10 +17,10 @@ namespace COMMO.Server
 
     public abstract class Creature : Thing, ICreature, ICombatActor
     {
-        private static readonly object IdLock = new object();
-        private static uint idCounter = 1;
+        private static readonly object _idLock = new object();
+        private static uint _idCounter = 1;
 
-        private readonly object enqueueWalkLock;
+        private readonly object _enqueueWalkLock;
 
         protected Creature(
             uint id,
@@ -42,7 +42,7 @@ namespace COMMO.Server
                 throw new ArgumentException($"{nameof(maxHitpoints)} must be positive.");
             }
 
-            enqueueWalkLock = new object();
+            _enqueueWalkLock = new object();
 
             CreatureId = id;
             Name = name;
@@ -197,9 +197,9 @@ namespace COMMO.Server
 
         public static uint GetNewId()
         {
-            lock (IdLock)
+            lock (_idLock)
             {
-                return idCounter++; // we got 2^32 ids to give per game run... enough!
+                return _idCounter++; // we got 2^32 ids to give per game run... enough!
             }
         }
 
@@ -369,7 +369,7 @@ namespace COMMO.Server
 
         public void StopWalking()
         {
-            lock (enqueueWalkLock)
+            lock (_enqueueWalkLock)
             {
                 WalkingQueue.Clear(); // reset the actual queue
                 UpdateLastStepInfo(0);
@@ -378,7 +378,7 @@ namespace COMMO.Server
 
         public void AutoWalk(params Direction[] directions)
         {
-            lock (enqueueWalkLock)
+            lock (_enqueueWalkLock)
             {
                 if (WalkingQueue.Count > 0)
                 {

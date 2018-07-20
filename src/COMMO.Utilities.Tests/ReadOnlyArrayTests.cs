@@ -1,30 +1,31 @@
 namespace COMMO.Utilities.Tests {
 	using COMMO.Utilities;
+	using NUnit.Framework;
 	using System;
-	using Xunit;
 
+	[TestFixture]
 	public sealed class ReadOnlyArrayTests {
 
-		[Fact]
+		[Test]
 		public void WrapCollection_Throws_OnNullReference() {
-			Assert.ThrowsAny<ArgumentNullException>(() => {
-				var readOnlyArray = ReadOnlyArray<int>.WrapCollection(null);
-			});
+			Assert.Throws(Is.InstanceOf<ArgumentNullException>(),
+				() => {
+					var readOnlyArray = ReadOnlyArray<int>.WrapCollection(null);
+				});
 		}
-		
-		[Theory]
-		[InlineData(0, 0)]
-		[InlineData(0, -1)]
-		[InlineData(0, 1)]
-		[InlineData(1, -1)]
-		[InlineData(1, 1)]
-		public void Indexer_Throws_OnOutOfBoundsIndex(int arrayLength, int elementIndex) {
+
+		[Test, Sequential]
+		public void Indexer_Throws_OnOutOfBoundsIndex(
+			[Values(0, +0, 0, +1, 1)] int arrayLength,
+			[Values(0, -1, 1, -1, 1)] int elementIndex
+			) {
 			var array = new int[arrayLength];
 			var wrapper = ReadOnlyArray<int>.WrapCollection(array);
 
-			Assert.ThrowsAny<IndexOutOfRangeException>(() => {
-				var values = wrapper[elementIndex];
-			});
+			Assert.Throws(Is.InstanceOf<IndexOutOfRangeException>(),
+				() => {
+					var values = wrapper[elementIndex];
+				});
 		}
 	}
 }
