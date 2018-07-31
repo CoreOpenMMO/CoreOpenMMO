@@ -1,17 +1,17 @@
 namespace COMMO.OTB.Tests {
+	using NUnit.Framework;
 	using System.Collections.Generic;
-	using Xunit;
 
 	public sealed class OTBParsingStreamTests {
 
-		[Theory]
-		[InlineData(
+		[Test]
+		[TestCase(
 			new byte[] { },
 			new byte[] { })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 0 },
 			new byte[] { 0 })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, 2, 0 },
 			new byte[] { 1, 2, 0 })]
 		public void ReadByte_WithoutEscapeBytes(byte[] buffer, byte[] expectedBytes) {
@@ -23,31 +23,31 @@ namespace COMMO.OTB.Tests {
 
 			var actualBytes = bytesRead.ToArray();
 
-			Assert.Equal(
+			Assert.AreEqual(
 				expected: expectedBytes,
 				actual: actualBytes);
 		}
 
-		[Theory]
-		[InlineData(
+		[Test]
+		[TestCase(
 			new byte[] { },
 			new byte[] { })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 0 },
 			new byte[] { 0 })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, (byte)OTBMarkupByte.Escape, (byte)OTBMarkupByte.Escape },
 			new byte[] { 1, (byte)OTBMarkupByte.Escape })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, (byte)OTBMarkupByte.Escape, (byte)OTBMarkupByte.Start },
 			new byte[] { 1, (byte)OTBMarkupByte.Start })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, (byte)OTBMarkupByte.Escape, (byte)OTBMarkupByte.End },
 			new byte[] { 1, (byte)OTBMarkupByte.End })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, (byte)OTBMarkupByte.Escape, 3 },
 			new byte[] { 1, 3 })]
-		[InlineData(
+		[TestCase(
 			new byte[] { (byte)OTBMarkupByte.Start, 3, (byte)OTBMarkupByte.End },
 			new byte[] { (byte)OTBMarkupByte.Start, 3, (byte)OTBMarkupByte.End })]
 		public void ReadByte_WithEscapeBytes(byte[] buffer, byte[] expectedBytes) {
@@ -61,7 +61,7 @@ namespace COMMO.OTB.Tests {
 
 			var actualBytes = bytesRead.ToArray();
 
-			Assert.Equal(
+			Assert.AreEqual(
 				expected: expectedBytes,
 				actual: actualBytes);
 		}

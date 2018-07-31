@@ -1,11 +1,22 @@
 namespace COMMO.Server.World {
 	using COMMO.OTB;
+	using COMMO.Server.Items;
+	using NLog;
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using Tile = COMMO.Server.Map.Tile;
 
 	/// <summary>
 	/// This class contains the methods necessary to load a .otbm file.
 	/// </summary>
 	public static partial class OTBMWorldLoader {
+
+		/// <summary>
+		/// NLog's documentation suggests that we should store a reference to the logger,
+		/// instead of asking the LogManager for a new instance everytime we need to log something.
+		/// </summary>
+		private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
 		/// <summary>
 		/// This class only support items encoded using this major version.
@@ -30,7 +41,7 @@ namespace COMMO.Server.World {
 			var worldDataNode = rootNode.Children[0];
 			ParseWorldDataNode(worldDataNode, world);
 
-			throw new NotImplementedException();
+			return world;
 		}
 
 		/// <summary>
@@ -59,12 +70,11 @@ namespace COMMO.Server.World {
 			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
 				throw new InvalidOperationException();
 
-			// TODO: use decent loggin methods
-			Console.WriteLine($"OTBM header version: {headerVersion}");
-			Console.WriteLine($"World width: {worldWidth}");
-			Console.WriteLine($"World height: {worldHeight}");
-			Console.WriteLine($"Item encoding major version: {itemEncodingMajorVersion}");
-			Console.WriteLine($"Item encoding minor version: {itemEncodingMinorVersion}");
+			_logger.Info($"OTBM header version: {headerVersion}.");
+			_logger.Info($"World width: {worldWidth}.");
+			_logger.Info($"World height: {worldHeight}.");
+			_logger.Info($"Item encoding major version: {itemEncodingMajorVersion}.");
+			_logger.Info($"Item encoding minor version: {itemEncodingMinorVersion}.");
 		}
 
 		/// <summary>
@@ -150,29 +160,132 @@ namespace COMMO.Server.World {
 			var stream = new OTBParsingStream(tileNode.Data);
 
 			// Finding the tiles "absolute coordinates"
-			var xOffset = stream.ReadUInt16();
-			var yOffset = stream.ReadUInt16();
+			var xOffset = stream.ReadByte();
+			var yOffset = stream.ReadByte();
 			var tilePosition = tilesAreaStartPosition.Translate(
 				xOffset: xOffset,
 				yOffset: yOffset);
 
-			throw new NotImplementedException();
+			// Currently there's no support for houses
+			// Checking whether the tile belongs to a house
+			// House house = null;
+			if (tileNode.Type == OTBNodeType.HouseTile) {
+				var houseId = stream.ReadUInt32();
+				//house = HouseManager.Instance.CreateHouseOrGetReference(houseId);
+			}
+
+			// We create the tile early and mutate it along the method
+			var tile = new Tile(x: xOffset,
+				y: yOffset,
+				z: tilesAreaStartPosition.Z);
+
+			// Parsing the tile attributes
+			var tileFlags = TileFlags.None;
+			var tilesItems = new List<Item>();
+
+			var tileNodeAttribute = (OTBMWorldNodeAttribute)stream.ReadByte();
+			switch (tileNodeAttribute) {
+
+				case OTBMWorldNodeAttribute.TileFlags:
+				var newFlags = (OTBMTileFlags)stream.ReadUInt32();
+				tileFlags = UpdateTileFlags(tileFlags, newFlags);
+				break;
+
+				case OTBMWorldNodeAttribute.Item:
+				var item = ParseItemData(stream);
+#warning Not sure if this is the proper method
+				tile.AddContent(item);
+				break;
+
+				default:
+				throw new Exception("TFS just threw a exception here, so shall we... Reason: unknown tile attribute.");
+			}
+
+			// var items = tileNode.Children.Select(node => ParseTilesItemNode(node));
+			var items = tileNode
+				.Children
+				.Select(node => new OTBParsingStream(node.Data))
+				.Select(nodeStream => ParseItemData(nodeStream));
+
+			foreach (var i in items) {
+#warning Not sure if this is the proper method
+				tile.AddContent(i);
+			}
+
+			world.AddTile(tile);
 		}
-		
+
+
+		private static TileFlags UpdateTileFlags(TileFlags oldFlags, OTBMTileFlags newFlags) {
+			if ((newFlags & OTBMTileFlags.NoLogout) != 0)
+				oldFlags |= TileFlags.NoLogout;
+
+			// I think we should throw if a tile contains contradictory flags, instead of just
+			// ignoring them like tfs does...
+			if ((newFlags & OTBMTileFlags.ProtectionZone) != 0)
+				oldFlags |= TileFlags.ProtectionZone;
+			else if ((newFlags & OTBMTileFlags.NoPvpZone) != 0)
+				oldFlags |= TileFlags.NoPvpZone;
+			else if ((newFlags & OTBMTileFlags.PvpZone) != 0)
+				oldFlags |= TileFlags.PvpZone;
+
+			return oldFlags;
+		}
+
+
 		/// <summary>
 		/// Updates the <paramref name="world"/> with the data contained
 		/// in <paramref name="tileNode"/>.
 		/// </summary>
-		private static void ParseTownCollectionNode(OTBNode child, World world) {
-			throw new NotImplementedException();
+		private static void ParseTownCollectionNode(OTBNode townCollectionNode, World world) {
+			if (townCollectionNode == null)
+				throw new ArgumentNullException(nameof(townCollectionNode));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+
+			foreach (var townNode in townCollectionNode.Children) {
+				if (townNode.Type != OTBNodeType.Town)
+					throw new InvalidOperationException();
+
+				var stream = new OTBParsingStream(townNode.Data);
+
+				var townId = stream.ReadUInt32();
+				// Implement Town and TownManager
+
+				var townName = stream.ReadString();
+				// Set town name
+
+				var townTempleX = stream.ReadUInt16();
+				var townTempleY = stream.ReadUInt16();
+				var townTempleZ = stream.ReadByte();
+				// Set town's temple
+			}
 		}
-		
+
 		/// <summary>
 		/// Updates the <paramref name="world"/> with the data contained
 		/// in <paramref name="tileNode"/>.
 		/// </summary>
-		private static void ParseWaypointCollectionNode(OTBNode child, World world) {
-			throw new NotImplementedException();
+		private static void ParseWaypointCollectionNode(OTBNode waypointCollection, World world) {
+			if (waypointCollection == null)
+				throw new ArgumentNullException(nameof(waypointCollection));
+			if (world == null)
+				throw new ArgumentNullException(nameof(world));
+
+			foreach (var waypointNode in waypointCollection.Children) {
+				if (waypointNode.Type != OTBNodeType.WayPoint)
+					throw new InvalidOperationException();
+
+				var stream = new OTBParsingStream(waypointNode.Data);
+
+				var waypointName = stream.ReadString();
+
+				var waypointX = stream.ReadUInt16();
+				var waypointY = stream.ReadUInt16();
+				var waypointZ = stream.ReadBool();
+
+				// Implement waypoints
+			}
 		}
 	}
 }

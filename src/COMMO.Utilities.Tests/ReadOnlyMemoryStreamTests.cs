@@ -1,31 +1,28 @@
 namespace COMMO.Utilities.Tests {
 	using COMMO.Utilities;
-	using Xunit;
+	using NUnit.Framework;
 	using System;
 	using System.Collections.Generic;
 
+	[TestFixture]
 	public sealed class ReadOnlyMemoryStreamTests {
 
-		[Theory]
-		[InlineData(0, 0, 0)]
-		[InlineData(1, 0, 1)]
-		[InlineData(1, 1, 0)]
-		[InlineData(2, 0, 2)]
-		[InlineData(2, 2, 0)]
+		[Test, Sequential]
 		public void BytesLeftToRead_ReturnsCorrectValueAfter_Constructor(
-			int bufferLength,
-			int startPosition,
-			int bytesLeft
+			[Values(0, 1, 1, 2, 2)] int bufferLength,
+			[Values(0, 0, 1, 0, 2)]int startPosition,
+			[Values(0, 1, 0, 2, 0)]int bytesLeft
 			) {
 			var stream = new ReadOnlyMemoryStream(
 				buffer: new byte[bufferLength],
 				position: startPosition);
 
-			Assert.Equal(expected: bytesLeft,
+			Assert.AreEqual(
+				expected: bytesLeft,
 				actual: stream.BytesLeftToRead);
 		}
 
-		[Fact]
+		[Test]
 		public void BytesLeftToRead_ReturnsCorrectValueAfter_ReadByte() {
 			var stream = new ReadOnlyMemoryStream(buffer: new byte[10]);
 
@@ -36,13 +33,16 @@ namespace COMMO.Utilities.Tests {
 			Assert.True(oldLeft - newLeft == 1);
 		}
 
-		[Theory]
-		[InlineData(10, 5, 5)]
-		public void ReadByte_Throws_AfterReadingEntireBuffer(int bufferLength, int startPosition, int bytesToRead) {
+		[Test, Sequential]
+		public void ReadByte_Throws_AfterReadingEntireBuffer(
+			[Values(10)] int bufferLength,
+			[Values(5)] int startPosition,
+			[Values(5)] int bytesToRead
+			) {
 			// Working around the ref struct constraints
 			var reachedThrowLine = false;
 
-			Assert.ThrowsAny<InvalidOperationException>(() => {
+			Assert.Throws<InvalidOperationException>(() => {
 				var stream = new ReadOnlyMemoryStream(
 					buffer: new byte[bufferLength],
 					position: startPosition);
@@ -58,17 +58,17 @@ namespace COMMO.Utilities.Tests {
 			Assert.True(reachedThrowLine);
 		}
 
-		[Theory]
-		[InlineData(
+		[Test, Sequential]
+		[TestCase(
 			new byte[] { },
 			new byte[] { })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 0 },
 			new byte[] { 0 })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1 },
 			new byte[] { 1 })]
-		[InlineData(
+		[TestCase(
 			new byte[] { 1, 3 },
 			new byte[] { 1, 3 })]
 		public void ReadByte_ReturnsCorrectValues(byte[] buffer, byte[] expectedBytes) {
@@ -80,7 +80,7 @@ namespace COMMO.Utilities.Tests {
 
 			var actualBytes = bytesRead.ToArray();
 
-			Assert.Equal(
+			Assert.AreEqual(
 				expected: expectedBytes,
 				actual: actualBytes);
 		}

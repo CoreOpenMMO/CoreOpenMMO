@@ -49,8 +49,9 @@ namespace COMMO.OTB {
 			if (!_childrenCounts.TryPop(out var childCount))
 				throw new InvalidOperationException();
 
+			// Since we are using a queue, we need to store the children in reverse order
 			var currentNodeChildren = new OTBNode[childCount];
-			for (int i = 0; i < childCount; i++)
+			for (int i = childCount - 1; i >= 0; i--)
 				currentNodeChildren[i] = _builtNodes.Pop();
 
 			// Updating the child count of the parent of the node we are creating

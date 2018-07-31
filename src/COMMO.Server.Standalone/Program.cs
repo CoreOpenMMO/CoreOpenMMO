@@ -7,16 +7,17 @@
 namespace COMMO.Server.Standalone {
 	using COMMO.Communications;
 	using COMMO.Communications.Interfaces;
-	using COMMO.OTB;
 	using COMMO.Server.Events;
 	using COMMO.Server.Handlers;
 	using COMMO.Server.Handlers.Management;
 	using COMMO.Server.Items;
 	using COMMO.Server.Monsters;
+	using NLog;
 	using System;
 	using System.IO;
 	using System.Threading;
 	using System.Threading.Tasks;
+
 
 	public class Program {
 		private static IOpenTibiaListener _loginListener;
@@ -24,13 +25,13 @@ namespace COMMO.Server.Standalone {
 
 		// private static IOpenTibiaListener managementListener;
 		static void Main() {
-			var rawData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
-			var relevantData = new Memory<byte>(rawData).Slice(4, rawData.Length - 4);
-			var otbTree = World.OTBMWorldLoader.LoadWorld(relevantData);
 
-			if (otbTree != null)
-				return;
-
+			// Loading the logger configuration file
+			var loggerConfigurationPath = Path.Combine("..", "..", "..", "..", "..", "COMMO.Configuration", "LoggerConfiguration.xml");
+			LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(
+				fileName: loggerConfigurationPath,
+				ignoreErrors: false);
+			
 			var cancellationTokenSource = new CancellationTokenSource();
 
 			// Set the loaders to use.

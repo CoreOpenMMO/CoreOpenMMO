@@ -27,7 +27,7 @@ namespace COMMO.Server.World {
 	/// Be careful when converting between the two systems (e.g.: when parsing a .otbm map).
 	/// </remarks>
 	public readonly struct Coordinate : IEquatable<Coordinate> {
-		private const byte TFSGroundFloorZCoordinate = 7;
+		public const byte TFSGroundFloorZCoordinate = 7;
 
 		/// <summary>
 		/// The x coordinate of this instance.
@@ -90,7 +90,7 @@ namespace COMMO.Server.World {
 		/// Creates a new <see cref="Coordinate"/> whose coordinates are equal to this instance's
 		/// plus the provided offesets.
 		/// </summary>
-		public Coordinate Translate(int xOffset, int yOffset) => Translate(xOffset: xOffset, yOffset: yOffset, zOffset: Z);
+		public Coordinate Translate(int xOffset, int yOffset) => Translate(xOffset: xOffset, yOffset: yOffset, zOffset: 0);
 
 		/// <summary>
 		/// Creates a new <see cref="Coordinate"/> whose coordinates are equal to this instance's
