@@ -6,6 +6,7 @@ namespace COMMO.Server.World {
 	/// </summary>
 	public enum OTBMWorldItemAttribute : byte {
 		None = 0,				 // We added this value to the C# version, because ughz... That's why...
+		None2 = 254,				 // We added this value to the C# version, because ughz... That's why...
 		AnotherDescription = 1,         // //ATTR_DESCRIPTION = 1,
 		ExtensionFile = 2,       // //ATTR_EXT_FILE = 2,
 		TileFlags = 3,           // ATTR_TILE_FLAGS = 3,

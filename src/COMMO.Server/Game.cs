@@ -76,10 +76,10 @@ namespace COMMO.Server {
 
 			// Initialize the map
 			// _map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
-			var otbmWorldData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
-			var relevantData = new Memory<byte>(otbmWorldData).Slice(4, otbmWorldData.Length - 4);
-			var lazyWorldLoaderWrapper = new LazyWorldWrapper(relevantData);
-			_map = new Map.Map(lazyWorldLoaderWrapper);
+			//var otbmWorldData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
+			//var relevantData = new Memory<byte>(otbmWorldData).Slice(4, otbmWorldData.Length - 4);
+			//var lazyWorldLoaderWrapper = new LazyWorldWrapper(relevantData);
+			//_map = new Map.Map(lazyWorldLoaderWrapper);
 
 			// Initialize game vars.
 			Status = WorldState.Creating;

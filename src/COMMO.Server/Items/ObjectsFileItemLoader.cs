@@ -153,9 +153,12 @@ namespace COMMO.Server.Items
     {
         var itemDictionary = new Dictionary<UInt16, ItemType>();
 
-        var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
-        var itemFilePath = baseDataDir + "/items/items.otb";
-        var itemExtensionFilePath = baseDataDir + "/items/items.xml";
+        //var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
+        //var itemFilePath = baseDataDir + "/items/items.otb";
+        //var itemExtensionFilePath = baseDataDir + "/items/items.xml";
+
+		var itemFilePath = @"C:/Git/CoreOpenMMO/src/COMMO.Server/Data/items/items.otb";
+        var itemExtensionFilePath = @"C:/Git/CoreOpenMMO/src/COMMO.Server/Data/items/items.xml";
 
         if (!File.Exists(itemFilePath))
         {

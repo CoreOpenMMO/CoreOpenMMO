@@ -40,7 +40,7 @@ namespace COMMO.Server.Items
         {
             if (ItemsCatalog == null)
             {
-                Initialize();
+                Initialize(true);
 
                 if (ItemsCatalog == null)
                 {
