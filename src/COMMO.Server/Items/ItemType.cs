@@ -83,6 +83,16 @@ namespace COMMO.Server.Items
             Flags.Add(flag);
         }
 
+        public void SetAttribute(ItemAttribute attribute, int attributeValue)
+        {
+            if (Locked)
+            {
+                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+            }
+
+            DefaultAttributes[attribute] = attributeValue;
+        }
+
         public void SetAttribute(string attributeName, int attributeValue)
         {
             if (Locked)
@@ -99,5 +109,105 @@ namespace COMMO.Server.Items
 
             DefaultAttributes[attribute] = attributeValue;
         }
+
+        public void ParseOTFlags(UInt32 flags)
+        {
+            if (HasOTFlag(flags, 1 << 0)) // blockSolid
+                SetFlag(ItemFlag.CollisionEvent);
+
+            if (HasOTFlag(flags, 1 << 1)) // blockProjectile
+                SetFlag(ItemFlag.Unthrow);
+
+            if (HasOTFlag(flags, 1 << 2)) // blockPathFind
+                SetFlag(ItemFlag.Unpass);
+
+            if (HasOTFlag(flags, 1 << 3)) // hasElevation
+                SetFlag(ItemFlag.Height);
+
+            if (HasOTFlag(flags, 1 << 4)) // isUsable
+                SetFlag(ItemFlag.UseEvent);
+
+            if (HasOTFlag(flags, 1 << 5)) // isPickupable
+                SetFlag(ItemFlag.Take);
+
+            if (HasOTFlag(flags, 1 << 6)) // isMoveable
+                SetFlag(ItemFlag.Unmove);
+
+            if (HasOTFlag(flags, 1 << 7)) // isStackable
+                SetFlag(ItemFlag.Cumulative);
+
+            //if (HasFlag(flags, 1 << 8)) // floorChangeDown -- unused
+
+            //if (HasFlag(flags, 1 << 9)) // floorChangeNorth -- unused
+
+            //if (HasFlag(flags, 1 << 10)) // floorChangeEast -- unused
+
+            //if (HasFlag(flags, 1 << 11)) // floorChangeSouth -- unused
+
+            //if (HasFlag(flags, 1 << 12)) // floorChangeWest -- unused
+
+            if (HasOTFlag(flags, 1 << 13)) // alwaysOnTop
+                SetFlag(ItemFlag.Top);
+
+            if (HasOTFlag(flags, 1 << 14)) // isReadable
+                SetFlag(ItemFlag.Text);
+
+            if (HasOTFlag(flags, 1 << 15)) // isRotatable
+                SetFlag(ItemFlag.Rotate);
+
+            if (HasOTFlag(flags, 1 << 16)) // isHangable
+                SetFlag(ItemFlag.Hang);
+
+            if (HasOTFlag(flags, 1 << 17)) // isVertical
+                SetFlag(ItemFlag.HookEast);
+
+            if (HasOTFlag(flags, 1 << 18)) // isHorizontal
+                SetFlag(ItemFlag.HookSouth);
+
+            //if (HasFlag(flags, 1 << 19)) // cannotDecay -- unused
+
+            if (HasOTFlag(flags, 1 << 20)) // allowDistRead
+                SetFlag(ItemFlag.DistUse);
+
+            //if (HasFlag(flags, 1 << 21)) // unused -- unused
+
+            //if (HasFlag(flags, 1 << 22)) // isAnimation -- unused
+
+            if (HasOTFlag(flags, 1 << 23)) // lookTrough
+                SetFlag(ItemFlag.Top);
+            else
+                SetFlag(ItemFlag.Bottom);
+
+            if (HasOTFlag(flags, 1 << 25)) // fullTile
+                SetFlag(ItemFlag.Bank);
+
+            if (HasOTFlag(flags, 1 << 26)) // forceUse
+                SetFlag(ItemFlag.ForceUse);
+        }
+
+        private bool HasOTFlag(UInt32 flags, UInt32 flag)
+        {
+            return (flags & flag) != 0;
+        }
+
+        public bool ParseOTWeaponType(string type)
+        {
+            bool success;
+
+            var value = OpenTibiaTranslationMap.TranslateMeeleWeaponTypeName(type, out success);
+            if (success)
+                SetAttribute(ItemAttribute.WeaponType, value);
+            else
+            {
+                var flag = OpenTibiaTranslationMap.TranslateToItemFlag(type, out success);
+                if (success)
+                    SetFlag(flag);
+                else
+                    return false;
+            }
+
+            return true;
+        }
+
     }
 }

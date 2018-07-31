@@ -8,6 +8,8 @@ namespace COMMO.OTB {
 	/// </summary>
 	public static class OTBDeserializer {
 
+		public static readonly int IdentifierLength = 4;
+
 		/// <summary>
 		/// Parses data serialized as .otb and returns the deserialized .otb tree structure.
 		/// </summary>
@@ -16,10 +18,9 @@ namespace COMMO.OTB {
 		/// Maps (worlds?), for instance, contain 4 "format identifier bytes" that should be skiped.
 		/// </remarks>
 		public static OTBNode DeserializeOTBData(ReadOnlyMemory<byte> serializedOTBData) {
+			// Lets throw away the identifier bytes and keep the rest
+			serializedOTBData = serializedOTBData.Slice(IdentifierLength);
 			var stream = new ReadOnlyMemoryStream(serializedOTBData);
-
-			// Skipping the first 4 bytes coz they are used to store a... identifier?
-			// stream.Skip(IdentifierLength);
 
 			var treeBuilder = new OTBTreeBuilder(serializedOTBData);
 			while (!stream.IsOver) {

@@ -6,6 +6,11 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
+  <!-- This is here just to Visul Studio Code, otherwise it will say that unsafe code is not allowed -->
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
