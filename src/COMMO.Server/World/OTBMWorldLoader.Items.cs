@@ -6,15 +6,15 @@ namespace COMMO.Server.World {
 	public static partial class OTBMWorldLoader {
 
 		private static Item ParseItemData(OTBParsingStream stream) {
-			var newItemId = GetItemIdAndConvertPvpFieldsToPermanentFields(ref stream);
-
+			var newItemId = GetItemIdAndConvertPvpFieldsToPermanentFields(stream);
+			
 			var item = ItemFactory.Create(newItemId);
 			if (item == null) {
 				_logger.Warn($"{nameof(ItemFactory)} was unable to create a item with id: {newItemId}.");
 				return null;
 			}
 
-			if(!stream.IsOver) {
+			if(!stream.IsOver && item.Count > 0) {
 				var itemAttribute = (OTBMWorldItemAttribute)stream.ReadByte();
 				itemAttribute = (OTBMWorldItemAttribute)stream.ReadByte();
 				itemAttribute = (OTBMWorldItemAttribute)stream.ReadByte();
@@ -209,7 +209,7 @@ namespace COMMO.Server.World {
 			return item;
 		}
 
-		private static UInt16 GetItemIdAndConvertPvpFieldsToPermanentFields(ref OTBParsingStream stream) {
+		private static UInt16 GetItemIdAndConvertPvpFieldsToPermanentFields(OTBParsingStream stream) {
 			var originalItemId = stream.ReadUInt16();
 			var newItemId = originalItemId;
 

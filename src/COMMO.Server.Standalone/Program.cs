@@ -60,7 +60,8 @@ namespace COMMO.Server.Standalone {
 			// managementListener.BeginListening();
 			_gameListener.BeginListening();
 
-			var rawData = File.ReadAllBytes(@"J:\tfs\forgottenserver\data\world\forgotten2.otbm");
+			//var rawData = File.ReadAllBytes(@"J:\tfs\forgottenserver\data\world\forgotten2.otbm");
+			var rawData = File.ReadAllBytes(@"J:/tfs/mapas/1.otbm");
 			//var relevantData = new Memory<byte>(rawData).Slice(4, rawData.Length - 4);
 			//var otbTree = OTBWorldLoader.LoadWorld(relevantData);
 			var otbTree = OTBMWorldLoader.LoadWorld(rawData);
