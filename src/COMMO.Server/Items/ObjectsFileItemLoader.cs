@@ -104,11 +104,10 @@ namespace COMMO.Server.Items
                             case "flags":
                                 foreach (var element in CipParser.Parse(propData))
                                 {
-                                    ItemFlag flagMatch;
 
-                                    var flagName = element.Attributes.FirstOrDefault()?.Name;
+									var flagName = element.Attributes.FirstOrDefault()?.Name;
 
-                                    if (Enum.TryParse(flagName, out flagMatch))
+									if (Enum.TryParse(flagName, out ItemFlag flagMatch))
                                     {
                                         current.SetFlag(flagMatch);
                                     }
@@ -164,6 +163,9 @@ namespace COMMO.Server.Items
         {
             throw new Exception($"Failed to load {itemFilePath}.");
         }
+
+		var attrsNotSuported = 0;
+		var attrsNotValid = 0;
 
         var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)));
         foreach (var itemChildren in fileTree.Children)
@@ -297,11 +299,10 @@ namespace COMMO.Server.Items
 
             for (ushort key = serverId; key < serverId + aplyTo; key++)
             {
-                ItemType current;
-                if (!itemDictionary.TryGetValue(key, out current))
-                    continue;
+					if (!itemDictionary.TryGetValue(key, out ItemType current))
+						continue;
 
-                var name = element.Attribute("name");
+					var name = element.Attribute("name");
                 if (name != null)
                     current.SetName(name.Value);
 
@@ -320,10 +321,9 @@ namespace COMMO.Server.Items
                     }
 
                     var lineInfo = (IXmlLineInfo) attribute;
-                    bool success;
-                    var attr = OpenTibiaTranslationMap.TranslateAttributeName(attrName.Value, out success);
+						var attr = OpenTibiaTranslationMap.TranslateAttributeName(attrName.Value, out bool success);
 
-                    if (success)
+						if (success)
                     {
                         int value = -1;
                         bool setAttr = true;
@@ -352,13 +352,18 @@ namespace COMMO.Server.Items
                         }
 
                         if (!success)
-                            Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] \"{attrValue.Value}\" is not a valid value for attribute \"{attrName.Value}\"");
+						{ 
+							attrsNotValid++;
+							//Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] \"{attrValue.Value}\" is not a valid value for attribute \"{attrName.Value}\"");
+						}
                         else if (setAttr)
                             current.SetAttribute(attr, value);
 
                     }
-                    else
-                        Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] Attribute \"{attrName.Value}\" is not supported!");
+					else {
+						attrsNotSuported++;
+						//Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] Attribute \"{attrName.Value}\" is not supported!");
+					} 
                 }
 
             }
@@ -368,6 +373,9 @@ namespace COMMO.Server.Items
         {
             type.Value.LockChanges();
         }
+
+		Console.WriteLine($"Items with attributes not supported: {attrsNotSuported}");
+		Console.WriteLine($"Not valid attributes: {attrsNotSuported}");
 
         return itemDictionary;
     }

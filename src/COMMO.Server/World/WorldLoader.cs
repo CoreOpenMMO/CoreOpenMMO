@@ -25,6 +25,10 @@ namespace COMMO.Server.World {
 		
 		public ITile GetTile(Location location) => _world.GetTile(location);
 
-		public WorldLoader(Memory<byte> serializedWorldData) { _world = OTBMWorldLoader.LoadWorld(serializedWorldData); }
+		public WorldLoader(Memory<byte> serializedWorldData)
+		{ 
+			_world = OTBMWorldLoader.LoadWorld(serializedWorldData); 
+			Console.WriteLine($"Tiles loaded in world: {_world.LoadedTilesCount()}");
+		}
 	}
 }

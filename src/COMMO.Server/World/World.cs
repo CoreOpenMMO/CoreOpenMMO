@@ -16,6 +16,7 @@ namespace COMMO.Server.World {
 
 		public byte PercentageComplete => 100;
 		public bool HasLoaded(int x, int y, byte z) => _worldTiles.Any();
+		public int LoadedTilesCount() => _worldTiles.Count();
 
 		private readonly ConcurrentDictionary<Coordinate, Tile> _worldTiles = new ConcurrentDictionary<Coordinate, Tile>();
 		
@@ -38,5 +39,6 @@ namespace COMMO.Server.World {
 
 			return null;
 		} 
+
 	}
 }
