@@ -21,13 +21,11 @@
 
   <ItemGroup>
     <None Remove="Data\dat\circles.dat" />
-    <None Remove="Data\dat\moveuse.dat" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\dat\circles.dat" />
-    <EmbeddedResource Include="Data\dat\moveuse.dat" />
   </ItemGroup>
 
   <ItemGroup>
