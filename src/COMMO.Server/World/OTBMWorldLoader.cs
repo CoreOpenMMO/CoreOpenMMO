@@ -41,6 +41,8 @@ namespace COMMO.Server.World {
 			var worldDataNode = rootNode.Children[0];
 			ParseWorldDataNode(worldDataNode, world);
 
+			//Console.WriteLine($"Tiles Loaded: {world.c}");
+
 			return world;
 		}
 
@@ -175,9 +177,7 @@ namespace COMMO.Server.World {
 			}
 
 			// We create the tile early and mutate it along the method
-			var tile = new Tile(x: xOffset,
-				y: yOffset,
-				z: tilesAreaStartPosition.Z);
+			var tile = new Tile((ushort)tilePosition.X, (ushort)tilePosition.Y, tilePosition.Z);
 
 			// Parsing the tile attributes
 			var tileFlags = TileFlags.None;

@@ -28,7 +28,7 @@ namespace COMMO.Server.World {
 				_world = OTBMWorldLoader.LoadWorld(_serializedWorldData);
 				_serializedWorldData = null;
 			}
-
+			
 			return _world.Load(
 				fromSectorX: fromSectorX,
 				toSectorX: toSectorX,

@@ -74,12 +74,11 @@ namespace COMMO.Server {
 			_connections = new ConcurrentDictionary<uint, Connection>();
 			Creatures = new ConcurrentDictionary<uint, Creature>();
 
-			// Initialize the map
-			// _map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
-			//var otbmWorldData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
-			//var relevantData = new Memory<byte>(otbmWorldData).Slice(4, otbmWorldData.Length - 4);
-			//var lazyWorldLoaderWrapper = new LazyWorldWrapper(relevantData);
-			//_map = new Map.Map(lazyWorldLoaderWrapper);
+			//Initialize the map
+			//_map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
+			var otbmWorldData = File.ReadAllBytes(@"J:/tfs/mapas/BlankAndDirt.otbm");
+			var lazyWorldLoaderWrapper = new LazyWorldWrapper(otbmWorldData);
+			_map = new Map.Map(lazyWorldLoaderWrapper);
 
 			// Initialize game vars.
 			Status = WorldState.Creating;

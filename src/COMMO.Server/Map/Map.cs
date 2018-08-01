@@ -21,8 +21,8 @@ namespace COMMO.Server.Map
         private static readonly TimeSpan _mapLoadPercentageReportDelay = TimeSpan.FromSeconds(7);
 
         // Start positions
-        public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
-        public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
+        public static Location NewbieStart = new Location { X = 170, Y = 150, Z = 7 };
+        public static Location VeteranStart = new Location { X = 170, Y = 150, Z = 7 };
 
         // # Refreshte Zylinder pro Minute
         // RefreshedCylinders = 8
@@ -117,63 +117,73 @@ namespace COMMO.Server.Map
         {
             var sectorX = atLocation.X / 32;
             var sectorY = atLocation.Y / 32;
-            // var sectorZ = atLocation.Z;
+			// var sectorZ = atLocation.Z;
 
-            // Load the required sector first
-            for (var z = 0; z < 15; z++)
-            {
-                var zByte = Convert.ToByte(z);
+			var zCount = 0;
 
-                if (_loader.HasLoaded(sectorX, sectorY, zByte))
-                {
-                    continue;
-                }
+			try 
+			{
+				 // Load the required sector first
+				for (var z = 0; z < 15; z++)
+				{
+					var zByte = Convert.ToByte(z);
 
-                var loadedTiles = _loader.Load(sectorX, sectorX, sectorY, sectorY, zByte, zByte);
+					if (_loader.HasLoaded(sectorX, sectorY, zByte))
+					{
+						continue;
+					}
 
-                foreach (var tile in loadedTiles)
-                {
-                    if (tile != null)
-                    {
-                        _mapTiles[tile.Location] = tile;
-                    }
-                }
-            }
+					var loadedTiles = _loader.Load(sectorX, sectorX, sectorY, sectorY, zByte, zByte);
+
+					foreach (var tile in loadedTiles)
+					{
+						if (tile != null)
+						{
+							_mapTiles[tile.Location] = tile;
+						}
+					}
+				}
+			}
+			catch (Exception ex) {
+				Console.WriteLine($"Exception in Z '{zCount}': {ex.Message}");
+			}
+
+           
 
             // asyncronously load the other sectors
-            Task.Factory.StartNew(() =>
-            {
-                for (var x = sectorX - 1; x < sectorX + 1; x++)
-                {
-                    for (var y = sectorY - 1; y < sectorY + 1; y++)
-                    {
-                        if (x == sectorX && y == sectorY)
-                        {
-                            continue;
-                        }
+            //Task.Factory.StartNew(() =>
+            //{
+            //    for (var x = sectorX - 1; x < sectorX + 1; x++)
+            //    {
+            //        for (var y = sectorY - 1; y < sectorY + 1; y++)
+            //        {
+            //            if (x == sectorX && y == sectorY)
+            //            {
+            //                continue;
+            //            }
 
-                        for (var z = 0; z < 15; z++)
-                        {
-                            var zByte = Convert.ToByte(z);
+            //            for (var z = 0; z < 15; z++)
+            //            {
+            //                var zByte = Convert.ToByte(z);
 
-                            if (_loader.HasLoaded(x, y, zByte))
-                            {
-                                continue;
-                            }
+            //                if (_loader.HasLoaded(x, y, zByte))
+            //                {
+            //                    continue;
+            //                }
 
-                            var loadedTiles = _loader.Load(x, x, y, y, zByte, zByte);
+            //                var loadedTiles = _loader.Load(x, x, y, y, zByte, zByte);
 
-                            foreach (var tile in loadedTiles)
-                            {
-                                if (tile != null)
-                                {
-                                    _mapTiles[tile.Location] = tile;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            //                foreach (var tile in loadedTiles)
+            //                {
+            //                    if (tile != null)
+            //                    {
+            //                        _mapTiles[tile.Location] = tile;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //});
         }
 
         public void Load(int fromX = 0, int toX = 0, int fromY = 0, int toY = 0, byte fromZ = 0, byte toZ = 0)
@@ -274,7 +284,7 @@ namespace COMMO.Server.Map
                 // {
                 //    return null;
                 // }
-                if (!_loader.HasLoaded(location.X, location.Y, (byte)location.Z))
+                if (!_loader.HasLoaded(location.X / 32, location.Y / 32, (byte)location.Z))
                 {
                     Load(location);
                 }
