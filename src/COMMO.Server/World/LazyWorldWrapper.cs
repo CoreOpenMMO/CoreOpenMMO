@@ -1,4 +1,5 @@
 using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
 using COMMO.Server.Map;
 using System;
 
@@ -22,20 +23,15 @@ namespace COMMO.Server.World {
 			else
 				return _world.HasLoaded(x, y, z);
 		}
-
-		public ITile[,,] Load(int fromSectorX, int toSectorX, int fromSectorY, int toSectorY, byte fromSectorZ, byte toSectorZ) {
+		
+		public ITile GetTile(Location location) 
+		{
 			if (_world == null) {
 				_world = OTBMWorldLoader.LoadWorld(_serializedWorldData);
 				_serializedWorldData = null;
 			}
-			
-			return _world.Load(
-				fromSectorX: fromSectorX,
-				toSectorX: toSectorX,
-				fromSectorY: fromSectorY,
-				toSectorY: toSectorY,
-				fromSectorZ: fromSectorZ,
-				toSectorZ: toSectorZ);
+
+			return  _world.GetTile(location);
 		}
 
 		public LazyWorldWrapper(Memory<byte> serializedWorldData) {

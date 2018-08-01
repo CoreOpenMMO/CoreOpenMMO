@@ -1,8 +1,9 @@
 namespace COMMO.Server.World {
 	using COMMO.Server.Data.Interfaces;
+	using COMMO.Server.Data.Models.Structs;
 	using COMMO.Server.Map;
 	using System;
-	using System.Collections.Generic;
+	using System.Collections.Concurrent;
 	using System.Linq;
 
 	/// <summary>
@@ -12,57 +13,12 @@ namespace COMMO.Server.World {
 	/// We will refactor and improve it later.
 	/// </summary>
 	public sealed class World : IMapLoader {
-		public const int SectorXLength = 32;
-		public const int SectorYLength = 32;
-		public const int SectorZLength = 1;
 
 		public byte PercentageComplete => 100;
-		public bool HasLoaded(int x, int y, byte z) => _loadedTiles.Any(c => c.X == x && c.Y == y && c.Z == z);
+		public bool HasLoaded(int x, int y, byte z) => _worldTiles.Any();
 
-		private List<LoadedTile> _loadedTiles;
-
-		private readonly Dictionary<Coordinate, Tile> _worldTiles = new Dictionary<Coordinate, Tile>();
+		private readonly ConcurrentDictionary<Coordinate, Tile> _worldTiles = new ConcurrentDictionary<Coordinate, Tile>();
 		
-		public ITile[,,] Load(int fromSectorX, int toSectorX, int fromSectorY, int toSectorY, byte fromSectorZ, byte toSectorZ) {
-			if (toSectorX < fromSectorX)
-				throw new ArgumentOutOfRangeException();
-			if (toSectorY < fromSectorY)
-				throw new ArgumentOutOfRangeException();
-			if (toSectorZ < fromSectorZ)
-				throw new ArgumentOutOfRangeException();
-			
-			if(_loadedTiles == null)
-				_loadedTiles = new List<LoadedTile>();
-
-			var tiles = new ITile[
-				(toSectorX - fromSectorX + 1) * SectorXLength,
-				(toSectorY - fromSectorY + 1) * SectorYLength,
-				toSectorZ - fromSectorZ + SectorZLength
-				];
-			
-			var xStart = fromSectorX * SectorXLength;
-            var xEnd = ((toSectorX - fromSectorX + 1) * SectorXLength) + xStart;
-
-            var yStart = fromSectorY * SectorYLength;
-            var yEnd = ((toSectorY - fromSectorY + 1) * SectorYLength) + yStart;
-
-            var zStart = (sbyte)(fromSectorZ * SectorZLength);
-            var zEnd = (sbyte)(((toSectorZ- fromSectorZ + 1) * SectorZLength) + zStart);
-
-			for (var x = xStart; x < xEnd; x++) {
-				for (var y = yStart; y < yEnd; y++) {
-					for (var z = zStart; z < zEnd; z++) {
-						var tileCoordinate = new Coordinate(x: x, y: y, z);
-							var tile = _worldTiles.GetValueOrDefault(tileCoordinate) ?? new Tile((ushort)x, (ushort)y, z);
-							tiles[x - xStart, y - yStart, z - zStart] = tile;
-							_loadedTiles.Add(new LoadedTile { X =  x - xStart, Y = y - yStart, Z = z - zStart} );
-					}
-				}
-			}
-
-			return tiles;
-		}
-
 		public void AddTile(Tile tile) {
 			if (tile == null)
 				throw new ArgumentNullException(nameof(tile));
@@ -74,12 +30,13 @@ namespace COMMO.Server.World {
 
 			_worldTiles[tilesCoordinates] = tile;
 		}
-	}
 
-	public class LoadedTile
-	{
-		public int X { get; set; }
-		public int Y { get; set; }
-		public int Z { get; set; }
+		public ITile GetTile(Location location)
+		{
+			if(_worldTiles.TryGetValue(new Coordinate(location.X, location.Y, location.Z), out Tile tile))
+				return tile;
+
+			return null;
+		} 
 	}
 }

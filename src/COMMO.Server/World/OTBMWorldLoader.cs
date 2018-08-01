@@ -211,7 +211,6 @@ namespace COMMO.Server.World {
 #warning Not sure if this is the proper method
 				tile.AddContent(i);
 			}
-
 			world.AddTile(tile);
 		}
 

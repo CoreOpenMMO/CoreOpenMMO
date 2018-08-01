@@ -5,10 +5,13 @@
 // </copyright>
 
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using COMMO.Server.Data.Interfaces;
+using COMMO.Server.Data.Models.Structs;
+using COMMO.Server.World;
 using StackExchange.Redis;
 
 namespace COMMO.Server.Map
@@ -50,71 +53,7 @@ namespace COMMO.Server.Map
             _totalLoadedCount = default;
             _sectorsLoaded = new bool[SectorXMax - SectorXMin, SectorYMax - SectorYMin, SectorZMax - SectorZMin];
         }
-
-        // public ITile[,,] LoadFullMap()
-        // {
-        //    return Load(SectorXMin, SectorXMax, SectorYMin, SectorYMax, SectorZMin, SectorZMax);
-        // }
-        public ITile[,,] Load(int fromSectorX, int toSectorX, int fromSectorY, int toSectorY, byte fromSectorZ, byte toSectorZ)
-        {
-            if (toSectorX < fromSectorX || toSectorY < fromSectorY || toSectorZ < fromSectorZ)
-            {
-                throw new InvalidOperationException("Bad range supplied.");
-            }
-
-            var tiles = new ITile[(toSectorX - fromSectorX + 1) * 32, (toSectorY - fromSectorY + 1) * 32, toSectorZ - fromSectorZ + 1];
-
-            _totalTileCount = tiles.LongLength;
-            _totalLoadedCount = default;
-
-            IDatabase cache = CacheConnection.GetDatabase();
-
-            Parallel.For(fromSectorZ, toSectorZ + 1, sectorZ =>
-            {
-                Parallel.For(fromSectorY, toSectorY + 1, sectorY =>
-                {
-                    Parallel.For(fromSectorX, toSectorX + 1, sectorX =>
-                    {
-                        var sectorFileName = $"{sectorX:0000}-{sectorY:0000}-{sectorZ:00}.sec";
-
-                        string fileContents = cache.StringGet(sectorFileName);
-
-                        if (fileContents == null)
-                        {
-                            var fullFilePath = Path.Combine(_mapDirInfo.FullName, sectorFileName);
-                            var sectorFileInfo = new FileInfo(fullFilePath);
-
-                            if (sectorFileInfo.Exists)
-                            {
-                                using (var streamReader = sectorFileInfo.OpenText())
-                                {
-                                    fileContents = streamReader.ReadToEnd();
-
-                                    cache.StringSet(sectorFileName, fileContents);
-                                }
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(fileContents))
-                        {
-                            var loadedTiles = SectorFileReader.ReadSector(sectorFileName, fileContents, (ushort)(sectorX * 32), (ushort)(sectorY * 32), (sbyte)sectorZ);
-
-                            Parallel.ForEach(loadedTiles, tile =>
-                            {
-                                tiles[tile.Location.X - (fromSectorX * 32), tile.Location.Y - (fromSectorY * 32), tile.Location.Z - fromSectorZ] = tile;
-                            });
-                        }
-
-                        Interlocked.Add(ref _totalLoadedCount, 1024); // 1024 per sector file, regardless if there is a tile or not...
-                        _sectorsLoaded[sectorX - SectorXMin, sectorY - SectorYMin, sectorZ - SectorZMin] = true;
-                    });
-                });
-            });
-
-            _totalLoadedCount = _totalTileCount;
-
-            return tiles;
-        }
+		
 
         public bool HasLoaded(int x, int y, byte z)
         {
@@ -125,5 +64,9 @@ namespace COMMO.Server.Map
 
             return _sectorsLoaded[x - SectorXMin, y - SectorYMin, z - SectorZMin];
         }
-    }
+
+		public ITile GetTile(Location location) {
+			throw new NotImplementedException();
+		}
+	}
 }

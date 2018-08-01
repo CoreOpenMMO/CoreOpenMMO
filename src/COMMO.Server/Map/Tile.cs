@@ -395,7 +395,7 @@ namespace COMMO.Server.Map {
 			var downItemStackToReverse = new Stack<IItem>();
 			var top1ItemStackToReverse = new Stack<IItem>();
 			var top2ItemStackToReverse = new Stack<IItem>();
-
+			
 			foreach (var element in content) {
 				if (element.Data < 0) {
 					// this is a flag an is unexpected.
