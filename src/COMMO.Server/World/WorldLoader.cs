@@ -4,9 +4,8 @@ using COMMO.Server.Map;
 using System;
 
 namespace COMMO.Server.World {
-	public sealed class LazyWorldWrapper : IMapLoader {
+	public sealed class WorldLoader : IMapLoader {
 		private World _world;
-		private Memory<byte> _serializedWorldData;
 
 		public byte PercentageComplete {
 			get {
@@ -24,18 +23,8 @@ namespace COMMO.Server.World {
 				return _world.HasLoaded(x, y, z);
 		}
 		
-		public ITile GetTile(Location location) 
-		{
-			if (_world == null) {
-				_world = OTBMWorldLoader.LoadWorld(_serializedWorldData);
-				_serializedWorldData = null;
-			}
+		public ITile GetTile(Location location) => _world.GetTile(location);
 
-			return  _world.GetTile(location);
-		}
-
-		public LazyWorldWrapper(Memory<byte> serializedWorldData) {
-			_serializedWorldData = serializedWorldData;
-		}
+		public WorldLoader(Memory<byte> serializedWorldData) { _world = OTBMWorldLoader.LoadWorld(serializedWorldData); }
 	}
 }

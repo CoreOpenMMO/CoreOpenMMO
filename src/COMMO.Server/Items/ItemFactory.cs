@@ -17,7 +17,7 @@ namespace COMMO.Server.Items
 
         public static Dictionary<ushort, ItemType> ItemsCatalog { get; private set; }
 
-        public static void Initialize(bool UseOTItemFiles = false)
+        public static void Initialize(bool useOTItemFiles = false)
         {
             if (ItemsCatalog != null)
             {
@@ -28,7 +28,7 @@ namespace COMMO.Server.Items
             {
                 if (ItemsCatalog == null)
                 {
-                    if (UseOTItemFiles)
+                    if (useOTItemFiles)
                         ItemsCatalog = Game.Instance.ItemLoader.LoadOTItems();
                     else
                         ItemsCatalog = Game.Instance.ItemLoader.Load(ServerConfiguration.ObjectsFileName);
