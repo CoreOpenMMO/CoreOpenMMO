@@ -151,23 +151,11 @@ namespace COMMO.Server.Items
     public Dictionary<ushort, ItemType> LoadOTItems()
     {
         var itemDictionary = new Dictionary<UInt16, ItemType>();
-
-        //var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
-        //var itemFilePath = baseDataDir + "/items/items.otb";
-        //var itemExtensionFilePath = baseDataDir + "/items/items.xml";
-
-		var itemFilePath = @"C:/Git/CoreOpenMMO/src/COMMO.Server/Data/items/items.otb";
-        var itemExtensionFilePath = @"C:/Git/CoreOpenMMO/src/COMMO.Server/Data/items/items.xml";
-
-        if (!File.Exists(itemFilePath))
-        {
-            throw new Exception($"Failed to load {itemFilePath}.");
-        }
-
+			
 		var attrsNotSuported = 0;
 		var attrsNotValid = 0;
 
-        var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)));
+        var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(ServerResourcesManager.GetItemsBytes("items.otb")));
         foreach (var itemChildren in fileTree.Children)
         {
             var current = new ItemType();
@@ -264,12 +252,7 @@ namespace COMMO.Server.Items
             itemDictionary.Add(current.TypeId, current);
         }
 
-        if (!File.Exists(itemExtensionFilePath))
-        {
-            throw new Exception($"Failed to load {itemFilePath}.");
-        }
-
-        var rootElement = XElement.Load(itemExtensionFilePath, LoadOptions.SetLineInfo);
+       var rootElement = XElement.Load(ServerResourcesManager.GetItems("items.xml"), LoadOptions.SetLineInfo);
 
         foreach (var element in rootElement.Elements("item"))
         {

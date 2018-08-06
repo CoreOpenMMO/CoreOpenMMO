@@ -156,7 +156,7 @@ namespace COMMO.Server {
 			ItemLoader = itemLoader ?? throw new ArgumentNullException(nameof(itemLoader));
 			MonsterLoader = monsterLoader ?? throw new ArgumentNullException(nameof(monsterLoader));
 			
-			_map = new Map.Map(new WorldLoader(File.ReadAllBytes(@"J:/tfs/mapas/BlankAndDirt.otbm")));
+			_map = new Map.Map(new WorldLoader(ServerResourcesManager.GetMap()));
 		}
 
 		/// <summary>
