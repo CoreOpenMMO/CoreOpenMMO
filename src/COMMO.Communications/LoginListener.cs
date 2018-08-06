@@ -21,7 +21,7 @@ namespace COMMO.Communications
         /// <param name="handlerFactory">The handler factory that this listener will use.</param>
         /// <param name="port">The port where this listener will listen.</param>
         public LoginListener(IHandlerFactory handlerFactory, int port = DefaultLoginListenerPort)
-            : base(port, ProtocolFactory.CreateForType(OpenTibiaProtocolType.LoginProtocol, handlerFactory))
+            : base(port, ProtocolFactory.CreateForType(OpenTibiaProtocolType.LoginProtocol, handlerFactory), OpenTibiaProtocolType.LoginProtocol)
         {
         }
     }

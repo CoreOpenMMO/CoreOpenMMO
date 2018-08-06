@@ -18,15 +18,18 @@ namespace COMMO.Communications
 
         public int Port { get; }
 
-        protected ICollection<Connection> Connections { get; }
+		private OpenTibiaProtocolType _openTibiaProtocolType;
 
-        protected OpenTibiaListener(int port, IProtocol protocol)
+        protected ICollection<Connection> _connections { get; }
+
+        protected OpenTibiaListener(int port, IProtocol protocol, OpenTibiaProtocolType openTibiaProtocolType)
             : base(IPAddress.Any, port)
         {
             Protocol = protocol ?? throw new ArgumentNullException(nameof(protocol));
 
+			_openTibiaProtocolType = openTibiaProtocolType;
             Port = port;
-            Connections = new HashSet<Connection>();
+            _connections = new HashSet<Connection>();
         }
 
         public void BeginListening()
@@ -50,13 +53,13 @@ namespace COMMO.Communications
 
         public void OnAccept(IAsyncResult ar)
         {
-            var connection = new Connection();
+            var connection = new Connection(_openTibiaProtocolType);
 
             connection.OnCloseEvent += OnConnectionClose;
             connection.OnProcessEvent += Protocol.ProcessMessage;
             connection.OnPostProcessEvent += Protocol.PostProcessMessage;
 
-            Connections.Add(connection);
+            _connections.Add(connection);
             Protocol.OnAcceptNewConnection(connection, ar);
 
             BeginAcceptSocket(OnAccept, this);
@@ -69,7 +72,7 @@ namespace COMMO.Communications
             connection.OnProcessEvent -= Protocol.ProcessMessage;
             connection.OnPostProcessEvent -= Protocol.PostProcessMessage;
 
-            Connections.Remove(connection);
+            _connections.Remove(connection);
         }
     }
 }
