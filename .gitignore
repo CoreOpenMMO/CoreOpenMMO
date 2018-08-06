@@ -58,7 +58,3 @@ Thumbs.db
 # Visual Code Studio file #
 ###########################
 .vscode
-
-# Map file #
-############
-src/COMMO.Server/Data/map
