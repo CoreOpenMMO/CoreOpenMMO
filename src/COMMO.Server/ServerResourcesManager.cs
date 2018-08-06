@@ -6,7 +6,7 @@ namespace COMMO.Server {
     {
 		public const string ItemsFilesDirectory = "COMMO.Server.Data.items";
 		public const string MapFilesDirectory = "COMMO.Server.Data.map";
-        public const string MapName = "COMMO.otbm";
+        public const string MapName = "world.otbm";
 
 		public static byte[] GetMap() {
             var assembly = Assembly.GetExecutingAssembly();

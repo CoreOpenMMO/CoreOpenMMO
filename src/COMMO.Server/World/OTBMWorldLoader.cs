@@ -58,19 +58,19 @@ namespace COMMO.Server.World {
 			var parsingStream = new OTBParsingStream(rootNode.Data);
 
 			var headerVersion = parsingStream.ReadUInt32();
-			if (headerVersion == 0 || headerVersion > 2)
-				throw new InvalidOperationException();
+			//if (headerVersion == 0 || headerVersion > 2)
+			//	throw new InvalidOperationException();
 
 			var worldWidth = parsingStream.ReadUInt16();
 			var worldHeight = parsingStream.ReadUInt16();
 
 			var itemEncodingMajorVersion = parsingStream.ReadUInt32();
-			if (itemEncodingMajorVersion != SupportedItemEncodingMajorVersion)
-				throw new InvalidOperationException();
+			//if (itemEncodingMajorVersion != SupportedItemEncodingMajorVersion)
+			//	throw new InvalidOperationException();
 
 			var itemEncodingMinorVersion = parsingStream.ReadUInt32();
-			if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
-				throw new InvalidOperationException();
+			//if (itemEncodingMinorVersion < SupportedItemEncodingMinorVersion)
+			//	throw new InvalidOperationException();
 
 			_logger.Info($"OTBM header version: {headerVersion}.");
 			_logger.Info($"World width: {worldWidth}.");
