@@ -53,12 +53,12 @@ namespace COMMO.Communications
             var newConnPacket = new NewConnectionPacket(inboundMessage);
             var gameConfig = ServiceConfiguration.GetConfiguration();
 
-            if (newConnPacket.Version != gameConfig.ClientVersionInt)
-            {
-                // TODO: hardcoded messages.
-                SendDisconnect(connection, $"You need client version {gameConfig.ClientVersionString} to connect to this server.");
-                return;
-            }
+            //if (newConnPacket.Version != gameConfig.ClientVersionInt)
+            //{
+            //    // TODO: hardcoded messages.
+            //    SendDisconnect(connection, $"You need client version {gameConfig.ClientVersionString} to connect to this server.");
+            //    return;
+            //}
 
             // Make a copy of the message in case we fail to decrypt using the first set of keys.
             var messageCopy = NetworkMessage.Copy(inboundMessage);

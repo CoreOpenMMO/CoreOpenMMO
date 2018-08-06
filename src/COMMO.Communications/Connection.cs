@@ -69,27 +69,27 @@ namespace COMMO.Communications
             Socket = ((TcpListener)ar.AsyncState).EndAcceptSocket(ar);
             Stream = new NetworkStream(Socket);
 
-			if (!_firstConnection && _openTibiaProtocolType == OpenTibiaProtocolType.GameProtocol) //FirstGameConnection
-			{
-				_firstConnection = true;
+			//if (!_firstConnection && _openTibiaProtocolType == OpenTibiaProtocolType.GameProtocol) //FirstGameConnection
+			//{
+			//	_firstConnection = true;
 
-				var message = new NetworkMessage(true);
+			//	var message = new NetworkMessage(true);
 
-				message.AddUInt16(0x0006);
-				message.AddByte(0x1F);
+			//	message.AddUInt16(0x0006);
+			//	message.AddByte(0x1F);
 				
-				var challengeTimestamp = (uint)Environment.TickCount;
+			//	var challengeTimestamp = (uint)Environment.TickCount;
 
-				message.AddUInt32(challengeTimestamp); // challengeTimestamp
+			//	message.AddUInt32(challengeTimestamp); // challengeTimestamp
 
-				var challengeRandom = new Random().Next(0x00, 0xFF);
+			//	var challengeRandom = new Random().Next(0x00, 0xFF);
 
-				message.AddByte((byte)challengeRandom); // challengeRandom
+			//	message.AddByte((byte)challengeRandom); // challengeRandom
 
-				message.SkipBytes(-6); // go back to header
+			//	message.SkipBytes(-6); // go back to header
 				
-				Send(message, false);
-			}
+			//	Send(message, false);
+			//}
 
             if (SimpleDoSDefender.Instance.IsBlockedAddress(SourceIp))
             {
