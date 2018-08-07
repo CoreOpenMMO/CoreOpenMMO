@@ -73,14 +73,7 @@ namespace COMMO.Server {
 			_combatQueue = new ConcurrentQueue<ICombatOperation>();
 			_connections = new ConcurrentDictionary<uint, Connection>();
 			Creatures = new ConcurrentDictionary<uint, Creature>();
-
-			// Initialize the map
-			// _map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
-			var otbmWorldData = File.ReadAllBytes(@"C:\Source\forgottenserver-master\data\world\forgotten.otbm");
-			var relevantData = new Memory<byte>(otbmWorldData).Slice(4, otbmWorldData.Length - 4);
-			var lazyWorldLoaderWrapper = new LazyWorldWrapper(relevantData);
-			_map = new Map.Map(lazyWorldLoaderWrapper);
-
+			
 			// Initialize game vars.
 			Status = WorldState.Creating;
 			LightColor = (byte)LightColors.White;
@@ -156,12 +149,14 @@ namespace COMMO.Server {
 		/// <summary>
 		/// Gets the current <see cref="_map"/> instance of the game.
 		/// </summary>
-		private Map.Map _map { get; }
+		private Map.Map _map { get; set; }
 
 		public void Initialize(IItemEventLoader eventLoader, IItemLoader itemLoader, IMonsterLoader monsterLoader) {
 			EventLoader = eventLoader ?? throw new ArgumentNullException(nameof(eventLoader));
 			ItemLoader = itemLoader ?? throw new ArgumentNullException(nameof(itemLoader));
 			MonsterLoader = monsterLoader ?? throw new ArgumentNullException(nameof(monsterLoader));
+			
+			_map = new Map.Map(new WorldLoader(File.ReadAllBytes(@"J:/tfs/mapas/BlankAndDirt.otbm")));
 		}
 
 		/// <summary>

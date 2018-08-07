@@ -4,6 +4,9 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Data.Contracts;
+using COMMO.OTB;
+using COMMO.Server.Parsing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,15 +14,13 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml;
 using System.Reflection;
+using System.Xml;
+using System.Xml.Linq;
 using COMMO.Data.Contracts;
-using COMMO.Server.Parsing;
-using COMMO.OTB;
 
-namespace COMMO.Server.Items
-{
-    public class ObjectsFileItemLoader : IItemLoader
-    {
-        /*
+namespace COMMO.Server.Items {
+	public class ObjectsFileItemLoader : IItemLoader {
+		/*
             An item definition starts and ends with blank lines.
 
             TypeID      = 1 # body container

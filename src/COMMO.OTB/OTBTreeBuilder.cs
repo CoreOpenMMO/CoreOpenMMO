@@ -38,7 +38,7 @@ namespace COMMO.OTB {
 			// Sanity checks
 			if (!_nodeStarts.TryPop(out var start))
 				throw new InvalidOperationException();
-			if (end <= start)
+			if (end < start)
 				throw new InvalidOperationException();
 
 			var nodeData = _serializedTreeData.Slice(

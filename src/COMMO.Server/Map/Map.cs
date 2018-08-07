@@ -5,290 +5,26 @@
 // </copyright>
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using COMMO.Data.Contracts;
 using COMMO.Server.Data.Interfaces;
 using COMMO.Server.Data.Models.Structs;
 
-namespace COMMO.Server.Map
-{
-    public class Map
+namespace COMMO.Server.Map {
+	public class Map
     {
         private static readonly TimeSpan _mapLoadPercentageReportDelay = TimeSpan.FromSeconds(7);
 
         // Start positions
-        public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
-        public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
-
-        // # Refreshte Zylinder pro Minute
-        // RefreshedCylinders = 8
-
-        // # benannte Punkte
-        // Mark = ("Thais",[32369,32215,7])
-        // Mark = ("Carlin",[32341,31789,7])
-        // Mark = ("Ab'Dendriel",[32661,31687,7])
-        // Mark = ("Rookgaard",[32097,32207,7])
-        // Mark = ("Fibula",[32176,32437,7])
-        // Mark = ("Kazordoon",[32632,31916,8])
-        // Mark = ("Senja",[32125,31667,7])
-        // Mark = ("Folda",[32046,31582,7])
-        // Mark = ("Vega",[32027,31692,7])
-        // Mark = ("Havoc",[32783,32243,6])
-        // Mark = ("Orc",[32901,31771,7])
-        // Mark = ("Minocity",[32404,32124,15])
-        // Mark = ("Minoroom",[32139,32109,11])
-        // Mark = ("Desert",[32653,32117,7])
-        // Mark = ("Swamp",[32724,31976,6])
-        // Mark = ("Home",[32316,31942,7])
-        // Mark = ("Mists",[32854,32333,6])
-        // Mark = ("FibulaDungeon",[32189,32426,9])
-        // Mark = ("DragonIsle",[32781,31603,7])
-        // Mark = ("HellsGate",[32675,31648,10])
-        // Mark = ("Necropolis",[32786,31683,14])
-        // Mark = ("Trollcaves",[32493,32259,8])
-        // Mark = ("Elvenbane",[32590,31657,7])
-        // Mark = ("Fieldofglory",[32430,31671,7])
-        // Mark = ("Hills",[32553,31827,6])
-        // Mark = ("Sternum",[32463,32077,7])
-        // Mark = ("Northport",[32486,31610,7])
-        // Mark = ("Greenshore",[32273,32053,7])
-        // Mark = ("Edron",[33191,31818,7])
-        // Mark = ("Stonehome",[33319,31766,7])
-        // Mark = ("Camp",[32655,32208,7])
-        // Mark = ("Cormaya",[33302,31970,7])
-        // Mark = ("Darashia",[33224,32428,7])
-        // Mark = ("Drefia",[32996,32417,7])
-        // Mark = ("Venore",[32955,32076,6])
-        // Mark = ("Ghostship",[33325,32173,6])
-        // Mark = ("VenoreDragons",[32793,32155,8])
-        // Mark = ("Shadowthorn",[33086,32157,7])
-        // Mark = ("Amazons",[32839,31925,7])
-        // Mark = ("KingsIsle",[32174,31940,7])
-        // Mark = ("Ghostlands",[32223,31831,7])
-        // Mark = ("Ankrahmun",[33162,32802,7])
-        // Mark = ("Oasis",[33132,32661,7])
-        // Mark = ("Marid",[33103,32539,6])
-        // Mark = ("Efreet",[33053,32622,6])
-        // Mark = ("PortHope",[32623,32753,7])
-        // Mark = ("Banuta",[32812,32559,7])
-        // Mark = ("Chor",[32956,32843,7])
-        // Mark = ("Trapwood",[32709,32901,8])
-        // Mark = ("Eremo",[33323,31883,7])
-        // Mark = ("Dagorlad",[31950,32413,7])
-        // Mark = ("Poi",[32808,32337,11])
-
-        // # Depots
-        // Depot = (0,"Thais",1000)
-        // Depot = (1,"Carlin",1000)
-        // Depot = (2,"Kazordoon",1000)
-        // Depot = (3,"Ab'Dendriel",1000)
-        // Depot = (4,"Edron",1000)
-        // Depot = (5,"Darashia",1000)
-        // Depot = (6,"Venore",1000)
-        // Depot = (7,"Ankrahmun",1000)
-        // Depot = (8,"Port Hope",1000)
-        private readonly ConcurrentDictionary<Location, ITile> _mapTiles;
-
-        // private Location Mininum2DLocation { get; set; }
-
-        // private Location Maximum2DLocation { get; set; }
-        public ConcurrentDictionary<Location, ITile> Tiles => _mapTiles;
-
-        // public bool Initialized { get; private set; }
+        public static Location NewbieStart = new Location { X = 1000, Y = 1000, Z = 7 };
+        public static Location VeteranStart = new Location { X = 1000, Y = 1000, Z = 7 };
+		
         private IMapLoader _loader { get; }
 
-        public Map(IMapLoader mapLoader)
-        {
-            if (mapLoader == null)
-            {
-                throw new ArgumentNullException(nameof(mapLoader));
-            }
-
-            _loader = mapLoader;
-            // Initialized = false;
-            _mapTiles = new ConcurrentDictionary<Location, ITile>();
-        }
-
-        public void Load(Location atLocation)
-        {
-            var sectorX = atLocation.X / 32;
-            var sectorY = atLocation.Y / 32;
-            // var sectorZ = atLocation.Z;
-
-            // Load the required sector first
-            for (var z = 0; z < 15; z++)
-            {
-                var zByte = Convert.ToByte(z);
-
-                if (_loader.HasLoaded(sectorX, sectorY, zByte))
-                {
-                    continue;
-                }
-
-                var loadedTiles = _loader.Load(sectorX, sectorX, sectorY, sectorY, zByte, zByte);
-
-                foreach (var tile in loadedTiles)
-                {
-                    if (tile != null)
-                    {
-                        _mapTiles[tile.Location] = tile;
-                    }
-                }
-            }
-
-            // asyncronously load the other sectors
-            Task.Factory.StartNew(() =>
-            {
-                for (var x = sectorX - 1; x < sectorX + 1; x++)
-                {
-                    for (var y = sectorY - 1; y < sectorY + 1; y++)
-                    {
-                        if (x == sectorX && y == sectorY)
-                        {
-                            continue;
-                        }
-
-                        for (var z = 0; z < 15; z++)
-                        {
-                            var zByte = Convert.ToByte(z);
-
-                            if (_loader.HasLoaded(x, y, zByte))
-                            {
-                                continue;
-                            }
-
-                            var loadedTiles = _loader.Load(x, x, y, y, zByte, zByte);
-
-                            foreach (var tile in loadedTiles)
-                            {
-                                if (tile != null)
-                                {
-                                    _mapTiles[tile.Location] = tile;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        public void Load(int fromX = 0, int toX = 0, int fromY = 0, int toY = 0, byte fromZ = 0, byte toZ = 0)
-        {
-            var cts = new CancellationTokenSource();
-
-            Task.Factory.StartNew(
-                () =>
-            {
-                while (!cts.IsCancellationRequested)
-                {
-                    Console.WriteLine($"Map loading is {_loader.PercentageComplete}% complete.");
-                    Thread.Sleep(_mapLoadPercentageReportDelay);
-                }
-            }, cts.Token);
-
-            // start loading.
-            if (toX == 0 && toY == 0 && toZ == 0)
-            {
-                // Reload all map.
-                // _mapTiles = Loader.LoadFullMap();
-            }
-            else
-            {
-                // else we need to validate the range.
-                if (fromX < 0 || fromY < 0 || fromZ > 15 || toX < fromX || toY < fromY || toZ < fromZ)
-                {
-                    throw new ArgumentException("Invalid map reload range.");
-                }
-
-                var loadedTiles = _loader.Load(fromX, toX, fromY, toY, fromZ, toZ);
-
-                foreach (var tile in loadedTiles)
-                {
-                    if (tile != null)
-                    {
-                        _mapTiles[tile.Location] = tile;
-                    }
-                }
-
-                // Parallel.For(0, loadedTiles.GetLength(2), z =>
-                // {
-                //    Parallel.For(0, loadedTiles.GetLength(1), y =>
-                //    {
-                //        Parallel.For(0, loadedTiles.GetLength(0), x =>
-                //        {
-                //            Location offsetLocation = new Location {X = x + fromX, Y = y + fromY, Z = (sbyte)(z + fromZ)};
-                //            _mapTiles[offsetLocation] = loadedTiles[x, y, z];
-                //        });
-                //    });
-                // });
-            }
-
-            cts.Cancel();
-            Console.WriteLine("Map loading is complete.");
-
-            // find out the minimum map locations in 2d...
-            // for (var z = 0; z < _mapTiles.GetLength(2); z++)
-            // {
-            //    if (_mapTiles[0, 0, z] != null)
-            //    {
-            //        Mininum2DLocation = new Location
-            //        {
-            //            X = _mapTiles[0, 0, z].Location.X,
-            //            Y = _mapTiles[0, 0, z].Location.Y,
-            //            Z = 0
-            //        };
-            //    }
-
-            // if (_mapTiles[_mapTiles.GetLength(0) - 1, _mapTiles.GetLength(1) - 1, z] != null)
-            //    {
-            //        Maximum2DLocation = new Location
-            //        {
-            //            X = _mapTiles[_mapTiles.GetLength(0) - 1, _mapTiles.GetLength(1) - 1, z].Location.X,
-            //            Y = _mapTiles[_mapTiles.GetLength(0) - 1, _mapTiles.GetLength(1) - 1, z].Location.Y,
-            //            Z = (sbyte)(_mapTiles.GetLength(2) - 1)
-            //        };
-            //    }
-            // }
-
-            // Initialized = true;
-        }
-
-        public ITile this[Location location]
-        {
-            get
-            {
-                // if (location < Mininum2DLocation || location > Maximum2DLocation)
-                // {
-                //    return null;
-                // }
-
-                // var tilesOffset = Location.GetOffsetBetween(location, Mininum2DLocation);
-
-                // if (tilesOffset[0] >= Tiles.GetLength(0) ||
-                //    tilesOffset[1] >= Tiles.GetLength(1) ||
-                //    tilesOffset[2] >= Tiles.GetLength(2))
-                // {
-                //    return null;
-                // }
-                if (!_loader.HasLoaded(location.X, location.Y, (byte)location.Z))
-                {
-                    Load(location);
-                }
-
-                try
-                {
-                    return Tiles[location];
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-        }
+        public Map(IMapLoader mapLoader)  { _loader = mapLoader; }
+		
+        public ITile this[Location location] => _loader.GetTile(location);
 
         public ITile this[ushort x, ushort y, sbyte z] => this[new Location { X = x, Y = y, Z = z }];
 
@@ -337,8 +73,8 @@ namespace COMMO.Server.Map
                 crawlFrom = Math.Max(0, currentZ - 2);
                 crawlTo = Math.Min(15, currentZ + 2);
             }
-
-            for (var z = crawlFrom; z != crawlTo + crawlDelta; z += crawlDelta)
+			
+			for (var z = crawlFrom; z != crawlTo + crawlDelta; z += crawlDelta)
             {
                 tempBytes.AddRange(GetFloorDescription(player, fromX, fromY, (sbyte)z, windowSizeX, windowSizeY, currentZ - z, ref skip));
             }

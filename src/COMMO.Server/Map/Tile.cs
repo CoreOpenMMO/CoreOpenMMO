@@ -387,70 +387,31 @@ namespace COMMO.Server.Map {
 			}
 		}
 
-		public void AddContent(object contentObj) {
-			if (!(contentObj is IEnumerable<CipElement> content)) {
-				return;
-			}
-
+		public void AddContent(Item item)
+		{
 			var downItemStackToReverse = new Stack<IItem>();
 			var top1ItemStackToReverse = new Stack<IItem>();
 			var top2ItemStackToReverse = new Stack<IItem>();
+			
+			if (item.IsGround)
+				Ground = item;
+			else if (item.IsTop1)
+				top1ItemStackToReverse.Push(item);
+			else if (item.IsTop2)
+				top2ItemStackToReverse.Push(item);
+			else
+				downItemStackToReverse.Push(item);
 
-			foreach (var element in content) {
-				if (element.Data < 0) {
-					// this is a flag an is unexpected.
-					// TODO: proper logging.
-					if (!ServerConfiguration.SupressInvalidItemWarnings) {
-						Console.WriteLine($"Tile.AddContent: Unexpected flag {element.Attributes?.First()?.Name}, igoring.");
-					}
-
-					continue;
-				}
-
-				try {
-					var item = ItemFactory.Create((ushort)element.Data);
-
-					if (item == null) {
-						if (!ServerConfiguration.SupressInvalidItemWarnings) {
-							Console.WriteLine($"Tile.AddContent: Item with id {element.Data} not found in the catalog, skipping.");
-						}
-
-						continue;
-					}
-
-					item.AddAttributes(element.Attributes);
-
-					if (item.IsGround) {
-						Ground = item;
-					} else if (item.IsTop1) {
-						top1ItemStackToReverse.Push(item);
-					} else if (item.IsTop2) {
-						top2ItemStackToReverse.Push(item);
-					} else {
-						downItemStackToReverse.Push(item);
-					}
-
-					item.Tile = this;
-				} catch (ArgumentException) {
-					// TODO: proper logging.
-					if (!ServerConfiguration.SupressInvalidItemWarnings) {
-						Console.WriteLine($"Tile.AddContent: Invalid item {element.Data} at {Location}, skipping.");
-					}
-				}
-			}
-
-			// Reverse and add the stacks.
-			while (top1ItemStackToReverse.Count > 0) {
+			item.Tile = this;
+			
+			while (top1ItemStackToReverse.Count > 0)
 				AddTopItem1(top1ItemStackToReverse.Pop());
-			}
-
-			while (top2ItemStackToReverse.Count > 0) {
+			
+			while (top2ItemStackToReverse.Count > 0)
 				AddTopItem2(top2ItemStackToReverse.Pop());
-			}
-
-			while (downItemStackToReverse.Count > 0) {
+			
+			while (downItemStackToReverse.Count > 0)
 				AddDownItem(downItemStackToReverse.Pop());
-			}
 		}
 
 		public IItem BruteFindItemWithId(ushort id) {

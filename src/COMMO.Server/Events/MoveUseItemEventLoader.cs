@@ -52,39 +52,39 @@ namespace COMMO.Server.Events
                 { ItemEventType.Separation, new HashSet<IItemEvent>() }
             };
 
-            using (var stream = assembly.GetManifestResourceStream(moveUseFilePath))
-            {
-                if (stream == null)
-                {
-                    throw new Exception($"Failed to load {moveUseFilePath}.");
-                }
+            //using (var stream = assembly.GetManifestResourceStream(moveUseFilePath))
+            //{
+            //    if (stream == null)
+            //    {
+            //        throw new Exception($"Failed to load {moveUseFilePath}.");
+            //    }
 
-                using (var reader = new StreamReader(stream))
-                {
-                    foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray()))
-                    {
-                        var inLine = readLine?.Split(new[] { ObjectsFileItemLoader.CommentSymbol }, 2).FirstOrDefault();
+            //    using (var reader = new StreamReader(stream))
+            //    {
+            //        foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray()))
+            //        {
+            //            var inLine = readLine?.Split(new[] { ObjectsFileItemLoader.CommentSymbol }, 2).FirstOrDefault();
 
-                        // ignore comments and empty lines.
-                        if (string.IsNullOrWhiteSpace(inLine) || inLine.StartsWith("BEGIN") || inLine.StartsWith("END"))
-                        {
-                            continue;
-                        }
+            //            // ignore comments and empty lines.
+            //            if (string.IsNullOrWhiteSpace(inLine) || inLine.StartsWith("BEGIN") || inLine.StartsWith("END"))
+            //            {
+            //                continue;
+            //            }
 
-                        try
-                        {
-                            var moveUseEventParsed = Event.Parse(inLine);
+            //            try
+            //            {
+            //                var moveUseEventParsed = Event.Parse(inLine);
 
-                            eventDictionary[moveUseEventParsed.Type].Add(ItemEventFactory.Create(moveUseEventParsed));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine(ex.StackTrace);
-                        }
-                    }
-                }
-            }
+            //                eventDictionary[moveUseEventParsed.Type].Add(ItemEventFactory.Create(moveUseEventParsed));
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Console.WriteLine(ex.Message);
+            //                Console.WriteLine(ex.StackTrace);
+            //            }
+            //        }
+            //    }
+            //}
 
             return eventDictionary;
         }

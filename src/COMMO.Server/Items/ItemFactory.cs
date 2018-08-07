@@ -4,14 +4,11 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using COMMO.Data.Contracts;
 
-namespace COMMO.Server.Items
-{
-    public static class ItemFactory
+namespace COMMO.Server.Items {
+	public static class ItemFactory
     {
         public static object InitLock = new object();
 
@@ -35,18 +32,11 @@ namespace COMMO.Server.Items
                 }
             }
         }
-
+    
         public static Item Create(ushort typeId)
         {
             if (ItemsCatalog == null)
-            {
-                Initialize();
-
-                if (ItemsCatalog == null)
-                {
-                    throw new InvalidOperationException("Failed to initialize ItemsCatalog.");
-                }
-            }
+                    ItemsCatalog = Game.Instance.ItemLoader.LoadOTItems();
 
             if (typeId < 100 || !ItemsCatalog.ContainsKey(typeId))
             {
