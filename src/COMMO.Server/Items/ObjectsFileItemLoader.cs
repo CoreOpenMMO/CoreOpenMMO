@@ -169,80 +169,24 @@ namespace COMMO.Server.Items
                 var attr = itemStream.ReadByte();
                 var dataSize = itemStream.ReadUInt16();
 
-                switch (attr)
+                switch ((ItemAttributes)attr)
                 {
-                    case 0x10: // ServerID 0x10 = 16
-                        current.SetId(itemStream.ReadUInt16());
+					case ItemAttributes.ServerId:
+                        var serverId = itemStream.ReadUInt16();
+
+						if(serverId == 4535) {
+							serverId = 4535;
+						}
+
+                        if (serverId > 30000 && serverId < 30100)
+                            serverId -= 30000;
+
+						current.SetId(serverId);
                         break;
 
-                    // ClientId 0x11 = 17 -- unused
-
-                    /*case 0x12: // Name 0x12 = 18
-                        current.SetName(itemStream.ReadString());
-                        break;*/
-
-                    /*case 0x13: // Description 0x13 = 19
-                        current.SetDescription(itemStream.ReadString());
-                        break;*/
-
-                    // Speed 0x14 = 20
-
-                    // Slot 0x15 = 21
-
-                    // MaxItems 0x16 = 22
-
-                    /*case 0x17: // Weight 0x17 = 23
-                        current.SetAttribute(ItemAttribute.Weight, itemStream.ReadUInt16());
-                        break;*/
-
-                    // Weapon 0x18 = 24
-
-                    // Amunition 0x19 = 25
-
-                    // Armor 0x1A = 26
-
-                    // MagicLevel 0x1B = 27
-
-                    // MagicFieldType 0x1C = 28
-
-                    // Writeable 0x1D = 29
-
-                    // RotateTo 0x1E = 30
-
-                    // Decay 0x1F = 31
-
-                    // SpriteHash 0x20 = 32
-
-                    // MinimapColor 0x21 = 33
-
-                    // 07? 0x22 = 34
-
-                    // 08? 0x23 = 35
-
-                    // Light 0x24 = 36
-
-                    //>> 1-byte aligned
-                    // Decay2 0x25 = 37  -- deprecated
-
-                    // Weapon2 0x26 = 38 -- deprecated
-
-                    // Amunition2 0x27 = 39 -- deprecated
-
-                    // Armor2 0x28 = 40 -- deprecated
-
-                    // Writeable2 0x29 = 41 -- deprecated
-
-                    /*case 0x2A: // Light2 0x2A = 42
-                        current.SetAttribute(ItemAttribute.Brightness, itemStream.ReadByte());
-                        current.SetAttribute(ItemAttribute.LightColor, itemStream.ReadByte());
-                        break;*/
-
-                    // TopOrder 0x2B = 43
-
-                    // Writeable3 0x2C = 44 -- deprecated
-                    //>> end of 1-byte aligned attributes
-
-                    // WareId 0x2D = 45
+                    case ItemAttributes.ClientId:
+                        current.SetClientId(itemStream.ReadUInt16());
+                        break;
 
                     default:
                         itemStream.Skip(dataSize);
@@ -282,10 +226,10 @@ namespace COMMO.Server.Items
 
             for (ushort key = serverId; key < serverId + aplyTo; key++)
             {
-					if (!itemDictionary.TryGetValue(key, out ItemType current))
-						continue;
+				if (!itemDictionary.TryGetValue(key, out ItemType current))
+					continue;
 
-					var name = element.Attribute("name");
+				var name = element.Attribute("name");
                 if (name != null)
                     current.SetName(name.Value);
 
@@ -362,6 +306,43 @@ namespace COMMO.Server.Items
 
         return itemDictionary;
     }
+		
+    }
 
+	public enum ItemAttributes : byte
+    {
+        ServerId = 0x10,
+        ClientId,
+        Name,
+        Description,
+        Speed,
+        Slot,
+        MaxItems,
+        Weight,
+        Weapon,
+        Ammunition,
+        Armor,
+        MagicLevel,
+        MagicFieldType,
+        Writeable,
+        RotateTo,
+        Decay,
+        SpriteHash,
+        MiniMapColor,
+        Attr07,
+        Attr08,
+        Light,
+
+        //1-byte aligned
+        Decay2, //deprecated
+        Weapon2, //deprecated
+        Ammunition2, //deprecated
+        Armor2, //deprecated
+        Writeable2, //deprecated
+        Light2,
+        TopOrder,
+        Writeable3, //deprecated
+
+        WareId
     }
 }
