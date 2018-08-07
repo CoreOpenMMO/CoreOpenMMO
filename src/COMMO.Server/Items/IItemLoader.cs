@@ -4,11 +4,12 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
 
-namespace COMMO.Server.Items {
-	using System.Collections.Generic;
-
-	public interface IItemLoader {
-		Dictionary<ushort, ItemType> LoadOTItems();
-	}
+namespace COMMO.Server.Items
+{
+    public interface IItemLoader
+    {
+        Dictionary<ushort, ItemType> LoadOTItems();
+    }
 }

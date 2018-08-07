@@ -26,7 +26,7 @@ namespace COMMO.Server.Items
 
         public bool Locked { get; private set; }
 
-        public ushort ClientId => Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(DefaultAttributes[ItemAttribute.DisguiseTarget]) : TypeId;
+        public ushort ClientId { get; private set; }
 
         public ItemType()
         {
@@ -51,6 +51,11 @@ namespace COMMO.Server.Items
             }
 
             TypeId = typeId;
+        }
+
+		public void SetClientId(ushort clientId)
+        {
+            ClientId = clientId;
         }
 
         public void SetName(string name)
@@ -99,15 +104,12 @@ namespace COMMO.Server.Items
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
+			
+			if (!Enum.TryParse(attributeName, out ItemAttribute attribute)) {
+				throw new InvalidDataException($"Attempted to set an unknown Item attribute [{attributeName}].");
+			}
 
-            ItemAttribute attribute;
-
-            if (!Enum.TryParse(attributeName, out attribute))
-            {
-                throw new InvalidDataException($"Attempted to set an unknown Item attribute [{attributeName}].");
-            }
-
-            DefaultAttributes[attribute] = attributeValue;
+			DefaultAttributes[attribute] = attributeValue;
         }
 
         public void ParseOTFlags(UInt32 flags)
@@ -192,10 +194,8 @@ namespace COMMO.Server.Items
 
         public bool ParseOTWeaponType(string type)
         {
-            bool success;
-
-            var value = OpenTibiaTranslationMap.TranslateMeeleWeaponTypeName(type, out success);
-            if (success)
+			var value = OpenTibiaTranslationMap.TranslateMeeleWeaponTypeName(type, out bool success);
+			if (success)
                 SetAttribute(ItemAttribute.WeaponType, value);
             else
             {

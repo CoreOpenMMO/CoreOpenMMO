@@ -21,11 +21,24 @@
 
   <ItemGroup>
     <None Remove="Data\dat\circles.dat" />
+    <None Remove="Data\items\items.otb" />
+    <None Remove="Data\items\items.xml" />
+    <None Remove="Data\map\COMMO-house.xml" />
+    <None Remove="Data\map\COMMO-spawn.xml" />
+    <None Remove="Data\map\COMMO.otbm" />
+    <None Remove="Data\map\world-house.xml" />
+    <None Remove="Data\map\world-spawn.xml" />
+    <None Remove="Data\map\world.otbm" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\dat\circles.dat" />
+    <EmbeddedResource Include="Data\items\items.otb" />
+    <EmbeddedResource Include="Data\items\items.xml" />
+    <EmbeddedResource Include="Data\map\COMMO-house.xml" />
+    <EmbeddedResource Include="Data\map\COMMO-spawn.xml" />
+    <EmbeddedResource Include="Data\map\COMMO.otbm" />
   </ItemGroup>
 
   <ItemGroup>

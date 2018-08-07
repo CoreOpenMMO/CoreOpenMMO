@@ -65,7 +65,7 @@ namespace COMMO.Communications
 
             Socket = ((TcpListener)ar.AsyncState).EndAcceptSocket(ar);
             Stream = new NetworkStream(Socket);
-
+			
             if (SimpleDoSDefender.Instance.IsBlockedAddress(SourceIp))
             {
                 // TODO: evaluate if it is worth just leaving the connection open but ignore it, so that they think they are successfully DoSing...

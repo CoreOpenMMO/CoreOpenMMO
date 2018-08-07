@@ -129,12 +129,11 @@ namespace COMMO.Server.Map {
                 return new byte[0];
             }
 
-            if (tile.CachedDescription != null)
-            {
-                return tile.CachedDescription;
-            }
+			if (tile.CachedDescription != null) {
+				return tile.CachedDescription;
+			}
 
-            var tempBytes = new List<byte>();
+			var tempBytes = new List<byte>();
 
             var count = 0;
             const int numberOfObjectsLimit = 9;

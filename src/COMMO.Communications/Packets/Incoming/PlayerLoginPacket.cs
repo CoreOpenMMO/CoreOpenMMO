@@ -4,6 +4,7 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Configuration;
 using COMMO.Server.Data;
 using COMMO.Server.Data.Interfaces;
 
@@ -19,8 +20,10 @@ namespace COMMO.Communications.Packets.Incoming
 			XteaKey[2] = message.GetUInt32();
 			XteaKey[3] = message.GetUInt32();
 
-			Os = message.GetUInt16();
-			Version = message.GetUInt16();
+			//if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt <= 770) {
+			//	Os = message.GetUInt16();
+			//	ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt = message.GetUInt16();
+			//}
 
 			IsGm = message.GetByte() > 0;
 
