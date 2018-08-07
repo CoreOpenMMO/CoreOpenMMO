@@ -3,9 +3,9 @@ namespace COMMO.Communications.Criptography {
 	using System.Runtime.InteropServices;
 
 	public static class XTea {
+		public const int MessageBlockSizeInBytes = 2 * sizeof(UInt32);
+		public const int KeySizeInBytes = 4 * sizeof(UInt32);
 		private const int DefaultOTCRoundCount = 32;
-		private const int MessageBlockSizeInBytes = 2 * sizeof(UInt32);
-		private const int KeySizeInBytes = 4 * sizeof(UInt32);
 
 		private const uint BakedSum = 0xC6EF3720;
 		private const uint Delta = 0x9E3779B9;
@@ -13,7 +13,7 @@ namespace COMMO.Communications.Criptography {
 		public static Span<byte> Encrypt(ReadOnlySpan<byte> message, ReadOnlySpan<byte> key, int rounds = DefaultOTCRoundCount) {
 			ThrowIfArgumentsAreInvalid(message, key);
 
-			var clone = new Span<byte>(new byte[message.Length]);
+			var clone = new byte[message.Length];
 			message.CopyTo(clone);
 			EncryptInplace(clone, key, rounds);
 			return clone;
@@ -42,7 +42,7 @@ namespace COMMO.Communications.Criptography {
 		public static Span<byte> Decrypt(ReadOnlySpan<byte> message, ReadOnlySpan<byte> key, int rounds = DefaultOTCRoundCount) {
 			ThrowIfArgumentsAreInvalid(message, key);
 
-			var clone = new Span<byte>(new byte[message.Length]);
+			var clone = new byte[message.Length];
 			message.CopyTo(clone);
 			DecryptInplace(clone, key, rounds);
 			return clone;
@@ -75,7 +75,7 @@ namespace COMMO.Communications.Criptography {
 			if (message.Length % MessageBlockSizeInBytes != 0)
 				throw new ArgumentException(nameof(message) + $"'s size, in bytes, must be a multiple of {MessageBlockSizeInBytes}.");
 			if (key.Length != KeySizeInBytes)
-				throw new ArgumentOutOfRangeException(nameof(key) + $"'s size, in bytes, must be exactly {KeySizeInBytes}.");
+				throw new ArgumentException(nameof(key) + $"'s size, in bytes, must be exactly {KeySizeInBytes}.");
 		}
 	}
 }
