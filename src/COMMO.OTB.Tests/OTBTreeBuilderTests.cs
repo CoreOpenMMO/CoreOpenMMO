@@ -5,7 +5,7 @@ namespace COMMO.OTB.Tests {
 
 		[Test]
 		public void WeNeedToWriteTestsForThis() {
-			Assert.Fail("WeNeedToWriteTestsForThis");
+			Assert.Fail("We need to write tests for this.");
 		}
 	}
 }

@@ -11,12 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using System.Xml;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
-using COMMO.Data.Contracts;
 
 namespace COMMO.Server.Items {
 	public class ObjectsFileItemLoader : IItemLoader {
@@ -30,345 +27,314 @@ namespace COMMO.Server.Items {
 
          */
 
-        public const char CommentSymbol = '#';
-        public const char PropertyValueSeparator = '=';
-
-        public Dictionary<ushort, ItemType> Load(string objectsFileName)
-        {
-            if (string.IsNullOrWhiteSpace(objectsFileName))
-            {
-                throw new ArgumentNullException(nameof(objectsFileName));
-            }
-
-            var itemDictionary = new Dictionary<ushort, ItemType>();
-            var objectsFilePath = "COMMO.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + objectsFileName;
-
-            var assembly = Assembly.GetExecutingAssembly();
-
-            using (var stream = assembly.GetManifestResourceStream(objectsFilePath))
-            {
-                if (stream == null)
-                {
-                    throw new Exception($"Failed to load {objectsFilePath}.");
-                }
-
-                using (var reader = new StreamReader(stream))
-                {
-                    var current = new ItemType();
-
-                    foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray()))
-                    {
-                        if (readLine == null)
-                        {
-                            continue;
-                        }
-
-                        var inLine = readLine.Split(new[] { CommentSymbol }, 2).FirstOrDefault();
-
-                        // ignore comments and empty lines.
-                        if (string.IsNullOrWhiteSpace(inLine))
-                        {
-                            // wrap up the current ItemType and add it if it has enought properties set:
-                            if (current.TypeId == 0 || string.IsNullOrWhiteSpace(current.Name))
-                            {
-                                continue;
-                            }
-
-                            current.LockChanges();
-                            itemDictionary.Add(current.TypeId, current);
-
-                            current = new ItemType();
-                            continue;
-                        }
-
-                        var data = inLine.Split(new[] { PropertyValueSeparator }, 2);
-
-                        if (data.Length != 2)
-                        {
-                            throw new Exception($"Malformed line [{inLine}] in objects file: [{objectsFilePath}]");
-                        }
-
-                        var propName = data[0].ToLower().Trim();
-                        var propData = data[1].Trim();
-
-                        switch (propName)
-                        {
-                            case "typeid":
-                                current.SetId(Convert.ToUInt16(propData));
-                                break;
-                            case "name":
-                                current.SetName(propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)));
-                                break;
-                            case "description":
-                                current.SetDescription(propData);
-                                break;
-                            case "flags":
-                                foreach (var element in CipParser.Parse(propData))
-                                {
-                                    ItemFlag flagMatch;
-
-                                    var flagName = element.Attributes.FirstOrDefault()?.Name;
-
-                                    if (Enum.TryParse(flagName, out flagMatch))
-                                    {
-                                        current.SetFlag(flagMatch);
-                                    }
-                                    else
-                                    {
-                                        // TODO: proper logging.
-                                        Console.WriteLine($"Unknown flag [{flagName}] found on item with TypeID [{current.TypeId}].");
-                                    }
-                                }
-
-                                break;
-                            case "attributes":
-                                foreach (var attrStr in propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)).Split(','))
-                                {
-                                    var attrPair = attrStr.Split('=');
-
-                                    if (attrPair.Length != 2)
-                                    {
-                                        throw new InvalidDataException($"Invalid attribute {attrStr}.");
-                                    }
+		public const char CommentSymbol = '#';
+		public const char PropertyValueSeparator = '=';
+
+		public Dictionary<ushort, ItemType> Load(string objectsFileName) {
+			if (string.IsNullOrWhiteSpace(objectsFileName)) {
+				throw new ArgumentNullException(nameof(objectsFileName));
+			}
+
+			var itemDictionary = new Dictionary<ushort, ItemType>();
+			var objectsFilePath = "COMMO.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + objectsFileName;
+
+			var assembly = Assembly.GetExecutingAssembly();
+
+			using (var stream = assembly.GetManifestResourceStream(objectsFilePath)) {
+				if (stream == null) {
+					throw new Exception($"Failed to load {objectsFilePath}.");
+				}
+
+				using (var reader = new StreamReader(stream)) {
+					var current = new ItemType();
+
+					foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray())) {
+						if (readLine == null) {
+							continue;
+						}
+
+						var inLine = readLine.Split(new[] { CommentSymbol }, 2).FirstOrDefault();
+
+						// ignore comments and empty lines.
+						if (string.IsNullOrWhiteSpace(inLine)) {
+							// wrap up the current ItemType and add it if it has enought properties set:
+							if (current.TypeId == 0 || string.IsNullOrWhiteSpace(current.Name)) {
+								continue;
+							}
+
+							current.LockChanges();
+							itemDictionary.Add(current.TypeId, current);
+
+							current = new ItemType();
+							continue;
+						}
+
+						var data = inLine.Split(new[] { PropertyValueSeparator }, 2);
+
+						if (data.Length != 2) {
+							throw new Exception($"Malformed line [{inLine}] in objects file: [{objectsFilePath}]");
+						}
+
+						var propName = data[0].ToLower().Trim();
+						var propData = data[1].Trim();
+
+						switch (propName) {
+							case "typeid":
+								current.SetId(Convert.ToUInt16(propData));
+								break;
+							case "name":
+								current.SetName(propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)));
+								break;
+							case "description":
+								current.SetDescription(propData);
+								break;
+							case "flags":
+								foreach (var element in CipParser.Parse(propData)) {
 
-                                    current.SetAttribute(attrPair[0], Convert.ToInt32(attrPair[1]));
-                                }
+									var flagName = element.Attributes.FirstOrDefault()?.Name;
 
-                                break;
-                        }
-                    }
+									if (Enum.TryParse(flagName, out ItemFlag flagMatch)) {
+										current.SetFlag(flagMatch);
+									}
+									else {
+										// TODO: proper logging.
+										Console.WriteLine($"Unknown flag [{flagName}] found on item with TypeID [{current.TypeId}].");
+									}
+								}
 
-                    // wrap up the last ItemType and add it if it has enought properties set:
-                    if (current.TypeId != 0 && string.IsNullOrWhiteSpace(current.Name))
-                    {
-                        current.LockChanges();
-                        itemDictionary.Add(current.TypeId, current);
-                    }
-                }
-            }
+								break;
+							case "attributes":
+								foreach (var attrStr in propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)).Split(',')) {
+									var attrPair = attrStr.Split('=');
 
-            return itemDictionary;
-        }
+									if (attrPair.Length != 2) {
+										throw new InvalidDataException($"Invalid attribute {attrStr}.");
+									}
 
-    public Dictionary<ushort, ItemType> LoadOTItems()
-    {
-        var itemDictionary = new Dictionary<UInt16, ItemType>();
+									current.SetAttribute(attrPair[0], Convert.ToInt32(attrPair[1]));
+								}
 
-        var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
-        var itemFilePath = baseDataDir + "/items/items.otb";
-        var itemExtensionFilePath = baseDataDir + "/items/items.xml";
+								break;
+						}
+					}
 
-        if (!File.Exists(itemFilePath))
-        {
-            throw new Exception($"Failed to load {itemFilePath}.");
-        }
+					// wrap up the last ItemType and add it if it has enought properties set:
+					if (current.TypeId != 0 && string.IsNullOrWhiteSpace(current.Name)) {
+						current.LockChanges();
+						itemDictionary.Add(current.TypeId, current);
+					}
+				}
+			}
 
-        var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)));
-        foreach (var itemChildren in fileTree.Children)
-        {
-            var current = new ItemType();
-            var itemStream = new OTBParsingStream(itemChildren.Data);
+			return itemDictionary;
+		}
 
-            var flags = itemStream.ReadUInt32();
-            current.ParseOTFlags(flags);
+		public Dictionary<ushort, ItemType> LoadOTItems() {
+			var itemDictionary = new Dictionary<UInt16, ItemType>();
 
-            while (!itemStream.IsOver)
-            {
-                var attr = itemStream.ReadByte();
-                var dataSize = itemStream.ReadUInt16();
+			var baseDataDir = Directory.GetParent(Directory.GetCurrentDirectory()) + "/COMMO.Server/Data";
+			var itemFilePath = baseDataDir + "/items/items.otb";
+			var itemExtensionFilePath = baseDataDir + "/items/items.xml";
 
-                switch (attr)
-                {
-                    case 0x10: // ServerID 0x10 = 16
-                        current.SetId(itemStream.ReadUInt16());
-                        break;
+			if (!File.Exists(itemFilePath)) {
+				throw new Exception($"Failed to load {itemFilePath}.");
+			}
 
-                    // ClientId 0x11 = 17 -- unused
+			var formatIdentifierPrefixLength = 4;
+			var fileTree = OTBDeserializer.DeserializeOTBData(
+				serializedOTBData: new ReadOnlyMemory<byte>(File.ReadAllBytes(itemFilePath)),
+				skipFirstBytes: formatIdentifierPrefixLength);
 
-                    /*case 0x12: // Name 0x12 = 18
-                        current.SetName(itemStream.ReadString());
-                        break;*/
+			foreach (var itemChildren in fileTree.Children) {
+				var current = new ItemType();
+				var itemStream = new OTBParsingStream(itemChildren.Data);
 
-                    /*case 0x13: // Description 0x13 = 19
-                        current.SetDescription(itemStream.ReadString());
-                        break;*/
+				var flags = itemStream.ReadUInt32();
+				current.ParseOTFlags(flags);
 
-                    // Speed 0x14 = 20
+				while (!itemStream.IsOver) {
+					var attr = itemStream.ReadByte();
+					var dataSize = itemStream.ReadUInt16();
 
-                    // Slot 0x15 = 21
+					switch (attr) {
+						case 0x10: // ServerID 0x10 = 16
+							current.SetId(itemStream.ReadUInt16());
+							break;
 
-                    // MaxItems 0x16 = 22
+						// ClientId 0x11 = 17 -- unused
 
-                    /*case 0x17: // Weight 0x17 = 23
-                        current.SetAttribute(ItemAttribute.Weight, itemStream.ReadUInt16());
-                        break;*/
+						/*case 0x12: // Name 0x12 = 18
+							current.SetName(itemStream.ReadString());
+							break;*/
 
-                    // Weapon 0x18 = 24
+						/*case 0x13: // Description 0x13 = 19
+							current.SetDescription(itemStream.ReadString());
+							break;*/
 
-                    // Amunition 0x19 = 25
+						// Speed 0x14 = 20
 
-                    // Armor 0x1A = 26
+						// Slot 0x15 = 21
 
-                    // MagicLevel 0x1B = 27
+						// MaxItems 0x16 = 22
 
-                    // MagicFieldType 0x1C = 28
+						/*case 0x17: // Weight 0x17 = 23
+							current.SetAttribute(ItemAttribute.Weight, itemStream.ReadUInt16());
+							break;*/
 
-                    // Writeable 0x1D = 29
+						// Weapon 0x18 = 24
 
-                    // RotateTo 0x1E = 30
+						// Amunition 0x19 = 25
 
-                    // Decay 0x1F = 31
+						// Armor 0x1A = 26
 
-                    // SpriteHash 0x20 = 32
+						// MagicLevel 0x1B = 27
 
-                    // MinimapColor 0x21 = 33
+						// MagicFieldType 0x1C = 28
 
-                    // 07? 0x22 = 34
+						// Writeable 0x1D = 29
 
-                    // 08? 0x23 = 35
+						// RotateTo 0x1E = 30
 
-                    // Light 0x24 = 36
+						// Decay 0x1F = 31
 
-                    //>> 1-byte aligned
-                    // Decay2 0x25 = 37  -- deprecated
+						// SpriteHash 0x20 = 32
 
-                    // Weapon2 0x26 = 38 -- deprecated
+						// MinimapColor 0x21 = 33
 
-                    // Amunition2 0x27 = 39 -- deprecated
+						// 07? 0x22 = 34
 
-                    // Armor2 0x28 = 40 -- deprecated
+						// 08? 0x23 = 35
 
-                    // Writeable2 0x29 = 41 -- deprecated
+						// Light 0x24 = 36
 
-                    /*case 0x2A: // Light2 0x2A = 42
-                        current.SetAttribute(ItemAttribute.Brightness, itemStream.ReadByte());
-                        current.SetAttribute(ItemAttribute.LightColor, itemStream.ReadByte());
-                        break;*/
+						//>> 1-byte aligned
+						// Decay2 0x25 = 37  -- deprecated
 
-                    // TopOrder 0x2B = 43
+						// Weapon2 0x26 = 38 -- deprecated
 
-                    // Writeable3 0x2C = 44 -- deprecated
-                    //>> end of 1-byte aligned attributes
+						// Amunition2 0x27 = 39 -- deprecated
 
-                    // WareId 0x2D = 45
+						// Armor2 0x28 = 40 -- deprecated
 
-                    default:
-                        itemStream.Skip(dataSize);
-                        break;
-                }
-            }
-            itemDictionary.Add(current.TypeId, current);
-        }
+						// Writeable2 0x29 = 41 -- deprecated
 
-        if (!File.Exists(itemExtensionFilePath))
-        {
-            throw new Exception($"Failed to load {itemFilePath}.");
-        }
+						/*case 0x2A: // Light2 0x2A = 42
+							current.SetAttribute(ItemAttribute.Brightness, itemStream.ReadByte());
+							current.SetAttribute(ItemAttribute.LightColor, itemStream.ReadByte());
+							break;*/
 
-        var rootElement = XElement.Load(itemExtensionFilePath, LoadOptions.SetLineInfo);
+						// TopOrder 0x2B = 43
 
-        foreach (var element in rootElement.Elements("item"))
-        {
-            var id = element.Attribute("id");
-            var fromId = element.Attribute("fromid");
-            var toId = element.Attribute("toid");
+						// Writeable3 0x2C = 44 -- deprecated
+						//>> end of 1-byte aligned attributes
 
-            // Malformed element, missing id information, ignore it
-            if (id == null && (fromId == null || toId == null))
-                continue;
+						// WareId 0x2D = 45
 
-            ushort serverId = 0;
-            ushort aplyTo = 1;
-            if (id == null)
-            {
-                // Ignore if can't parse the values or if fromId >= toId
-                if (!ushort.TryParse(fromId.Value, out serverId) || !ushort.TryParse(toId.Value, out aplyTo) || serverId >= aplyTo)
-                    continue;
+						default:
+							itemStream.Skip(dataSize);
+							break;
+					}
+				}
+				itemDictionary.Add(current.TypeId, current);
+			}
 
-                aplyTo -= serverId;
-            }
-            else
-            {
-                if (!ushort.TryParse(id.Value, out serverId))
-                    continue;
-            }
+			if (!File.Exists(itemExtensionFilePath)) {
+				throw new Exception($"Failed to load {itemFilePath}.");
+			}
 
-            for (ushort key = serverId; key < serverId + aplyTo; key++)
-            {
-                ItemType current;
-                if (!itemDictionary.TryGetValue(key, out current))
-                    continue;
+			var rootElement = XElement.Load(itemExtensionFilePath, LoadOptions.SetLineInfo);
 
-                var name = element.Attribute("name");
-                if (name != null)
-                    current.SetName(name.Value);
+			foreach (var element in rootElement.Elements("item")) {
+				var id = element.Attribute("id");
+				var fromId = element.Attribute("fromid");
+				var toId = element.Attribute("toid");
 
-                foreach (var attribute in element.Elements("attribute"))
-                {
-                    var attrName = attribute.Attribute("key");
-                    var attrValue = attribute.Attribute("value");
+				// Malformed element, missing id information, ignore it
+				if (id == null && (fromId == null || toId == null))
+					continue;
 
-                    if (attrName == null || attrValue == null)
-                        continue;
+				ushort serverId = 0;
+				ushort aplyTo = 1;
+				if (id == null) {
+					// Ignore if can't parse the values or if fromId >= toId
+					if (!ushort.TryParse(fromId.Value, out serverId) || !ushort.TryParse(toId.Value, out aplyTo) || serverId >= aplyTo)
+						continue;
 
-                    if (attrName.Value == "description")
-                    {
-                        current.SetDescription(attrValue.Value);
-                        continue;
-                    }
+					aplyTo -= serverId;
+				}
+				else {
+					if (!ushort.TryParse(id.Value, out serverId))
+						continue;
+				}
 
-                    var lineInfo = (IXmlLineInfo) attribute;
-                    bool success;
-                    var attr = OpenTibiaTranslationMap.TranslateAttributeName(attrName.Value, out success);
+				for (ushort key = serverId; key < serverId + aplyTo; key++) {
+					if (!itemDictionary.TryGetValue(key, out ItemType current))
+						continue;
 
-                    if (success)
-                    {
-                        int value = -1;
-                        bool setAttr = true;
-                        switch (attrName.Value)
-                        {
-                            case "weaponType":
-                                success = current.ParseOTWeaponType(attrValue.Value);
-                                setAttr = false;
-                                break;
+					var name = element.Attribute("name");
+					if (name != null)
+						current.SetName(name.Value);
 
-                            case "fluidSource":
-                                value = OpenTibiaTranslationMap.TranslateLiquidType(attrValue.Value, out success);
-                                break;
+					foreach (var attribute in element.Elements("attribute")) {
+						var attrName = attribute.Attribute("key");
+						var attrValue = attribute.Attribute("value");
 
-                            case "corpseType":
-                                value = OpenTibiaTranslationMap.TranslateCorpseType(attrValue.Value, out success);
-                                break;
+						if (attrName == null || attrValue == null)
+							continue;
 
-                            case "slotType":
-                                value = OpenTibiaTranslationMap.TranslateSlotType(attrValue.Value, out success);
-                                break;
+						if (attrName.Value == "description") {
+							current.SetDescription(attrValue.Value);
+							continue;
+						}
 
-                            default:
-                                success = int.TryParse(attrValue.Value, out value);
-                                break;
-                        }
+						var lineInfo = (IXmlLineInfo)attribute;
+						var attr = OpenTibiaTranslationMap.TranslateAttributeName(attrName.Value, out bool success);
 
-                        if (!success)
-                            Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] \"{attrValue.Value}\" is not a valid value for attribute \"{attrName.Value}\"");
-                        else if (setAttr)
-                            current.SetAttribute(attr, value);
+						if (success) {
+							int value = -1;
+							bool setAttr = true;
+							switch (attrName.Value) {
+								case "weaponType":
+									success = current.ParseOTWeaponType(attrValue.Value);
+									setAttr = false;
+									break;
 
-                    }
-                    else
-                        Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] Attribute \"{attrName.Value}\" is not supported!");
-                }
+								case "fluidSource":
+									value = OpenTibiaTranslationMap.TranslateLiquidType(attrValue.Value, out success);
+									break;
 
-            }
-        }
+								case "corpseType":
+									value = OpenTibiaTranslationMap.TranslateCorpseType(attrValue.Value, out success);
+									break;
 
-        foreach (var type in itemDictionary)
-        {
-            type.Value.LockChanges();
-        }
+								case "slotType":
+									value = OpenTibiaTranslationMap.TranslateSlotType(attrValue.Value, out success);
+									break;
 
-        return itemDictionary;
-    }
+								default:
+									success = int.TryParse(attrValue.Value, out value);
+									break;
+							}
 
-    }
+							if (!success)
+								Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] \"{attrValue.Value}\" is not a valid value for attribute \"{attrName.Value}\"");
+							else if (setAttr)
+								current.SetAttribute(attr, value);
+
+						}
+						else
+							Console.WriteLine($"[{Path.GetFileName(itemExtensionFilePath)}:{lineInfo.LineNumber}] Attribute \"{attrName.Value}\" is not supported!");
+					}
+
+				}
+			}
+
+			foreach (var type in itemDictionary) {
+				type.Value.LockChanges();
+			}
+
+			return itemDictionary;
+		}
+
+	}
 }
