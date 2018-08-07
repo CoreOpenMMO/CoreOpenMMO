@@ -33,11 +33,9 @@ namespace COMMO.Server.World {
 		/// </summary>
 		public static World LoadWorld(ReadOnlyMemory<byte> serializedWorldData) {
 			var world = new World();
-
-			var otbmFormatSpecifierLength = 4;
+			
 			var rootNode = OTBDeserializer.DeserializeOTBData(
-				serializedOTBData: serializedWorldData,
-				skipFirstBytes: otbmFormatSpecifierLength);
+				serializedOTBData: serializedWorldData);
 
 			ParseOTBTreeRootNode(rootNode);
 
