@@ -316,9 +316,12 @@ namespace COMMO.Server.Data
             _position += count;
         }
 
-        public void RsaDecrypt()
+        public void RsaDecrypt(bool useCipKeys = true, bool useRsa2 = false)
         {
-			Rsa.Decrypt(ref _buffer, _position, _length);
+			if (!useRsa2)
+				Rsa.Decrypt(ref _buffer, _position, _length, useCipKeys);
+			else
+				Rsa2.Decrypt(ref _buffer, _position, _length);
         }
 
         public bool XteaDecrypt(uint[] key)

@@ -4,6 +4,7 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using COMMO.Configuration;
 using COMMO.Server.Data;
 using COMMO.Server.Data.Interfaces;
 
@@ -14,7 +15,7 @@ namespace COMMO.Communications.Packets.Incoming
         public NewConnectionPacket(NetworkMessage message)
         {
 			Os = message.GetUInt16();
-			Version = message.GetUInt16();
+			ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt = message.GetUInt16();
 
             message.SkipBytes(12);
         }

@@ -22,18 +22,16 @@ namespace COMMO.Server.Handlers
         {
             var playerLoginPacket = new PlayerLoginPacket(message);
             connection.SetXtea(playerLoginPacket.XteaKey);
+			
+			if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt < ServiceConfiguration.GetConfiguration().ClientMinVersionInt ||
+				playerLoginPacket.Version > ServiceConfiguration.GetConfiguration().ClientMaxVersionInt) {
 
-            var gameConfig = ServiceConfiguration.GetConfiguration();
-
-			if (playerLoginPacket.Version < gameConfig.ClientMinVersionInt || playerLoginPacket.Version > gameConfig.ClientMaxVersionInt) {
 				ResponsePackets.Add(new GameServerDisconnectPacket {
-					Reason = $"You need client version in between {gameConfig.ClientMinVersionString} and {gameConfig.ClientMaxVersionString} to connect to this server."
+					Reason = $"You need client version in between {ServiceConfiguration.GetConfiguration().ClientMinVersionString} and {ServiceConfiguration.GetConfiguration().ClientMaxVersionString} to connect to this server."
 				});
 
 				return;
 			}
-
-			gameConfig.ReceivedClientVersionInt = playerLoginPacket.Version;
 
             if (Game.Instance.Status == WorldState.Creating)
             {
