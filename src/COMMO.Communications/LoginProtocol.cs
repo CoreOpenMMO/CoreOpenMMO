@@ -53,42 +53,23 @@ namespace COMMO.Communications
             var newConnPacket = new NewConnectionPacket(inboundMessage);
             var gameConfig = ServiceConfiguration.GetConfiguration();
 
-            //if (newConnPacket.Version != gameConfig.ClientVersionInt)
-            //{
-            //    // TODO: hardcoded messages.
-            //    SendDisconnect(connection, $"You need client version {gameConfig.ClientVersionString} to connect to this server.");
-            //    return;
-            //}
+			if (newConnPacket.Version < gameConfig.ClientMinVersionInt || newConnPacket.Version > gameConfig.ClientMaxVersionInt) {
 
-            // Make a copy of the message in case we fail to decrypt using the first set of keys.
-            var messageCopy = NetworkMessage.Copy(inboundMessage);
+				//ResponsePackets.Add(new GameServerDisconnectPacket {
+				//	Reason = $"You need client version in between {gameConfig.ClientMinVersionString} and {gameConfig.ClientMaxVersionString} to connect to this server."
+				//});
 
-            inboundMessage.RsaDecrypt(useCipKeys: gameConfig.UsingCipsoftRsaKeys);
+				return;
+			}
+
+			gameConfig.ReceivedClientVersionInt = newConnPacket.Version;
+
+			inboundMessage.RsaDecrypt();
 
             if (inboundMessage.GetByte() != 0) // means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
             {
-                inboundMessage = messageCopy;
-
-                inboundMessage.RsaDecrypt(useCipKeys: !gameConfig.UsingCipsoftRsaKeys);
-
-                if (inboundMessage.GetByte() != 0)
-                {
-                    // These RSA keys are also unsuccessful... give up.
-                    // loginPacket = new AccountLoginPacket(inboundMessage);
-
-                    // connection.SetXtea(loginPacket?.XteaKey);
-
-                    //// TODO: hardcoded messages.
-                    // if (gameConfig.UsingCipsoftRSAKeys)
-                    // {
-                    //    SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that does not replace the RSA Keys.\nWe recommend using Tibia Loader's 7.7 client.\nYou may also download the client from out website.");
-                    // }
-                    // else
-                    // {
-                    //    SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that replaces the RSA Keys.\nWe recommend using OTLand's IP changer with a virgin 7.7 client.\nYou may also download the client from out website.");
-                    // }
-                    return;
-                }
+				connection.Close();
+                return;
             }
 
             IAccountLoginInfo loginPacket = new AccountLoginPacket(inboundMessage);

@@ -21,7 +21,7 @@ namespace COMMO.Communications
         /// <param name="handlerFactory">The handler factory that this listener will use.</param>
         /// <param name="port">The port where this listener will listen.</param>
         public GameListener(IHandlerFactory handlerFactory, int port = DefaultGameListenerPort)
-            : base(port, ProtocolFactory.CreateForType(OpenTibiaProtocolType.GameProtocol, handlerFactory), OpenTibiaProtocolType.GameProtocol)
+            : base(port, ProtocolFactory.CreateForType(OpenTibiaProtocolType.GameProtocol, handlerFactory))
         {
         }
     }

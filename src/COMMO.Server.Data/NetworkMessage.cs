@@ -18,13 +18,11 @@ namespace COMMO.Server.Data
         private readonly int _bufferSize = 16394;
         private int _length;
         private int _position;
-        private int _headerPosition;
 
         public int Length => _length;
 
         public int Position => _position;
 		
-        public int HeaderPosition => _headerPosition;
 
         public byte[] Buffer => _buffer;
 
@@ -38,14 +36,6 @@ namespace COMMO.Server.Data
         public NetworkMessage(int startingIndex)
         {
             Reset(startingIndex);
-        }
-
-		public NetworkMessage(bool firstmessage)
-        {
-            _buffer = new byte[_bufferSize];
-            _length = 0;
-            _position = 6;
-			_headerPosition = 6;
         }
 
         public void Reset(int startingIndex)
@@ -326,9 +316,9 @@ namespace COMMO.Server.Data
             _position += count;
         }
 
-        public void RsaDecrypt(bool useCipKeys = true)
+        public void RsaDecrypt()
         {
-            Rsa.Decrypt(ref _buffer, _position, _length, useCipKeys);
+			Rsa.Decrypt(ref _buffer, _position, _length);
         }
 
         public bool XteaDecrypt(uint[] key)

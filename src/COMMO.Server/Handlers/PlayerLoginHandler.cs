@@ -25,15 +25,15 @@ namespace COMMO.Server.Handlers
 
             var gameConfig = ServiceConfiguration.GetConfiguration();
 
-            if (playerLoginPacket.Version != gameConfig.ClientVersionInt)
-            {
-                ResponsePackets.Add(new GameServerDisconnectPacket
-                {
-                    Reason = $"You need client version {gameConfig.ClientVersionString} to connect to this server."
-                });
+			if (playerLoginPacket.Version < gameConfig.ClientMinVersionInt || playerLoginPacket.Version > gameConfig.ClientMaxVersionInt) {
+				ResponsePackets.Add(new GameServerDisconnectPacket {
+					Reason = $"You need client version in between {gameConfig.ClientMinVersionString} and {gameConfig.ClientMaxVersionString} to connect to this server."
+				});
 
-                return;
-            }
+				return;
+			}
+
+			gameConfig.ReceivedClientVersionInt = playerLoginPacket.Version;
 
             if (Game.Instance.Status == WorldState.Creating)
             {

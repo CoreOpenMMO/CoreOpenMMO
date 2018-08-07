@@ -47,27 +47,18 @@ namespace COMMO.Communications
                     connection.Close();
                     return;
                 }
-
-                var gameConfig = ServiceConfiguration.GetConfiguration();
-
-                // Make a copy of the message in case we fail to decrypt using the first set of keys.
-                var messageCopy = NetworkMessage.Copy(inboundMessage);
-
-                inboundMessage.RsaDecrypt(useCipKeys: gameConfig.UsingCipsoftRsaKeys);
+				
+				if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt > 770) {
+					var os = inboundMessage.GetUInt16();
+					var version = inboundMessage.GetUInt16();
+				}
+			
+				inboundMessage.RsaDecrypt();
 
                 if (inboundMessage.GetByte() != 0)
                 {
-                    // means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
-                    inboundMessage = messageCopy;
-
-                    inboundMessage.RsaDecrypt(useCipKeys: !gameConfig.UsingCipsoftRsaKeys);
-
-                    if (inboundMessage.GetByte() != 0)
-                    {
-                        // These RSA keys are also usuccessful... so give up.
-                        connection.Close();
-                        return;
-                    }
+					connection.Close();
+					return;
                 }
             }
             else

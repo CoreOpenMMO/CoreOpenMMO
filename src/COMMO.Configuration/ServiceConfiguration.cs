@@ -37,9 +37,15 @@ namespace COMMO.Configuration
 
         public string GameVersionString { get; set; }
 
-        public int ClientVersionInt { get; set; }
+        public int ClientMinVersionInt { get; set; }
 
-        public string ClientVersionString { get; set; }
+        public string ClientMinVersionString { get; set; }
+		
+        public int ClientMaxVersionInt { get; set; }
+
+        public string ClientMaxVersionString { get; set; }
+		
+        public int ReceivedClientVersionInt { get; set; }
 
         public string WebsiteUrl { get; set; }
 
@@ -67,8 +73,11 @@ namespace COMMO.Configuration
                             UsingCipsoftRsaKeys = true,
                             GameVersionInt = 10,
                             GameVersionString = "0.1",
-                            ClientVersionInt = 770,
-                            ClientVersionString = "7.7",
+                            ClientMinVersionInt = 770,
+                            ClientMinVersionString = "7.70",
+                            ClientMaxVersionInt = 772,
+                            ClientMaxVersionString = "7.72",
+							ReceivedClientVersionInt = 00,
                             WorldType = WorldType.Hardcore,
                             PublicGameIpAddress = IPAddress.Parse("127.0.0.1"),
                             PublicGamePort = 7172,
