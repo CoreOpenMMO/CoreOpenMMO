@@ -18,12 +18,7 @@ namespace COMMO.Communications
 
         protected OpenTibiaProtocol(IHandlerFactory handlerFactory)
         {
-            if (handlerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(handlerFactory));
-            }
-
-            HandlerFactory = handlerFactory;
+			HandlerFactory = handlerFactory ?? throw new ArgumentNullException(nameof(handlerFactory));
         }
 
         public virtual void OnAcceptNewConnection(Connection connection, IAsyncResult ar)
