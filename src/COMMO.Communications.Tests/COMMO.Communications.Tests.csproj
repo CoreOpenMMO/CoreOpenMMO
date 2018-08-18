@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\COMMO.Communications\COMMO.Communications.csproj" />
+    <ProjectReference Include="..\COMMO.Security\COMMO.Security.csproj" />
   </ItemGroup>
 
 </Project>
