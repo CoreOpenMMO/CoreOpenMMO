@@ -174,11 +174,11 @@ dotnet_naming_symbols.type_definition_symbols.applicable_kinds          		= clas
 dotnet_naming_symbols.type_definition_symbols.applicable_accessibilities		= *
 dotnet_naming_style.type_definition_style.capitalization						= pascal_case
 
-# Methods
+# Methods and properties
 dotnet_naming_rule.method_definition.symbols 									= method_definition_symbols
 dotnet_naming_rule.method_definition.style										= method_definition_style
 dotnet_naming_rule.method_definition.severity									= error
-dotnet_naming_symbols.method_definition_symbols.applicable_kinds          		= method
+dotnet_naming_symbols.method_definition_symbols.applicable_kinds          		= method, properties
 dotnet_naming_symbols.method_definition_symbols.applicable_accessibilities		= *
 dotnet_naming_style.method_definition_style.capitalization						= pascal_case
 
@@ -190,11 +190,11 @@ dotnet_naming_symbols.public_symbols.applicable_kinds              	= namespace,
 dotnet_naming_symbols.public_symbols.applicable_accessibilities		= public
 dotnet_naming_style.public_style.capitalization						= pascal_case
 
-# Non-public fields and properties
+# Non-public fields
 dotnet_naming_rule.private.symbols 									= private_symbols
 dotnet_naming_rule.private.style									= private_style
 dotnet_naming_rule.private.severity									= error
-dotnet_naming_symbols.private_symbols.applicable_kinds             	= property,field
+dotnet_naming_symbols.private_symbols.applicable_kinds             	= field
 dotnet_naming_symbols.private_symbols.applicable_accessibilities	= internal, private, protected, protected_internal, protected_friend
 dotnet_naming_style.private_style.capitalization					= camel_case
 dotnet_naming_style.private_style.required_prefix					= _
