@@ -105,12 +105,12 @@ dotnet_sort_system_directives_first	= true
 ### C# formatting settings
 # Newline options
 csharp_new_line_before_open_brace						= none
-csharp_new_line_before_else								= none
-csharp_new_line_before_catch							= none
-csharp_new_line_before_finally							= none
-csharp_new_line_before_members_in_object_initializers	= true
-csharp_new_line_before_members_in_anonymous_types		= true
-csharp_new_line_within_query_expression_clauses			= true
+csharp_new_line_before_else								= false
+csharp_new_line_before_catch							= false
+csharp_new_line_before_finally							= false
+csharp_new_line_before_members_in_object_initializers	= false
+csharp_new_line_before_members_in_anonymous_types		= false
+csharp_new_line_within_query_expression_clauses			= false
 
 # Indentation options
 csharp_indent_case_contents	= false
@@ -178,7 +178,7 @@ dotnet_naming_style.type_definition_style.capitalization						= pascal_case
 dotnet_naming_rule.method_definition.symbols 									= method_definition_symbols
 dotnet_naming_rule.method_definition.style										= method_definition_style
 dotnet_naming_rule.method_definition.severity									= error
-dotnet_naming_symbols.method_definition_symbols.applicable_kinds          		= method, properties
+dotnet_naming_symbols.method_definition_symbols.applicable_kinds          		= method, property
 dotnet_naming_symbols.method_definition_symbols.applicable_accessibilities		= *
 dotnet_naming_style.method_definition_style.capitalization						= pascal_case
 
@@ -203,6 +203,6 @@ dotnet_naming_style.private_style.required_prefix					= _
 dotnet_naming_rule.parameter_rule.symbols							= parameter_symbols
 dotnet_naming_rule.parameter_rule.style								= parameter_style
 dotnet_naming_rule.parameter_rule.severity							= error
-dotnet_naming_symbols.parameter_symbols.applicable_kinds			= *
+dotnet_naming_symbols.parameter_symbols.applicable_kinds			= parameter
 dotnet_naming_style.parameter_style.capitalization					= camel_case
 
