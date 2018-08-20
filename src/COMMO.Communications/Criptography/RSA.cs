@@ -4,7 +4,18 @@ namespace COMMO.Communications.Criptography {
 	using System.Security.Cryptography;
 	using SystemCryptography = System.Security.Cryptography;
 
+	/// <summary>
+	/// This class provides easy method to encrypt / decrypt messages using RSA with OTC's keys.
+	/// I know this is nasty, but the keys are hardcoded on the OTC, so they are hard coded here too.
+	/// </summary>
 	public static class RSA {
+
+		/// <summary>
+		/// RSA's algorithm supports encrypting and decrypting only fixed size messages,
+		/// with such size depending of the size of the key.
+		/// Since they keys are hardcoded, so is the message length.
+		/// </summary>
+		public const int MessageLength = 128;
 
 		/// <summary>
 		/// Since we have the RSA's parameters as string representations, to prevent
@@ -22,14 +33,14 @@ namespace COMMO.Communications.Criptography {
 				if (_otclientRSAParameters.D == null) {
 					// Checking if it's it's initialized. If it's not, then initialize it.
 					_otclientRSAParameters = new RSAParameters() {
-						Exponent = ConvertStringRepresentationToBase64BigEndian(OTClientExponent),
-						Modulus = ConvertStringRepresentationToBase64BigEndian(OTClientModulus),
-						P = ConvertStringRepresentationToBase64BigEndian(OTClientP),
-						Q = ConvertStringRepresentationToBase64BigEndian(OTClientQ),
-						D = ConvertStringRepresentationToBase64BigEndian(OTClientD),
-						DP = ConvertStringRepresentationToBase64BigEndian(OTClientDP),
-						DQ = ConvertStringRepresentationToBase64BigEndian(OTClientDQ),
-						InverseQ = ConvertStringRepresentationToBase64BigEndian(OTClientInverseq),
+						Exponent = ConvertStringToRSAParameterFormat(OTClientExponent),
+						Modulus = ConvertStringToRSAParameterFormat(OTClientModulus),
+						P = ConvertStringToRSAParameterFormat(OTClientP),
+						Q = ConvertStringToRSAParameterFormat(OTClientQ),
+						D = ConvertStringToRSAParameterFormat(OTClientD),
+						DP = ConvertStringToRSAParameterFormat(OTClientDP),
+						DQ = ConvertStringToRSAParameterFormat(OTClientDQ),
+						InverseQ = ConvertStringToRSAParameterFormat(OTClientInverseq),
 					};
 				}
 
@@ -37,27 +48,101 @@ namespace COMMO.Communications.Criptography {
 			}
 		}
 
-		public static byte[] Encrypt(byte[] message) {
+		[ThreadStatic]
+		private static RSAEncryptionPadding _padding;
+
+		private static RSAEncryptionPadding Padding {
+			get {
+				if (_padding == null)
+					_padding = RSAEncryptionPadding.OaepSHA256;
+
+				return _padding;
+			}
+		}
+
+		/// <summary>
+		/// Encrypts the data using the OTC keys.
+		/// If the message length is less than <see cref="MessageLength"/>, it will be padded.
+		/// If the message length is greater than <see cref="MessageLength"/>, this method will throw.
+		/// </summary>
+		public static byte[] EncryptWithOTCKeys(byte[] data) {
+			if (data == null)
+				throw new ArgumentNullException(nameof(data));
+			if (data.Length > MessageLength)
+				throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+
 			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
 				var encrypted = csp.Encrypt(
-					data: message,
-					padding: RSAEncryptionPadding.OaepSHA256);
+					data: data,
+					padding: Padding);
 
 				return encrypted;
 			}
 		}
 
-		public static byte[] Decrypt(byte[] message) {
+		/// <summary>
+		/// Try to encrypt the data using OTC keys.
+		/// Returns whether the process was successful.
+		/// </summary>
+		public static bool TryEncryptWithOTCKeys(
+			ReadOnlySpan<byte> data,
+			Span<byte> destination,
+			out int bytesWritten) {
+			//if (data.Length > MessageLength)
+			//	throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+			//if (destination.Length < MessageLength)
+			//	throw new ArgumentException(nameof(destination) + $" length must be at least {MessageLength}.");
+
+			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
+				return csp.TryEncrypt(
+					data: data,
+					destination: destination,
+					padding: Padding,
+					bytesWritten: out bytesWritten);
+			}
+		}
+
+		/// <summary>
+		/// Decrypts the data using OTC keys.
+		/// </summary>
+		public static byte[] DecryptWithOTCKeys(byte[] data) {
+			if (data == null)
+				throw new ArgumentNullException(nameof(data));
+			if (data.Length > MessageLength)
+				throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+
 			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
 				var decrypted = csp.Decrypt(
-					data: message,
-					padding: RSAEncryptionPadding.OaepSHA256);
+					data: data,
+					padding: Padding);
 
 				return decrypted;
 			}
 		}
 
-		private static byte[] ConvertStringRepresentationToBase64BigEndian(string parameter) {
+		/// <summary>
+		/// Try to decrypt the data using OTC keys.
+		/// Returns whether the process was successful.
+		/// </summary>
+		public static bool TryDecryptWithOTCKeys(
+			ReadOnlySpan<byte> data,
+			Span<byte> destination,
+			out int bytesWritten) {
+			//if (data.Length > MessageLength)
+			//	throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+			//if (destination.Length < MessageLength)
+			//	throw new ArgumentException(nameof(destination) + $" length must be at least {MessageLength}.");
+
+			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
+				return csp.TryDecrypt(
+					data: data,
+					destination: destination,
+					padding: Padding,
+					bytesWritten: out bytesWritten);
+			}
+		}
+
+		private static byte[] ConvertStringToRSAParameterFormat(string parameter) {
 			var biggie = BigInteger.Parse(parameter);
 			var valBytes = biggie.ToByteArray();
 			int len = valBytes.Length;
