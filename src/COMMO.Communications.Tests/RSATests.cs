@@ -60,5 +60,29 @@ namespace COMMO.Communications.Tests {
 				expected: message,
 				actual: decoded);
 		}
+
+		[Test]
+		public void LegacyCompoatibility_Encrypt() {
+			var message = "lol";
+			var encoded = Encoding.UTF8.GetBytes(message);
+
+			var legacyEncrypted = LegacyEncrypt(encoded);
+			var newEncrypted = RSA.EncryptWithOTCKeys(encoded);
+
+			Assert.That(
+				newEncrypted,
+				Is.EquivalentTo(legacyEncrypted));
+		}
+
+		/// <summary>
+		/// Coz legacy code encrypts in-place.
+		/// </summary>
+		private static byte[] LegacyEncrypt(Span<byte> message) {
+			var messageCopy = message.ToArray();
+
+			throw new NotImplementedException();
+
+			return messageCopy;
+		}
 	}
 }
