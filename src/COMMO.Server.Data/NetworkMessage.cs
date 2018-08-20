@@ -15,20 +15,17 @@ namespace COMMO.Server.Data
     public class NetworkMessage
     {
         private byte[] _buffer;
-        private readonly int _bufferSize = 16394;
-        private int _length;
-        private int _position;
+		private int _length;
 
-        public int Length => _length;
+		public int Length => _length;
 
-        public int Position => _position;
-		
+        public int Position { get; private set; }
 
         public byte[] Buffer => _buffer;
 
-        public int BufferSize => _bufferSize;
+        public int BufferSize { get; } = 16394;
 
-        public NetworkMessage()
+		public NetworkMessage()
         {
             Reset();
         }
@@ -40,9 +37,9 @@ namespace COMMO.Server.Data
 
         public void Reset(int startingIndex)
         {
-            _buffer = new byte[_bufferSize];
+            _buffer = new byte[BufferSize];
             _length = startingIndex;
-            _position = startingIndex;
+            Position = startingIndex;
         }
 
         public void Reset()
@@ -57,7 +54,7 @@ namespace COMMO.Server.Data
                 throw new IndexOutOfRangeException("NetworkMessage GetByte() out of range.");
             }
 
-            return _buffer[_position++];
+            return _buffer[Position++];
         }
 
         public byte[] GetBytes(int count)
@@ -70,7 +67,7 @@ namespace COMMO.Server.Data
             byte[] t = new byte[count];
             Array.Copy(_buffer, Position, t, 0, count);
 
-            _position += count;
+            Position += count;
             return t;
         }
 
@@ -86,7 +83,7 @@ namespace COMMO.Server.Data
             inMessage.Buffer.CopyTo(newMessage._buffer, 0);
 
             newMessage._length = inMessage.Length;
-            newMessage._position = inMessage.Position;
+            newMessage.Position = inMessage.Position;
 
             return newMessage;
         }
@@ -96,7 +93,7 @@ namespace COMMO.Server.Data
             int len = GetUInt16();
             string t = ASCIIEncoding.Default.GetString(_buffer, Position, len);
 
-            _position += len;
+            Position += len;
             return t;
         }
 
@@ -129,7 +126,7 @@ namespace COMMO.Server.Data
 
         public void AddByte(byte value)
         {
-            if (1 + Length > _bufferSize)
+            if (1 + Length > BufferSize)
             {
                 throw new Exception("NetworkMessage buffer is full.");
             }
@@ -139,14 +136,14 @@ namespace COMMO.Server.Data
 
         public void AddBytes(byte[] value)
         {
-            if (value.Length + Length > _bufferSize)
+            if (value.Length + Length > BufferSize)
             {
                 throw new Exception("NetworkMessage buffer is full.");
             }
 
             Array.Copy(value, 0, _buffer, Position, value.Length);
 
-            _position += value.Length;
+            Position += value.Length;
 
             if (Position > Length)
             {
@@ -172,7 +169,7 @@ namespace COMMO.Server.Data
 
         public void AddPaddingBytes(int count)
         {
-            _position += count;
+            Position += count;
 
             if (Position > Length)
             {
@@ -272,7 +269,7 @@ namespace COMMO.Server.Data
         public void Resize(int size)
         {
             _length = size;
-            _position = 0;
+            Position = 0;
         }
 
         public byte[] PeekBytes(int count)
@@ -313,15 +310,15 @@ namespace COMMO.Server.Data
                 throw new IndexOutOfRangeException("NetworkMessage SkipBytes() out of range.");
             }
 
-            _position += count;
+            Position += count;
         }
 
         public void RsaDecrypt(bool useCipKeys = true, bool useRsa2 = false)
         {
 			if (!useRsa2)
-				Rsa.Decrypt(ref _buffer, _position, _length, useCipKeys);
+				Rsa.Decrypt(ref _buffer, Position, _length, useCipKeys);
 			else
-				Rsa2.Decrypt(ref _buffer, _position, _length);
+				Rsa2.Decrypt(ref _buffer, Position, _length);
         }
 
         public bool XteaDecrypt(uint[] key)
@@ -380,7 +377,7 @@ namespace COMMO.Server.Data
                 return false;
             }
 
-            _position = 4;
+            Position = 4;
             return true;
         }
     }
