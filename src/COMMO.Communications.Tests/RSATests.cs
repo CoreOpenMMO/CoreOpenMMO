@@ -80,7 +80,13 @@ namespace COMMO.Communications.Tests {
 		private static byte[] LegacyEncrypt(Span<byte> message) {
 			var messageCopy = message.ToArray();
 
-			throw new NotImplementedException();
+			var encrypted = COMMO.Security.Encryption.Rsa.Encrypt(
+				buffer: ref messageCopy,
+				position: 0,
+				useCipValues: false);
+
+			if (!encrypted)
+				throw new InvalidOperationException();
 
 			return messageCopy;
 		}
