@@ -6,15 +6,39 @@ namespace COMMO.Communications.Criptography {
 
 	public static class RSA {
 
+		/// <summary>
+		/// Since we have the RSA's parameters as string representations, to prevent
+		/// the conversion to Base64 big endian each call, we are caching the converted values.
+		/// To prevent multithreading issues (that shouldn't really happen), the cached values are
+		/// thread specific.
+		/// We are storing the parameters instead of the crypto service provider because the crypto
+		/// service provider implemented IDisposable, i.e. it could leak resources.
+		/// </summary>
+		[ThreadStatic]
+		private static RSAParameters _otclientRSAParameters;
+
+		private static RSAParameters OTClientRSAParameters {
+			get {
+				if (_otclientRSAParameters.D == null) {
+					// Checking if it's it's initialized. If it's not, then initialize it.
+					_otclientRSAParameters = new RSAParameters() {
+						Exponent = ConvertStringRepresentationToBase64BigEndian(OTClientExponent),
+						Modulus = ConvertStringRepresentationToBase64BigEndian(OTClientModulus),
+						P = ConvertStringRepresentationToBase64BigEndian(OTClientP),
+						Q = ConvertStringRepresentationToBase64BigEndian(OTClientQ),
+						D = ConvertStringRepresentationToBase64BigEndian(OTClientD),
+						DP = ConvertStringRepresentationToBase64BigEndian(OTClientDP),
+						DQ = ConvertStringRepresentationToBase64BigEndian(OTClientDQ),
+						InverseQ = ConvertStringRepresentationToBase64BigEndian(OTClientInverseq),
+					};
+				}
+
+				return _otclientRSAParameters;
+			}
+		}
+
 		public static byte[] Encrypt(byte[] message) {
-			using (var csp = SystemCryptography.RSA.Create()) {
-				var parameters = new RSAParameters() {
-					Exponent = ConvertStringRepresentationToBase64BigEndian(OTClientExponent),
-					Modulus = ConvertStringRepresentationToBase64BigEndian(OTClientModulus)
-				};
-
-				csp.ImportParameters(parameters);
-
+			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
 				var encrypted = csp.Encrypt(
 					data: message,
 					padding: RSAEncryptionPadding.OaepSHA256);
@@ -24,25 +48,12 @@ namespace COMMO.Communications.Criptography {
 		}
 
 		public static byte[] Decrypt(byte[] message) {
-			using (var csp = SystemCryptography.RSA.Create()) {
-				var parameters = new RSAParameters() {
-					Exponent = ConvertStringRepresentationToBase64BigEndian(OTClientExponent),
-					Modulus = ConvertStringRepresentationToBase64BigEndian(OTClientModulus),
-					P = ConvertStringRepresentationToBase64BigEndian(OTClientP),
-					Q = ConvertStringRepresentationToBase64BigEndian(OTClientQ),
-					D = ConvertStringRepresentationToBase64BigEndian(OTClientD),
-					DP = ConvertStringRepresentationToBase64BigEndian(OTClientDP),
-					DQ = ConvertStringRepresentationToBase64BigEndian(OTClientDQ),
-					InverseQ = ConvertStringRepresentationToBase64BigEndian(OTClientInverseq),
-				};
-
-				csp.ImportParameters(parameters);
-
-				var encrypted = csp.Decrypt(
+			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
+				var decrypted = csp.Decrypt(
 					data: message,
 					padding: RSAEncryptionPadding.OaepSHA256);
 
-				return encrypted;
+				return decrypted;
 			}
 		}
 
