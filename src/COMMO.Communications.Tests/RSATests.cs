@@ -1,5 +1,6 @@
 namespace COMMO.Communications.Tests {
 	using System;
+	using System.Linq;
 	using System.Text;
 	using COMMO.Communications.Criptography;
 	using NUnit.Framework;
@@ -62,23 +63,26 @@ namespace COMMO.Communications.Tests {
 		}
 
 		[Test]
-		public void LegacyCompoatibility_Encrypt() {
+		public void LegacyCompatibility_Encrypt() {
 			var message = "lol";
 			var encoded = Encoding.UTF8.GetBytes(message);
-
-			var legacyEncrypted = LegacyEncrypt(encoded);
+			
 			var newEncrypted = RSA.EncryptWithOTCKeys(encoded);
+			var legacyEncrypted = LegacyEncrypt(encoded);
 
 			Assert.That(
 				newEncrypted,
 				Is.EquivalentTo(legacyEncrypted));
 		}
 
+
 		/// <summary>
 		/// Coz legacy code encrypts in-place.
 		/// </summary>
 		private static byte[] LegacyEncrypt(Span<byte> message) {
 			var messageCopy = message.ToArray();
+			Array.Reverse(messageCopy);
+			Array.Resize(ref messageCopy, RSA.MessageLength);
 
 			var encrypted = COMMO.Security.Encryption.Rsa.Encrypt(
 				buffer: ref messageCopy,
