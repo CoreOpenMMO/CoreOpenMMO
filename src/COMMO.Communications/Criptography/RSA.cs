@@ -12,10 +12,17 @@ namespace COMMO.Communications.Criptography {
 
 		/// <summary>
 		/// RSA's algorithm supports encrypting and decrypting only fixed size messages,
-		/// with such size depending of the size of the key.
-		/// Since they keys are hardcoded, so is the message length.
+		/// with such size depending of the size of the key and the padding scheme.
+		/// Since they keys and the padding are hardcoded, so is the message length.
 		/// </summary>
-		public const int MessageLength = 128;
+		public const int LengthOfEncodedData = 128;
+
+		/// <summary>
+		/// RSA's algorithm supports encrypting and decrypting only fixed size messages,
+		/// with such size depending of the size of the key and the padding scheme.
+		/// Since they keys and the padding are hardcoded, so is the message length.
+		/// </summary>
+		public const int MaximumDataLengthBeforeEncryption = 117;
 
 		/// <summary>
 		/// Since we have the RSA's parameters as string representations, to prevent
@@ -54,7 +61,7 @@ namespace COMMO.Communications.Criptography {
 		private static RSAEncryptionPadding Padding {
 			get {
 				if (_padding == null)
-					_padding = RSAEncryptionPadding.OaepSHA256;
+					_padding = RSAEncryptionPadding.Pkcs1;
 
 				return _padding;
 			}
@@ -62,14 +69,14 @@ namespace COMMO.Communications.Criptography {
 
 		/// <summary>
 		/// Encrypts the data using the OTC keys.
-		/// If the message length is less than <see cref="MessageLength"/>, it will be padded.
-		/// If the message length is greater than <see cref="MessageLength"/>, this method will throw.
+		/// If the message length is less than <see cref="LengthOfEncodedData"/>, it will be padded.
+		/// If the message length is greater than <see cref="LengthOfEncodedData"/>, this method will throw.
 		/// </summary>
 		public static byte[] EncryptWithOTCKeys(byte[] data) {
-			if (data == null)
-				throw new ArgumentNullException(nameof(data));
-			if (data.Length > MessageLength)
-				throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+			//if (data == null)
+			//	throw new ArgumentNullException(nameof(data));
+			//if (data.Length > MaximumDataLengthForEncryption)
+			//	throw new ArgumentException(nameof(data) + $" length can't be greater than {MaximumDataLengthForEncryption}.");
 
 			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
 				var encrypted = csp.Encrypt(
@@ -106,10 +113,10 @@ namespace COMMO.Communications.Criptography {
 		/// Decrypts the data using OTC keys.
 		/// </summary>
 		public static byte[] DecryptWithOTCKeys(byte[] data) {
-			if (data == null)
-				throw new ArgumentNullException(nameof(data));
-			if (data.Length > MessageLength)
-				throw new ArgumentException(nameof(data) + $" length can't be greater than {MessageLength}.");
+			//if (data == null)
+			//	throw new ArgumentNullException(nameof(data));
+			//if (data.Length != LengthOfEncodedData)
+			//	throw new ArgumentException(nameof(data) + $" length can't be greater than {LengthOfEncodedData}.");
 
 			using (var csp = SystemCryptography.RSA.Create(parameters: OTClientRSAParameters)) {
 				var decrypted = csp.Decrypt(

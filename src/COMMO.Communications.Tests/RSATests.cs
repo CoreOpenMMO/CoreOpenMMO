@@ -10,7 +10,7 @@ namespace COMMO.Communications.Tests {
 
 		[Test]
 		public void Encrypt_ThrowsIfMessageTooLong() {
-			var data = new byte[RSA.MessageLength + 1];
+			var data = new byte[RSA.LengthOfEncodedData + 1];
 
 			Assert.That(
 				() => RSA.EncryptWithOTCKeys(data),
@@ -38,13 +38,13 @@ namespace COMMO.Communications.Tests {
 			var message = "lol";
 			var encoded = Encoding.UTF8.GetBytes(message);
 
-			var encryptionBuffer = new byte[RSA.MessageLength];
+			var encryptionBuffer = new byte[RSA.LengthOfEncodedData];
 			var encrypted = RSA.TryEncryptWithOTCKeys(
 				data: encoded,
 				destination: encryptionBuffer,
 				bytesWritten: out var _);
 
-			var decryptionBuffer = new byte[RSA.MessageLength];
+			var decryptionBuffer = new byte[RSA.LengthOfEncodedData];
 			var decrypted = RSA.TryDecryptWithOTCKeys(
 				data: encryptionBuffer,
 				destination: decryptionBuffer,
@@ -83,7 +83,18 @@ namespace COMMO.Communications.Tests {
 			var message = "lol";
 			var encoded = Encoding.UTF8.GetBytes(message);
 
-			var encrypted = RSA.EncryptWithOTCKeys(encoded);
+			var padSize = RSA.MaximumDataLengthBeforeEncryption - encoded.Length;
+			var padded = new byte[RSA.MaximumDataLengthBeforeEncryption];
+			padded = encoded.ToArray();
+			Array.Resize(ref padded, RSA.MaximumDataLengthBeforeEncryption);
+			//Array.Copy(
+			//	sourceArray: encoded,
+			//	sourceIndex: 0,
+			//	destinationArray: padded,
+			//	destinationIndex: padSize,
+			//	length: encoded.Length);
+
+			var encrypted = RSA.EncryptWithOTCKeys(padded);
 			var decrypted = LegacyDecrypt(encrypted, encoded.Length);
 
 			var decoded = Encoding.UTF8.GetString(decrypted);
@@ -113,7 +124,7 @@ namespace COMMO.Communications.Tests {
 		/// </summary>
 		private static byte[] LegacyEncrypt(Span<byte> data) {
 			var messageCopy = data.ToArray();
-			Array.Resize(ref messageCopy, RSA.MessageLength);
+			Array.Resize(ref messageCopy, RSA.LengthOfEncodedData);
 
 			var encrypted = COMMO.Security.Encryption.Rsa.Encrypt(
 				buffer: ref messageCopy,
