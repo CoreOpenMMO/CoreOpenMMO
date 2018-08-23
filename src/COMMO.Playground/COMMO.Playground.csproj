@@ -7,4 +7,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\COMMO.Communications\COMMO.Communications.csproj" />
+    <ProjectReference Include="..\COMMO.Security\COMMO.Security.csproj" />
+  </ItemGroup>
+
 </Project>
