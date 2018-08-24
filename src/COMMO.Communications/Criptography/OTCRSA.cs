@@ -51,7 +51,7 @@ namespace COMMO.Communications.Criptography {
 		/// 
 		/// </summary>
 		public static Span<byte> Decrypt(ReadOnlySpan<byte> data) {
-			if (data.Length != DataLength)
+			if (data.Length > DataLength)
 				throw new ArgumentException(nameof(data));
 
 			var input = new BigInteger(
