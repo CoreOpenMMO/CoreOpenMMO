@@ -52,11 +52,112 @@ namespace COMMO.Communications.Tests {
 			Assert.That(decryptedData.ToArray(), Is.EquivalentTo(data.ToArray()));
 		}
 
+
+		// Legacy compatibility tests
 		[Test]
-		public void WriteMe() {
-			var ughz = new byte[0];
-			OldRsa.Encrypt(ref ughz, 0);
-			OldRsa2.Decrypt(ref ughz, 0, 0);
+		public void OldEncrypt_NewDecrypt(
+			[Values(
+			new byte[] { },
+			new byte[] { 0 },
+			new byte[] { 1 },
+			new byte[] { 0, 1 },
+			new byte[] { 1, 0 },
+			new byte[] { 1, 1 })] byte[] data) {
+
+			var paddedData = data.ToArray();
+			Array.Resize(ref paddedData, OTClientRSA.DataLength);
+
+			var paddingSize = OTClientRSA.DataLength - data.Length;
+
+			OldRsa.Encrypt(
+				buffer: ref paddedData,
+				position: 0,
+				useCipValues: false);
+
+			var decryptedData = OTClientRSA.DecryptThenUnpad(
+				data: paddedData,
+				paddingSize: paddingSize);
+
+			Assert.That(decryptedData.ToArray(), Is.EquivalentTo(data.ToArray()));
+		}
+
+		[Test]
+		public void NewEncrypt_OldDecrypt(
+			[Values(
+			new byte[] { },
+			new byte[] { 0 },
+			new byte[] { 1 },
+			new byte[] { 0, 1 },
+			new byte[] { 1, 0 },
+			new byte[] { 1, 1 })] byte[] data) {
+
+			var paddingSize = OTClientRSA.PadThenEncrypt(
+				data: data,
+				output: out var encryptedData);
+
+			var buffer = encryptedData.ToArray();
+
+			OldRsa.Decrypt(
+				buffer: ref buffer,
+				position: 0,
+				length: OTClientRSA.DataLength,
+				useCipValues: false);
+
+			Array.Resize(ref buffer, data.Length);
+
+			Assert.That(buffer.ToArray(), Is.EquivalentTo(data.ToArray()));
+		}
+
+		[Test]
+		public void OldEncrypt2_NewDecrypt(
+			[Values(
+			new byte[] { },
+			new byte[] { 0 },
+			new byte[] { 1 },
+			new byte[] { 0, 1 },
+			new byte[] { 1, 0 },
+			new byte[] { 1, 1 })] byte[] data) {
+
+			var paddedData = data.ToArray();
+			Array.Resize(ref paddedData, OTClientRSA.DataLength);
+
+			var paddingSize = OTClientRSA.DataLength - data.Length;
+
+			OldRsa2.Encrypt(
+				buffer: ref paddedData,
+				index: 0);
+
+			var decryptedData = OTClientRSA.DecryptThenUnpad(
+				data: paddedData,
+				paddingSize: paddingSize);
+
+			Assert.That(decryptedData.ToArray(), Is.EquivalentTo(data.ToArray()));
+		}
+
+		[Test]
+		public void NewEncrypt_OldDecrypt2(
+			[Values(
+			new byte[] { },
+			new byte[] { 0 },
+			new byte[] { 1 },
+			new byte[] { 0, 1 },
+			new byte[] { 1, 0 },
+			new byte[] { 1, 1 })] byte[] data) {
+
+			var paddingSize = OTClientRSA.PadThenEncrypt(
+				data: data,
+				output: out var encryptedData);
+
+			var buffer = encryptedData.ToArray();
+
+			OldRsa2.Decrypt(
+				buffer: ref buffer,
+				index: 0,
+				lenght: data.Length);
+
+			Array.Resize(ref buffer, data.Length);
+
+			Assert.That(buffer.ToArray(), Is.EquivalentTo(data.ToArray()));
 		}
 	}
 }
