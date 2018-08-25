@@ -12,7 +12,7 @@ namespace COMMO.Communications.Criptography {
 	/// messages to be 0 padded, and the framework only supports standardized
 	/// paddings.
 	/// </summary>
-	public static class OTCRSA {
+	public static class OTClientRSA {
 
 		/// <summary>
 		/// RSA can only encrypt fixed-size messages (and such size
@@ -26,9 +26,9 @@ namespace COMMO.Communications.Criptography {
 		/// "Encrypts" <paramref name="data"/> with the algorithm that OTClient
 		/// expects.
 		/// It's important to note that <paramref name="data"/> must be exactly
-		/// <see cref="OTCRSA.DataLength"/> bytes long.
+		/// <see cref="OTClientRSA.DataLength"/> bytes long.
 		/// If your data is not long enough, pad it to the right with zeroes
-		/// or call <see cref="OTCRSA.PadThenEncrypt(ReadOnlySpan{byte})"/> instead.
+		/// or call <see cref="OTClientRSA.PadThenEncrypt(ReadOnlySpan{byte})"/> instead.
 		/// </summary>
 		public static Span<byte> Encrypt(ReadOnlySpan<byte> data) {
 			if (data.Length != DataLength)
@@ -56,7 +56,7 @@ namespace COMMO.Communications.Criptography {
 
 		/// <summary>
 		/// Pads the data with zeros, as OTClient's expect, then "encrypts"
-		/// the data padded data using <see cref="OTCRSA.Encrypt(ReadOnlySpan{byte})"/>.
+		/// the data padded data using <see cref="OTClientRSA.Encrypt(ReadOnlySpan{byte})"/>.
 		/// Returns the size of the padding.
 		/// </summary>
 		public static int PadThenEncrypt(ReadOnlySpan<byte> data,
@@ -70,7 +70,7 @@ namespace COMMO.Communications.Criptography {
 			
 			data.CopyTo(paddedData);
 
-			output = OTCRSA.Encrypt(paddedData);
+			output = OTClientRSA.Encrypt(paddedData);
 
 			return paddingSize;
 		}
@@ -79,7 +79,7 @@ namespace COMMO.Communications.Criptography {
 		/// "Decrypts" <paramref name="data"/> with the algorithm that OTClient
 		/// expects.
 		/// It's important to note that <paramref name="data"/> must be exactly
-		/// <see cref="OTCRSA.DataLength"/> bytes long.
+		/// <see cref="OTClientRSA.DataLength"/> bytes long.
 		/// </summary>
 		public static Span<byte> Decrypt(ReadOnlySpan<byte> data) {
 			if (data.Length > DataLength)
@@ -100,7 +100,7 @@ namespace COMMO.Communications.Criptography {
 
 		/// <summary>
 		/// "Decrypts" <paramref name="data"/> using 
-		/// <see cref="OTCRSA.Decrypt(ReadOnlySpan{byte})"/>, then returns the first
+		/// <see cref="OTClientRSA.Decrypt(ReadOnlySpan{byte})"/>, then returns the first
 		/// <paramref name="paddingSize"/> bytes from it, the way OTClient expects.
 		/// </summary>
 		public static Span<Byte> DecryptThenUnpad(ReadOnlySpan<byte> data, int paddingSize) {
@@ -109,7 +109,7 @@ namespace COMMO.Communications.Criptography {
 			if (paddingSize < 0)
 				throw new ArgumentException(nameof(paddingSize));
 
-			var decryptedData = OTCRSA.Decrypt(data);
+			var decryptedData = OTClientRSA.Decrypt(data);
 			var relevantData = decryptedData.Slice(
 				start: 0,
 				length: DataLength - paddingSize);

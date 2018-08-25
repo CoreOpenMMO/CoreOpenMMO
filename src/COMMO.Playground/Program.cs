@@ -1,7 +1,7 @@
 namespace COMMO.Playground {
 	using System;
 	using System.Linq;
-	using NewRsa = COMMO.Communications.Criptography.OTCRSA;
+	using NewRsa = COMMO.Communications.Criptography.OTClientRSA;
 	using OldRsa2 = COMMO.Security.Encryption.Rsa2;
 
 	public static class Program {

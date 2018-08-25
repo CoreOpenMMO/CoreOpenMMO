@@ -7,7 +7,7 @@ namespace COMMO.Communications.Tests {
 	using OldRsa2 = COMMO.Security.Encryption.Rsa2;
 
 	[TestFixture]
-	public sealed class OTCRSATests {
+	public sealed class OTClientRSATests {
 
 		[Test]
 		public void EncryptDecrypt(
@@ -21,9 +21,9 @@ namespace COMMO.Communications.Tests {
 
 			var padded = data.ToArray();
 			Array.Resize(ref padded, 128);
-			var encrypted = OTCRSA.Encrypt(padded);
+			var encrypted = OTClientRSA.Encrypt(padded);
 
-			var decrypted = OTCRSA.Decrypt(encrypted)
+			var decrypted = OTClientRSA.Decrypt(encrypted)
 				.ToArray()
 				.Take(data.Length)
 				.ToArray();
@@ -41,11 +41,11 @@ namespace COMMO.Communications.Tests {
 			new byte[] { 1, 0 },
 			new byte[] { 1, 1 })] byte[] data) {
 
-			var paddingSize = OTCRSA.PadThenEncrypt(
+			var paddingSize = OTClientRSA.PadThenEncrypt(
 				data: data,
 				out var encryptedData);
 
-			var decryptedData = OTCRSA.DecryptThenUnpad(
+			var decryptedData = OTClientRSA.DecryptThenUnpad(
 				data: encryptedData,
 				paddingSize: paddingSize);
 
