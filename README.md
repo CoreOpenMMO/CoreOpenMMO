@@ -1,5 +1,9 @@
 # CoreOpenMMO
 
+<p align="center">
+  <img src="https://github.com/CoreOpenMMO/CoreOpenMMO/blob/master/resources/demo.gif">
+</p>
+
 ## What is CoreOpenMMO?
 CoreOpenMMO is a .Net Core implementation of a Massively  Multiplayer Online game, inspired by [The Forgotten Server](https://github.com/otland/forgottenserver) and [OTX](https://github.com/mattyx14/otxserver) and based on [OTC](https://github.com/jlnunez89/opentibiacore) by [jlnunez89](https://github.com/jlnunez89)
 
