@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Utilities.Tests", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.OTB.Tests", "src\COMMO.OTB.Tests\COMMO.OTB.Tests.csproj", "{25AE710E-7309-40FB-B002-F40675C8BBCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMO.Server.Tests", "src\COMMO.Server.Tests\COMMO.Server.Tests.csproj", "{A36C0A12-CDEF-4CBE-B843-36889F57AEA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Server.Tests", "src\COMMO.Server.Tests\COMMO.Server.Tests.csproj", "{A36C0A12-CDEF-4CBE-B843-36889F57AEA2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMO.Communications.Tests", "src\COMMO.Communications.Tests\COMMO.Communications.Tests.csproj", "{BEFD7D3F-2724-4789-982F-01EF2ED1FA92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{A36C0A12-CDEF-4CBE-B843-36889F57AEA2}.Debug|x64.Build.0 = Debug|x64
 		{A36C0A12-CDEF-4CBE-B843-36889F57AEA2}.Release|x64.ActiveCfg = Release|x64
 		{A36C0A12-CDEF-4CBE-B843-36889F57AEA2}.Release|x64.Build.0 = Release|x64
+		{BEFD7D3F-2724-4789-982F-01EF2ED1FA92}.Debug|x64.ActiveCfg = Debug|x64
+		{BEFD7D3F-2724-4789-982F-01EF2ED1FA92}.Debug|x64.Build.0 = Debug|x64
+		{BEFD7D3F-2724-4789-982F-01EF2ED1FA92}.Release|x64.ActiveCfg = Release|x64
+		{BEFD7D3F-2724-4789-982F-01EF2ED1FA92}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
