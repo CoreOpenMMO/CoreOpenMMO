@@ -339,7 +339,11 @@ namespace COMMO.Server {
 				try {
 					var conn = _connections[spectator.CreatureId];
 
-					InternalRequestNofitication(notificationFunc(conn));
+					var notification = notificationFunc(conn);
+
+					notification.Connection = conn;
+
+					InternalRequestNofitication(notification);
 				} catch (Exception ex) {
 					// TODO: proper logging
 					Console.WriteLine(ex.Message);

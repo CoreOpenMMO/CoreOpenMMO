@@ -18,7 +18,7 @@ namespace COMMO.Server.Notifications
 {
     public abstract class Notification : BaseEvent, INotification
     {
-        public Connection Connection { get; }
+        public Connection Connection { get; set; }
 
         public IList<IPacketOutgoing> ResponsePackets { get; protected set; }
 
@@ -57,7 +57,7 @@ namespace COMMO.Server.Notifications
             }
 
             Connection.Send(networkMessage);
-            Console.WriteLine($"Sent {GetType().Name} [{EventId}] to {Connection.PlayerId}");
+            Console.WriteLine($"Sent {GetType().Name} [{EventId}] to {Connection.PlayerId} - {Connection.SourceIp}");
 
             // foreach (var packet in ResponsePackets)
             // {

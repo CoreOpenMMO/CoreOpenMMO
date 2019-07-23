@@ -162,7 +162,32 @@ namespace COMMO.Communications
 
 		            otContext.Players.Add(p2);
 		            otContext.SaveChanges();
-	            }
+
+					var u3 = new User() {
+						Id = 3,
+						Email = "3",
+						Login = 3,
+						Passwd = "3",
+						Userlevel = 50,
+						Premium = 1,
+						Premium_Days = 100
+					};
+
+					otContext.Users.Add(u3);
+					otContext.SaveChanges();
+
+					var p3 = new PlayerModel() {
+						Account_Id = 3,
+						Player_Id = 3,
+						Account_Nr = 3,
+						Charname = "TESTE",
+						Level = 50,
+						Comment = "Teste"
+					};
+
+					otContext.Players.Add(p3);
+					otContext.SaveChanges();
+				}
 
                 // validate credentials.
                 var user = otContext.Users.FirstOrDefault(u => u.Login == loginPacket.AccountNumber && u.Passwd.Equals(loginPacket.Password));
