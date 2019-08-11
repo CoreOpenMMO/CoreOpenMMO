@@ -21,12 +21,7 @@ namespace COMMO.Server.Notifications
         public CreatureAddedNotification(Connection connection, ICreature creature, EffectT addEffect = EffectT.None)
             : base(connection)
         {
-            if (creature == null)
-            {
-                throw new ArgumentNullException(nameof(creature));
-            }
-
-            Creature = creature;
+			Creature = creature ?? throw new ArgumentNullException(nameof(creature));
             AddedEffect = addEffect;
         }
 
@@ -37,14 +32,12 @@ namespace COMMO.Server.Notifications
                 return;
             }
 
-            var player = Game.Instance.GetCreatureWithId(Connection.PlayerId) as IPlayer;
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(Connection.PlayerId) is IPlayer player)) {
+				return;
+			}
 
-            if (AddedEffect != EffectT.None)
+			if (AddedEffect != EffectT.None)
             {
                 ResponsePackets.Add(new MagicEffectPacket
                 {

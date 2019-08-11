@@ -18,12 +18,7 @@ namespace COMMO.Server.Notifications
         public CreatureChangedOutfitNotification(Connection connection, ICreature creature)
             : base(connection)
         {
-            if (creature == null)
-            {
-                throw new ArgumentNullException(nameof(creature));
-            }
-
-            Creature = creature;
+			Creature = creature ?? throw new ArgumentNullException(nameof(creature));
         }
 
         public override void Prepare()

@@ -30,9 +30,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddCreature(Creature, AsKnown, RemoveThisCreatureId);
         }
 
-        public override void CleanUp()
-        {
-            Creature = null;
-        }
-    }
+		public override void CleanUp() => Creature = null;
+	}
 }

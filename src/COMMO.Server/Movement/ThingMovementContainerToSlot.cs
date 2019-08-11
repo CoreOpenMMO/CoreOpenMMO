@@ -68,16 +68,12 @@ namespace COMMO.Server.Movement
 
         private void MoveContainerToSlot()
         {
-            IItem addedItem;
-            var updateItem = Thing as IItem;
+			if (FromContainer == null || !(Thing is IItem updateItem) || Requestor == null) {
+				return;
+			}
 
-            if (FromContainer == null || updateItem == null || Requestor == null)
-            {
-                return;
-            }
-
-            // attempt to remove from the source container
-            if (!FromContainer.RemoveContent(updateItem.Type.TypeId, FromIndex, Count, out addedItem))
+			// attempt to remove from the source container
+			if (!FromContainer.RemoveContent(updateItem.Type.TypeId, FromIndex, Count, out var addedItem))
             {
                 return;
             }

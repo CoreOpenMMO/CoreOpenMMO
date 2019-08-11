@@ -25,9 +25,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddItem(Item);
         }
 
-        public override void CleanUp()
-        {
-            Item = null;
-        }
-    }
+		public override void CleanUp() => Item = null;
+	}
 }

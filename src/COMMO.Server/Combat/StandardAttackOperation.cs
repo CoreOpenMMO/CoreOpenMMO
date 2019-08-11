@@ -36,23 +36,11 @@ namespace COMMO.Server.Combat
 
         public override TimeSpan ExhaustionCost => TimeSpan.FromSeconds(2);
 
-        public override int MinimumDamage
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+		public override int MinimumDamage => throw new NotImplementedException();
 
-        public override int MaximumDamage
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+		public override int MaximumDamage => throw new NotImplementedException();
 
-        protected override int InternalExecute(out EffectT resultingEffect, out bool shielded, out bool armored, out TextColor colorText)
+		protected override int InternalExecute(out EffectT resultingEffect, out bool shielded, out bool armored, out TextColor colorText)
         {
             resultingEffect = EffectT.XBlood;
             colorText = TextColor.Red;

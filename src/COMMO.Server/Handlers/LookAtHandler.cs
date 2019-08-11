@@ -20,14 +20,12 @@ namespace COMMO.Server.Handlers
         {
             var lookAtPacket = new LookAtPacket(message);
             IThing thing = null;
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            Console.WriteLine($"LookAt {lookAtPacket.ThingId}.");
+			Console.WriteLine($"LookAt {lookAtPacket.ThingId}.");
 
             if (lookAtPacket.Location.Type != LocationType.Ground || player.CanSee(lookAtPacket.Location))
             {

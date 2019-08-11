@@ -7,8 +7,6 @@ namespace COMMO.Utilities {
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public static byte ToByte(this char value) {
-			return (byte)value;
-		}
+		public static byte ToByte(this char value) => (byte) value;
 	}
 }

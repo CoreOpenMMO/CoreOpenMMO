@@ -66,8 +66,6 @@ namespace COMMO.Utilities {
 		/// <summary>Converts an array of bytes into a formatted string of hex digits (ex: E4 CA B2)</summary>
 		/// <param name="data">The array of bytes to be translated into a string of hex digits.</param>
 		/// <returns>Returns a well formatted string of hex digits with spacing.</returns>
-		public static string ToHexString(this byte[] data) {
-			return data.ToHexString(0, data.Length);
-		}
+		public static string ToHexString(this byte[] data) => data.ToHexString(0, data.Length);
 	}
 }

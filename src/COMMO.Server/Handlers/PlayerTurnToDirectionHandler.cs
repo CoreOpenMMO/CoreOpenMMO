@@ -22,15 +22,13 @@ namespace COMMO.Server.Handlers
 
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
-            // No other content in message.
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
+			// No other content in message.
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            player.TurnToDirection(Direction);
+			player.TurnToDirection(Direction);
 
             Game.Instance.NotifySpectatingPlayers(conn => new CreatureTurnedNotification(conn, player), player.Location);
         }

@@ -14,6 +14,7 @@ using System.Reflection;
 using COMMO.Data.Contracts;
 using COMMO.Server.Parsing;
 using COMMO.OTB;
+using COMMO.IO;
 
 namespace COMMO.Server.Items
 {
@@ -154,8 +155,10 @@ namespace COMMO.Server.Items
 			
 		var attrsNotSuported = 0;
 		var attrsNotValid = 0;
-			
-        var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(ServerResourcesManager.GetItemsBytes("items.otb")));
+
+		var ss = File.ReadAllBytes("data/items/items.otb");
+		var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(ss));
+
         foreach (var itemChildren in fileTree.Children)
         {
             var current = new ItemType();
@@ -196,7 +199,7 @@ namespace COMMO.Server.Items
             itemDictionary.Add(current.TypeId, current);
         }
 
-       var rootElement = XElement.Load(ServerResourcesManager.GetItems("items.xml"), LoadOptions.SetLineInfo);
+       var rootElement = XElement.Load("data/items/items.xml", LoadOptions.SetLineInfo);
 
         foreach (var element in rootElement.Elements("item"))
         {
@@ -226,7 +229,7 @@ namespace COMMO.Server.Items
 
             for (ushort key = serverId; key < serverId + aplyTo; key++)
             {
-				if (!itemDictionary.TryGetValue(key, out ItemType current))
+				if (!itemDictionary.TryGetValue(key, out var current))
 					continue;
 
 				var name = element.Attribute("name");

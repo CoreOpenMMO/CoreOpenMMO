@@ -25,11 +25,9 @@ namespace COMMO.Server.Actions
 
         protected override void InternalPerform()
         {
-            var itemUsePacket = Packet as ItemUsePacket;
+			IThing thingToUse = null;
 
-            IThing thingToUse = null;
-
-            if (itemUsePacket == null)
+			if (!(Packet is ItemUsePacket itemUsePacket))
             {
                 return;
             }
@@ -71,70 +69,60 @@ namespace COMMO.Server.Actions
             }
 
             var thingAsItem = thingToUse as IItem;
-            var thingAsContainer = thingAsItem as IContainer;
 
-            if (thingAsItem != null && thingAsItem.ChangesOnUse)
-            {
-                Functions.Change(ref thingToUse, thingAsItem.ChangeOnUseTo, 0);
-            }
-            else if (thingAsItem != null && thingAsItem.IsContainer && thingAsContainer != null)
-            {
-                var openContainerId = Player.GetContainerId(thingAsContainer);
+			if (thingAsItem != null && thingAsItem.ChangesOnUse) {
+				Functions.Change(ref thingToUse, thingAsItem.ChangeOnUseTo, 0);
+			}
+			else if (thingAsItem != null && thingAsItem.IsContainer && thingAsItem is IContainer thingAsContainer) {
+				var openContainerId = Player.GetContainerId(thingAsContainer);
 
-                if (openContainerId < 0)
-                {
-                    // PlayerId doesn't have this container open.
-                    switch (itemUsePacket.FromLocation.Type)
-                    {
-                        case LocationType.Ground:
-                            Player.OpenContainer(thingAsContainer);
-                            break;
-                        case LocationType.Container:
-                            Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
-                            break;
-                        case LocationType.Slot:
-                            Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+				if (openContainerId < 0) {
+					// PlayerId doesn't have this container open.
+					switch (itemUsePacket.FromLocation.Type) {
+						case LocationType.Ground:
+							Player.OpenContainer(thingAsContainer);
+							break;
+						case LocationType.Container:
+							Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
+							break;
+						case LocationType.Slot:
+							Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
+					}
 
-                    thingAsContainer.OnThingChanged += Player.CheckInventoryContainerProximity;
+					thingAsContainer.OnThingChanged += Player.CheckInventoryContainerProximity;
 
-                    ResponsePackets.Add(new ContainerOpenPacket
-                    {
-                        ContainerId = (byte)thingAsContainer.GetIdFor(Player.CreatureId),
-                        ClientItemId = thingAsItem.ThingId,
-                        HasParent = thingAsContainer.Parent != null,
-                        Name = thingAsItem.Type.Name,
-                        Volume = thingAsContainer.Volume,
-                        Contents = thingAsContainer.Content
-                    });
-                }
-                else
-                {
-                    // Close it.
-                    Player.CloseContainerWithId((byte)openContainerId);
-                    thingAsContainer.OnThingChanged -= Player.CheckInventoryContainerProximity;
+					ResponsePackets.Add(new ContainerOpenPacket {
+						ContainerId = (byte) thingAsContainer.GetIdFor(Player.CreatureId),
+						ClientItemId = thingAsItem.ThingId,
+						HasParent = thingAsContainer.Parent != null,
+						Name = thingAsItem.Type.Name,
+						Volume = thingAsContainer.Volume,
+						Contents = thingAsContainer.Content
+					});
+				}
+				else {
+					// Close it.
+					Player.CloseContainerWithId((byte) openContainerId);
+					thingAsContainer.OnThingChanged -= Player.CheckInventoryContainerProximity;
 
-                    ResponsePackets.Add(new ContainerClosePacket
-                    {
-                        ContainerId = (byte)openContainerId
-                    });
-                }
-            }
-            else
-            {
-                var useEvents = Game.Instance.EventsCatalog[ItemEventType.Use].Cast<UseItemEvent>();
+					ResponsePackets.Add(new ContainerClosePacket {
+						ContainerId = (byte) openContainerId
+					});
+				}
+			}
+			else {
+				var useEvents = Game.Instance.EventsCatalog[ItemEventType.Use].Cast<UseItemEvent>();
 
-                var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == itemUsePacket.ClientId && e.Setup(thingToUse, null, Player) && e.CanBeExecuted);
+				var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == itemUsePacket.ClientId && e.Setup(thingToUse, null, Player) && e.CanBeExecuted);
 
-                if (candidate != null)
-                {
-                    // Execute all actions.
-                    candidate.Execute();
-                }
-            }
-        }
+				if (candidate != null) {
+					// Execute all actions.
+					candidate.Execute();
+				}
+			}
+		}
     }
 }

@@ -21,7 +21,7 @@ namespace COMMO.Server
 {
     public class Player : Creature, IPlayer
     {
-        const int KnownCreatureLimit = 100; // TODO: not sure of the number for this version... debugs will tell :|
+		private const int KnownCreatureLimit = 100; // TODO: not sure of the number for this version... debugs will tell :|
 
         public override bool CanBeMoved => AccessLevel == 0;
 
@@ -43,9 +43,9 @@ namespace COMMO.Server
 
         public bool CanLogout => AutoAttackTargetId == 0;
 
-        private Dictionary<uint, long> KnownCreatures { get; }
+        private Dictionary<uint, long> _knownCreatures { get; }
 
-        private Dictionary<string, bool> VipList { get; }
+        private Dictionary<string, bool> _vipList { get; }
 
         public Location LocationInFront
         {
@@ -97,7 +97,7 @@ namespace COMMO.Server
 
         public sealed override IInventory Inventory { get; protected set; }
 
-        private IContainer[] OpenContainers { get; }
+        private IContainer[] _openContainers { get; }
 
         private const sbyte MaxContainers = 16;
 
@@ -139,38 +139,29 @@ namespace COMMO.Server
             Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
             Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
 
-            OpenContainers = new IContainer[MaxContainers];
+            _openContainers = new IContainer[MaxContainers];
             Inventory = new PlayerInventory(this);
-            KnownCreatures = new Dictionary<uint, long>();
-            VipList = new Dictionary<string, bool>();
+            _knownCreatures = new Dictionary<uint, long>();
+            _vipList = new Dictionary<string, bool>();
 
             OnThingChanged += CheckInventoryContainerProximity;
         }
 
-        // ~PlayerId()
-        // {
-        //    OnLocationChanged -= CheckInventoryContainerProximity;
-        // }
-        public byte GetSkillInfo(SkillType skill)
-        {
-            return (byte)Skills[skill].Level;
-        }
+		// ~PlayerId()
+		// {
+		//    OnLocationChanged -= CheckInventoryContainerProximity;
+		// }
+		public byte GetSkillInfo(SkillType skill) => (byte) Skills[skill].Level;
 
-        public byte GetSkillPercent(SkillType skill)
-        {
-            return (byte)Math.Min(100, Skills[skill].Count * 100 / (Skills[skill].Target + 1));
-        }
+		public byte GetSkillPercent(SkillType skill) => (byte) Math.Min(100, Skills[skill].Count * 100 / (Skills[skill].Target + 1));
 
-        public bool KnowsCreatureWithId(uint creatureId)
-        {
-            return KnownCreatures.ContainsKey(creatureId);
-        }
+		public bool KnowsCreatureWithId(uint creatureId) => _knownCreatures.ContainsKey(creatureId);
 
-        public void AddKnownCreature(uint creatureId)
+		public void AddKnownCreature(uint creatureId)
         {
             try
             {
-                KnownCreatures[creatureId] = DateTime.Now.Ticks;
+                _knownCreatures[creatureId] = DateTime.Now.Ticks;
             }
             catch
             {
@@ -181,13 +172,13 @@ namespace COMMO.Server
         public uint ChooseToRemoveFromKnownSet()
         {
             // if the buffer is full we need to choose a vitim.
-            while (KnownCreatures.Count == KnownCreatureLimit)
+            while (_knownCreatures.Count == KnownCreatureLimit)
             {
-                foreach (var candidate in KnownCreatures.OrderBy(kvp => kvp.Value).ToList()) // .ToList() prevents modifiying an enumerating collection in the rare case we hit an exception down there.
+                foreach (var candidate in _knownCreatures.OrderBy(kvp => kvp.Value).ToList()) // .ToList() prevents modifiying an enumerating collection in the rare case we hit an exception down there.
                 {
                     try
                     {
-                        if (KnownCreatures.Remove(candidate.Key))
+                        if (_knownCreatures.Remove(candidate.Key))
                         {
                             return candidate.Key;
                         }
@@ -202,27 +193,13 @@ namespace COMMO.Server
             return uint.MinValue; // 0
         }
 
-        public void SetOutfit(Outfit outfit)
-        {
-            Outfit = outfit;
-        }
+		public void SetOutfit(Outfit outfit) => Outfit = outfit;
 
-        public void SetPendingAction(IAction action)
-        {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+		public void SetPendingAction(IAction action) => PendingAction = action ?? throw new ArgumentNullException(nameof(action));
 
-            PendingAction = action;
-        }
+		public void ClearPendingActions() => PendingAction = null;
 
-        public void ClearPendingActions()
-        {
-            PendingAction = null;
-        }
-
-        protected override void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventArgs)
+		protected override void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventArgs)
         {
             if (PendingAction == null || thingChanged != this || eventArgs.PropertyChanged != nameof(Location))
             {
@@ -241,9 +218,9 @@ namespace COMMO.Server
 
         public sbyte GetContainerId(IContainer thingAsContainer)
         {
-            for (sbyte i = 0; i < OpenContainers.Length; i++)
+            for (sbyte i = 0; i < _openContainers.Length; i++)
             {
-                if (OpenContainers[i] == thingAsContainer)
+                if (_openContainers[i] == thingAsContainer)
                 {
                     return i;
                 }
@@ -256,8 +233,8 @@ namespace COMMO.Server
         {
             try
             {
-                OpenContainers[openContainerId].Close(CreatureId);
-                OpenContainers[openContainerId] = null;
+                _openContainers[openContainerId].Close(CreatureId);
+                _openContainers[openContainerId] = null;
             }
             catch
             {
@@ -272,38 +249,38 @@ namespace COMMO.Server
                 throw new ArgumentNullException(nameof(container));
             }
 
-            for (byte i = 0; i < OpenContainers.Length; i++)
+            for (byte i = 0; i < _openContainers.Length; i++)
             {
-                if (OpenContainers[i] != null)
+                if (_openContainers[i] != null)
                 {
                     continue;
                 }
 
-                OpenContainers[i] = container;
-                OpenContainers[i].Open(CreatureId, i);
+                _openContainers[i] = container;
+                _openContainers[i].Open(CreatureId, i);
 
                 return (sbyte)i;
             }
 
-            var lastIdx = (sbyte)(OpenContainers.Length - 1);
+            var lastIdx = (sbyte)(_openContainers.Length - 1);
 
-            OpenContainers[lastIdx] = container;
+            _openContainers[lastIdx] = container;
 
             return lastIdx;
         }
 
         public void OpenContainerAt(IContainer thingAsContainer, byte index)
         {
-            OpenContainers[index]?.Close(CreatureId);
-            OpenContainers[index] = thingAsContainer;
-            OpenContainers[index].Open(CreatureId, index);
+            _openContainers[index]?.Close(CreatureId);
+            _openContainers[index] = thingAsContainer;
+            _openContainers[index].Open(CreatureId, index);
         }
 
         public IContainer GetContainer(byte index)
         {
             try
             {
-                var container = OpenContainers[index];
+                var container = _openContainers[index];
 
                 container.Open(CreatureId, index);
 
@@ -319,14 +296,14 @@ namespace COMMO.Server
 
         public void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs)
         {
-            for (byte i = 0; i < OpenContainers.Length; i++)
+            for (byte i = 0; i < _openContainers.Length; i++)
             {
-                if (OpenContainers[i] == null)
+                if (_openContainers[i] == null)
                 {
                     continue;
                 }
 
-                var containerSourceLoc = OpenContainers[i].Location;
+                var containerSourceLoc = _openContainers[i].Location;
 
                 switch (containerSourceLoc.Type)
                 {

@@ -42,9 +42,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddByte(Player.GetSkillPercent(SkillType.Fishing));
         }
 
-        public override void CleanUp()
-        {
-            Player = null;
-        }
-    }
+		public override void CleanUp() => Player = null;
+	}
 }

@@ -4,8 +4,6 @@ namespace COMMO.OTB.Tests {
 	public sealed class OTBTreeBuilderTests {
 
 		[Test]
-		public void WeNeedToWriteTestsForThis() {
-			Assert.Fail("We need to write tests for this.");
-		}
+		public void WeNeedToWriteTestsForThis() => Assert.Fail("We need to write tests for this.");
 	}
 }

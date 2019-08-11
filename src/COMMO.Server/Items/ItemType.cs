@@ -38,12 +38,9 @@ namespace COMMO.Server.Items
             Locked = false;
         }
 
-        public void LockChanges()
-        {
-            Locked = true;
-        }
+		public void LockChanges() => Locked = true;
 
-        public void SetId(ushort typeId)
+		public void SetId(ushort typeId)
         {
             if (Locked)
             {
@@ -53,12 +50,9 @@ namespace COMMO.Server.Items
             TypeId = typeId;
         }
 
-		public void SetClientId(ushort clientId)
-        {
-            ClientId = clientId;
-        }
+		public void SetClientId(ushort clientId) => ClientId = clientId;
 
-        public void SetName(string name)
+		public void SetName(string name)
         {
             if (Locked)
             {
@@ -187,12 +181,9 @@ namespace COMMO.Server.Items
                 SetFlag(ItemFlag.ForceUse);
         }
 
-        private bool HasOTFlag(UInt32 flags, UInt32 flag)
-        {
-            return (flags & flag) != 0;
-        }
+		private bool HasOTFlag(UInt32 flags, UInt32 flag) => (flags & flag) != 0;
 
-        public bool ParseOTWeaponType(string type)
+		public bool ParseOTWeaponType(string type)
         {
 			var value = OpenTibiaTranslationMap.TranslateMeeleWeaponTypeName(type, out bool success);
 			if (success)

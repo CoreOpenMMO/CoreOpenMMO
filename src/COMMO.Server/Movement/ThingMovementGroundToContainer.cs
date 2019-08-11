@@ -74,14 +74,11 @@ namespace COMMO.Server.Movement
 
         private void PickupToContainer()
         {
-            var thingAsItem = Thing as IItem;
+			if (FromTile == null || ToContainer == null || Thing == null || !(Thing is IItem thingAsItem)) {
+				return;
+			}
 
-            if (FromTile == null || ToContainer == null || Thing == null || thingAsItem == null)
-            {
-                return;
-            }
-
-            var thingAtTile = FromTile.GetThingAtStackPosition(FromStackPos);
+			var thingAtTile = FromTile.GetThingAtStackPosition(FromStackPos);
 
             if (thingAtTile == null)
             {

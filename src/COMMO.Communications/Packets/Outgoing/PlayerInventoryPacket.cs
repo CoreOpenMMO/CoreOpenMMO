@@ -46,9 +46,6 @@ namespace COMMO.Communications.Packets.Outgoing
             addInventoryItem(Slot.Ammo);
         }
 
-        public override void CleanUp()
-        {
-            Player = null;
-        }
-    }
+		public override void CleanUp() => Player = null;
+	}
 }

@@ -5,6 +5,17 @@ namespace COMMO.Server.World {
 
 	public static partial class OTBMWorldLoader {
 
+		private static Item ParseItemData(ushort newItemId) {
+			
+			var item = ItemFactory.Create(newItemId);
+			if (item == null) {
+				_logger.Warn($"{nameof(ItemFactory)} was unable to create a item with id: {newItemId}.");
+				return null;
+			}
+
+			return item;
+		}
+
 		private static Item ParseItemData(OTBParsingStream stream) {
 			var newItemId = GetItemIdAndConvertPvpFieldsToPermanentFields(stream);
 			

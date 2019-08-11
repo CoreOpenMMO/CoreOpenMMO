@@ -24,6 +24,7 @@ namespace COMMO.OTB {
 
 			var treeBuilder = new OTBTreeBuilder(serializedOTBData);
 			while (!stream.IsOver) {
+
 				var currentMark = (OTBMarkupByte)stream.ReadByte();
 				if (currentMark < OTBMarkupByte.Escape) {
 					// Since <see cref="OTBMarkupByte"/> can only have values Escape (0xFD), Start (0xFE) and

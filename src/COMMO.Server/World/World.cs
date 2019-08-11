@@ -34,7 +34,7 @@ namespace COMMO.Server.World {
 
 		public ITile GetTile(Location location)
 		{
-			if(_worldTiles.TryGetValue(new Coordinate(location.X, location.Y, location.Z), out Tile tile))
+			if(_worldTiles.TryGetValue(new Coordinate(location.X, location.Y, location.Z), out var tile))
 				return tile;
 
 			return null;

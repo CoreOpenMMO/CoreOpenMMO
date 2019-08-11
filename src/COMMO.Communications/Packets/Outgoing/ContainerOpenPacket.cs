@@ -45,9 +45,6 @@ namespace COMMO.Communications.Packets.Outgoing
             }
         }
 
-        public override void CleanUp()
-        {
-            Contents = null;
-        }
-    }
+		public override void CleanUp() => Contents = null;
+	}
 }

@@ -11,48 +11,36 @@ namespace COMMO.Utilities
     /// </summary>
     public static class FlagsHelper
     {
-        /// <summary>
-        /// Checks if the value has the <paramref name="flagVal"/> set.
-        /// </summary>
-        /// <param name="keysVal">The value to evaluate.</param>
-        /// <param name="flagVal">The flag value to check for.</param>
-        /// <returns>True if the value contains the flag, false otherwise.</returns>
-        public static bool HasFlag(this byte keysVal, byte flagVal)
-        {
-            return (keysVal & flagVal) == flagVal;
-        }
+		/// <summary>
+		/// Checks if the value has the <paramref name="flagVal"/> set.
+		/// </summary>
+		/// <param name="keysVal">The value to evaluate.</param>
+		/// <param name="flagVal">The flag value to check for.</param>
+		/// <returns>True if the value contains the flag, false otherwise.</returns>
+		public static bool HasFlag(this byte keysVal, byte flagVal) => (keysVal & flagVal) == flagVal;
 
-        /// <summary>
-        /// Checks if the value has the <paramref name="flagVal"/> set.
-        /// </summary>
-        /// <param name="keysVal">The value to evaluate.</param>
-        /// <param name="flagVal">The flag value to check for.</param>
-        /// <returns>True if the value contains the flag, false otherwise.</returns>
-        public static bool HasFlag(this uint keysVal, uint flagVal)
-        {
-            return (keysVal & flagVal) == flagVal;
-        }
+		/// <summary>
+		/// Checks if the value has the <paramref name="flagVal"/> set.
+		/// </summary>
+		/// <param name="keysVal">The value to evaluate.</param>
+		/// <param name="flagVal">The flag value to check for.</param>
+		/// <returns>True if the value contains the flag, false otherwise.</returns>
+		public static bool HasFlag(this uint keysVal, uint flagVal) => (keysVal & flagVal) == flagVal;
 
-        /// <summary>
-        /// Sets the flag value into the current variable.
-        /// </summary>
-        /// <param name="keysVal">The value to set the flag into.</param>
-        /// <param name="flagVal">The flag value to add.</param>
-        /// <returns>The variable after setting the flag.</returns>
-        public static byte SetFlag(this byte keysVal, byte flagVal)
-        {
-            return (byte)(keysVal | flagVal);
-        }
+		/// <summary>
+		/// Sets the flag value into the current variable.
+		/// </summary>
+		/// <param name="keysVal">The value to set the flag into.</param>
+		/// <param name="flagVal">The flag value to add.</param>
+		/// <returns>The variable after setting the flag.</returns>
+		public static byte SetFlag(this byte keysVal, byte flagVal) => (byte) (keysVal | flagVal);
 
-        /// <summary>
-        /// Sets the flag value into the current variable.
-        /// </summary>
-        /// <param name="keysVal">The value to set the flag into.</param>
-        /// <param name="flagVal">The flag value to add.</param>
-        /// <returns>The variable after setting the flag.</returns>
-        public static uint SetFlag(this uint keysVal, uint flagVal)
-        {
-            return keysVal | flagVal;
-        }
-    }
+		/// <summary>
+		/// Sets the flag value into the current variable.
+		/// </summary>
+		/// <param name="keysVal">The value to set the flag into.</param>
+		/// <param name="flagVal">The flag value to add.</param>
+		/// <returns>The variable after setting the flag.</returns>
+		public static uint SetFlag(this uint keysVal, uint flagVal) => keysVal | flagVal;
+	}
 }

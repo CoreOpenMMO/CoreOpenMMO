@@ -16,10 +16,7 @@ namespace COMMO.Scheduling.Contracts {
 		/// </summary>
 		/// <param name="evt">The event to include as the event fired.</param>
 		public EventFiredEventArgs(IEvent evt) {
-			if (evt == null)
-				throw new ArgumentNullException(nameof(evt));
-
-			Event = evt;
+			Event = evt ?? throw new ArgumentNullException(nameof(evt));
 		}
 
 		/// <summary>

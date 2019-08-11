@@ -69,12 +69,11 @@ namespace COMMO.Server.Movement
                 return;
             }
 
-            bool partialRemove;
 
-            // attempt to remove the item from the inventory
-            var movingItem = Requestor.Inventory?.Remove(FromSlot, Count, out partialRemove);
+			// attempt to remove the item from the inventory
+			var movingItem = Requestor.Inventory?.Remove(FromSlot, Count, out Boolean partialRemove);
 
-            if (movingItem == null)
+			if (movingItem == null)
             {
                 return;
             }

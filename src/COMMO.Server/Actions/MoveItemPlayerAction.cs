@@ -22,14 +22,11 @@ namespace COMMO.Server.Actions {
 
         protected override void InternalPerform()
         {
-            var itemMovePacket = Packet as ItemMovePacket;
+			if (!(Packet is ItemMovePacket itemMovePacket)) {
+				return;
+			}
 
-            if (itemMovePacket == null)
-            {
-                return;
-            }
-
-            switch (itemMovePacket.FromLocation.Type)
+			switch (itemMovePacket.FromLocation.Type)
             {
                 case LocationType.Ground:
                     MoveFromGround(itemMovePacket);

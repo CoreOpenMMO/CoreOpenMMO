@@ -40,22 +40,22 @@ namespace COMMO.Scheduling {
 		/// <summary>
 		/// The internal priority queue used to manage events.
 		/// </summary>
-		private FastPriorityQueue<BaseEvent> _priorityQueue;
+		private readonly FastPriorityQueue<BaseEvent> _priorityQueue;
 
 		/// <summary>
 		/// Stores the ids of cancelled events.
 		/// </summary>
-		private ISet<string> _cancelledEvents;
+		private readonly ISet<string> _cancelledEvents;
 
 		/// <summary>
 		/// A dictionary to keep track of who requested which events.
 		/// </summary>
-		private IDictionary<uint, ISet<string>> _eventsPerRequestor;
+		private readonly IDictionary<uint, ISet<string>> _eventsPerRequestor;
 
 		/// <summary>
 		/// A cancellation token to use on the queue processing thread.
 		/// </summary>
-		private CancellationToken _cancellationToken;
+		private readonly CancellationToken _cancellationToken;
 
 		/// <summary>
 		/// A lock object to semaphore queue modifications.
@@ -225,15 +225,13 @@ namespace COMMO.Scheduling {
 		/// </summary>
 		/// <param name="dateTime">The specified time.</param>
 		/// <returns>The milliseconds value.</returns>
-		private long GetMillisecondsAfterReferenceTime(DateTime dateTime) {
-			return Convert.ToInt64((dateTime - _startTime).TotalMilliseconds);
-		}
+		private long GetMillisecondsAfterReferenceTime(DateTime dateTime) => Convert.ToInt64((dateTime - _startTime).TotalMilliseconds);
 
 		/// <summary>
 		/// Processes the queue and fires events.
 		/// </summary>
 		private void QueueProcessing() {
-			TimeSpan waitForNewTimeOut = TimeSpan.Zero;
+			var waitForNewTimeOut = TimeSpan.Zero;
 
 			while (!_cancellationToken.IsCancellationRequested) {
 				lock (_eventsAvailableLock) {

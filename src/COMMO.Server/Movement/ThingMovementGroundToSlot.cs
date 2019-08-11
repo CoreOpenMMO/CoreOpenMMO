@@ -64,14 +64,11 @@ namespace COMMO.Server.Movement
 
         private void MoveFromGroudToSlot()
         {
-            var updatedItem = Thing as IItem;
+			if (FromTile == null || Thing == null || !(Thing is IItem updatedItem) || Requestor == null) {
+				return;
+			}
 
-            if (FromTile == null || Thing == null || updatedItem == null || Requestor == null)
-            {
-                return;
-            }
-
-            var thingAtTile = FromTile.GetThingAtStackPosition(FromStackPos);
+			var thingAtTile = FromTile.GetThingAtStackPosition(FromStackPos);
 
             if (thingAtTile == null)
             {
@@ -110,62 +107,54 @@ namespace COMMO.Server.Movement
                 return;
             }
 
-            // attempt to place the intended item at the slot.
-            IItem addedItem;
-            if (!Requestor.Inventory.Add(updatedItem, out addedItem, ToSlot, updatedItem.Count))
-            {
-                // failed to add to the slot, add again to the source tile
-                FromTile.AddThing(ref thing, thing.Count);
+			// attempt to place the intended item at the slot.
+			if (!Requestor.Inventory.Add(updatedItem, out var addedItem, ToSlot, updatedItem.Count)) {
+				// failed to add to the slot, add again to the source tile
+				FromTile.AddThing(ref thing, thing.Count);
 
-                // notify all spectator players of that tile.
-                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
+				// notify all spectator players of that tile.
+				Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
 
-                // call any collision events again.
-                if (FromTile.HandlesCollision)
-                {
-                    foreach (var itemWithCollision in FromTile.ItemsWithCollision)
-                    {
-                        var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
+				// call any collision events again.
+				if (FromTile.HandlesCollision) {
+					foreach (var itemWithCollision in FromTile.ItemsWithCollision) {
+						var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                        var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, updatedItem) && e.CanBeExecuted);
+						var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, updatedItem) && e.CanBeExecuted);
 
-                        // Execute all actions.
-                        candidate?.Execute();
-                    }
-                }
-            }
-            else
-            {
-                // added the new item to the slot
-                if (addedItem == null)
-                {
-                    return;
-                }
+						// Execute all actions.
+						candidate?.Execute();
+					}
+				}
+			}
+			else {
+				// added the new item to the slot
+				if (addedItem == null) {
+					return;
+				}
 
-                // we exchanged or got some leftover item, place back in the source container at any index.
-                IThing remainderThing = addedItem;
+				// we exchanged or got some leftover item, place back in the source container at any index.
+				IThing remainderThing = addedItem;
 
-                FromTile.AddThing(ref remainderThing, remainderThing.Count);
+				FromTile.AddThing(ref remainderThing, remainderThing.Count);
 
-                // notify all spectator players of that tile.
-                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
+				// notify all spectator players of that tile.
+				Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
 
-                // call any collision events again.
-                if (!FromTile.HandlesCollision)
-                {
-                    return;
-                }
+				// call any collision events again.
+				if (!FromTile.HandlesCollision) {
+					return;
+				}
 
-                foreach (var itemWithCollision in FromTile.ItemsWithCollision)
-                {
-                    var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
+				foreach (var itemWithCollision in FromTile.ItemsWithCollision) {
+					var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                    var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, remainderThing) && e.CanBeExecuted);
+					var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, remainderThing) && e.CanBeExecuted);
 
-                    // Execute all actions.
-                    candidate?.Execute();
-                }
-            }
-        }
+					// Execute all actions.
+					candidate?.Execute();
+				}
+			}
+		}
     }
 }

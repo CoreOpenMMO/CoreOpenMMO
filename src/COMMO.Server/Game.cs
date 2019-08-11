@@ -114,9 +114,7 @@ namespace COMMO.Server {
 		/// Gets the current world's <see cref="WorldState"/>.
 		/// </summary>
 		public WorldState Status {
-			get {
-				return _status;
-			}
+			get => _status;
 
 			private set {
 				_status = value;
@@ -361,7 +359,7 @@ namespace COMMO.Server {
 					foreach (var creature in Creatures.Values.Where(c => c.WalkingQueue.Count > 0).ToList()) {
 						var cooldownTime = creature.CalculateRemainingCooldownTime(CooldownType.Move, CurrentTime);
 
-						if (cooldownTime <= TimeSpan.Zero && creature.WalkingQueue.TryPeek(out Tuple<byte, Direction> nextTuple) && creature.NextStepId == nextTuple.Item1) {
+						if (cooldownTime <= TimeSpan.Zero && creature.WalkingQueue.TryPeek(out var nextTuple) && creature.NextStepId == nextTuple.Item1) {
 							// Time to walk, let's process it.
 							if (!creature.WalkingQueue.TryDequeue(out nextTuple)) {
 								continue;
@@ -500,7 +498,7 @@ namespace COMMO.Server {
 
 
 						// Need to actually pathfind to avoid placing a monster in unreachable places.
-						Pathfind(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 100);
+						Pathfind(spawn.Location, randomTile.Location, out var foundLocation, (i + 1) * 100);
 
 						var foundTile = GetTileAt(foundLocation);
 
@@ -609,7 +607,7 @@ namespace COMMO.Server {
 				return;
 			}
 
-			IEvent evt = eventArgs.Event;
+			var evt = eventArgs.Event;
 
 			Console.WriteLine($"Processing event {evt.EventId}.");
 
@@ -636,9 +634,8 @@ namespace COMMO.Server {
 				try {
 					if (combatOp.CanBeExecuted) {
 						var canAttack = true;
-						var attackerAsCreature = combatOp.Attacker as ICreature;
 
-						if (combatOp.Target is ICreature targetAsCreature && attackerAsCreature != null) {
+						if (combatOp.Target is ICreature targetAsCreature && combatOp.Attacker is ICreature attackerAsCreature) {
 							canAttack &= attackerAsCreature.CanSee(targetAsCreature);
 							canAttack &= CanThrowBetween(attackerAsCreature.Location, targetAsCreature.Location);
 						}
@@ -663,17 +660,11 @@ namespace COMMO.Server {
 			ScheduleEvent(notification);
 		}
 
-		public IEnumerable<uint> GetSpectatingCreatureIds(Location location) {
-			return _map.GetCreatureIdsAt(location);
-		}
+		public IEnumerable<uint> GetSpectatingCreatureIds(Location location) => _map.GetCreatureIdsAt(location);
 
-		public ITile GetTileAt(Location location) {
-			return _map[location];
-		}
+		public ITile GetTileAt(Location location) => _map[location];
 
-		private IEnumerable<IPlayer> GetSpectatingPlayers(Location location) {
-			return _connections.Keys.Select(creatureId => Creatures[creatureId]).Where(c => c.CanSee(location)).Cast<IPlayer>().ToList();
-		}
+		private IEnumerable<IPlayer> GetSpectatingPlayers(Location location) => _connections.Keys.Select(creatureId => Creatures[creatureId]).Where(c => c.CanSee(location)).Cast<IPlayer>().ToList();
 
 		public bool CanThrowBetween(Location fromLocation, Location toLocation, bool checkLineOfSight = true) {
 			if (fromLocation == toLocation) {
@@ -751,24 +742,32 @@ namespace COMMO.Server {
 		}
 
 		internal Player Login(PlayerModel playerRecord, Connection connection) {
-			var rng = new Random();
-			var player = new Player((uint)rng.Next(), playerRecord.Charname, 100, 100, 4240, 100, 100);
+			try {
+				var rng = new Random();
+				var player = new Player((uint) rng.Next(), playerRecord.Charname, 100, 100, 4240, 100, 100);
 
-			// TODO: check if map.CanAddCreature(playerRecord.location);
-			// playerRecord.location
-			IThing playerThing = player;
-			_map[Server.Map.Map.VeteranStart].AddThing(ref playerThing);
+				// TODO: check if map.CanAddCreature(playerRecord.location);
+				// playerRecord.location
+				IThing playerThing = player;
+				_map[Server.Map.Map.VeteranStart].AddThing(ref playerThing);
 
-			NotifySpectatingPlayers(conn => new CreatureAddedNotification(conn, player, EffectT.BubbleBlue), player.Location);
+				NotifySpectatingPlayers(conn => new CreatureAddedNotification(conn, player, EffectT.BubbleBlue), player.Location);
 
-			_connections.TryAdd(player.CreatureId, connection);
+				_connections.TryAdd(player.CreatureId, connection);
 
-			if (!Creatures.TryAdd(player.CreatureId, player)) {
-				// TODO: proper logging
-				Console.WriteLine($"WARNING: Failed to add {player.Name} to the global dictionary.");
+				if (!Creatures.TryAdd(player.CreatureId, player)) {
+					// TODO: proper logging
+					Console.WriteLine($"WARNING: Failed to add {player.Name} to the global dictionary.");
+				}
+
+				return player;
+			}
+			catch (Exception ex) {
+				// TODO: propper logging
+				Console.WriteLine(ex);
 			}
 
-			return player;
+			return null;
 		}
 
 		internal bool AttemptLogout(IPlayer player) {
@@ -784,18 +783,14 @@ namespace COMMO.Server {
 
 			NotifySpectatingPlayers(conn => new CreatureRemovedNotification(conn, player, oldStackpos, EffectT.Puff), player.Location);
 
-			Creatures.TryRemove(player.CreatureId, out Creature creature);
+			Creatures.TryRemove(player.CreatureId, out var creature);
 
-			return _connections.TryRemove(player.CreatureId, out Connection connection);
+			return _connections.TryRemove(player.CreatureId, out var connection);
 		}
 
-		internal byte[] GetMapDescriptionAt(IPlayer forPlayer, Location location) {
-			return _map.GetDescription(forPlayer, (ushort)(location.X - 8), (ushort)(location.Y - 6), location.Z, location.IsUnderground).ToArray(); // TODO: handle near top left of map edge case.
-		}
+		internal byte[] GetMapDescriptionAt(IPlayer forPlayer, Location location) => _map.GetDescription(forPlayer, (ushort) (location.X - 8), (ushort) (location.Y - 6), location.Z, location.IsUnderground).ToArray(); // TODO: handle near top left of map edge case.
 
-		internal byte[] GetMapDescription(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, bool isUnderground, byte windowSizeX, byte windowSizeY) {
-			return _map.GetDescription(player, fromX, fromY, currentZ, isUnderground, windowSizeX, windowSizeY).ToArray();
-		}
+		internal byte[] GetMapDescription(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, bool isUnderground, byte windowSizeX, byte windowSizeY) => _map.GetDescription(player, fromX, fromY, currentZ, isUnderground, windowSizeX, windowSizeY).ToArray();
 
 		internal byte[] GetMapFloorsDescription(IPlayer forPlayer, ushort fromX, ushort fromY, short startZ, short endZ, byte windowSizeX, byte windowSizeY, int startingOffsetZ = 0) {
 			var totalBytes = new List<byte>();

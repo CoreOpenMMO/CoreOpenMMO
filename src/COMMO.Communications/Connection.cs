@@ -51,12 +51,9 @@ namespace COMMO.Communications
             IsAuthenticated = false;
         }
 
-        public void BeginStreamRead()
-        {
-            Stream.BeginRead(InMessage.Buffer, 0, 2, OnRead, null);
-        }
+		public void BeginStreamRead() => Stream.BeginRead(InMessage.Buffer, 0, 2, OnRead, null);
 
-        public void OnAccept(IAsyncResult ar)
+		public void OnAccept(IAsyncResult ar)
         {
             if (ar == null)
             {
@@ -183,12 +180,9 @@ namespace COMMO.Communications
             }
         }
 
-        public void Send(NetworkMessage message)
-        {
-            Send(message, true);
-        }
+		public void Send(NetworkMessage message) => Send(message, true);
 
-        public void Send(NetworkMessage message, bool useEncryption, bool managementProtocol = false)
+		public void Send(NetworkMessage message, bool useEncryption, bool managementProtocol = false)
         {
             // if (isInTransaction)
             // {
@@ -212,9 +206,6 @@ namespace COMMO.Communications
             OnCloseEvent?.Invoke(this);
         }
 
-        public void SetXtea(uint[] xteaKey)
-        {
-            XTeaKey = xteaKey;
-        }
-    }
+		public void SetXtea(uint[] xteaKey) => XTeaKey = xteaKey;
+	}
 }

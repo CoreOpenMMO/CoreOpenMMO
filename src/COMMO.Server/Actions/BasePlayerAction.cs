@@ -22,13 +22,8 @@ namespace COMMO.Server.Actions {
 		public IList<IPacketOutgoing> ResponsePackets { get; }
 
 		protected BasePlayerAction(IPlayer player, IPacketIncoming packet, Location retryLocation) {
-			if (player == null)
-				throw new System.ArgumentNullException(nameof(player));
-			if (packet == null)
-				throw new System.ArgumentNullException(nameof(packet));
-
-			Player = player;
-			Packet = packet;
+			Player = player ?? throw new System.ArgumentNullException(nameof(player));
+			Packet = packet ?? throw new System.ArgumentNullException(nameof(packet));
 			RetryLocation = retryLocation;
 			ResponsePackets = new List<IPacketOutgoing>();
 		}

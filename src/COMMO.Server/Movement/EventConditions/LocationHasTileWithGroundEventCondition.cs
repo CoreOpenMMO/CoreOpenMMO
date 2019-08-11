@@ -31,10 +31,7 @@ namespace COMMO.Server.Movement.EventConditions
         /// <inheritdoc/>
         public string ErrorMessage => "There is not enough room.";
 
-        /// <inheritdoc/>
-        public bool Evaluate()
-        {
-            return Game.Instance.GetTileAt(Location)?.Ground != null;
-        }
-    }
+		/// <inheritdoc/>
+		public bool Evaluate() => Game.Instance.GetTileAt(Location)?.Ground != null;
+	}
 }

@@ -15,12 +15,9 @@ namespace COMMO.Communications.Packets.Outgoing
 
         public bool HadError { get; set; }
 
-        public override void Add(NetworkMessage message)
-        {
-            message.AddByte((byte)(HadError ? 0x01 : 0x00));
-        }
+		public override void Add(NetworkMessage message) => message.AddByte((byte) (HadError ? 0x01 : 0x00));
 
-        public override void CleanUp()
+		public override void CleanUp()
         {
             // No references to clear.
         }

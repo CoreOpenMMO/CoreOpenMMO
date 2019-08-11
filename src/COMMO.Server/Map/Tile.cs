@@ -39,11 +39,7 @@ namespace COMMO.Server.Map {
 
 		public IEnumerable<IItem> DownItems => _downItemsOnTile;
 
-		public bool HandlesCollision {
-			get {
-				return (Ground != null && Ground.HasCollision) || TopItems1.Any(i => i.HasCollision) || TopItems2.Any(i => i.HasCollision) || DownItems.Any(i => i.HasCollision);
-			}
-		}
+		public bool HandlesCollision => (Ground != null && Ground.HasCollision) || TopItems1.Any(i => i.HasCollision) || TopItems2.Any(i => i.HasCollision) || DownItems.Any(i => i.HasCollision);
 
 		public IEnumerable<IItem> ItemsWithCollision {
 			get {
@@ -61,11 +57,7 @@ namespace COMMO.Server.Map {
 			}
 		}
 
-		public bool HandlesSeparation {
-			get {
-				return (Ground != null && Ground.HasSeparation) || TopItems1.Any(i => i.HasSeparation) || TopItems2.Any(i => i.HasSeparation) || DownItems.Any(i => i.HasSeparation);
-			}
-		}
+		public bool HandlesSeparation => (Ground != null && Ground.HasSeparation) || TopItems1.Any(i => i.HasSeparation) || TopItems2.Any(i => i.HasSeparation) || DownItems.Any(i => i.HasSeparation);
 
 		public IEnumerable<IItem> ItemsWithSeparation {
 			get {
@@ -85,23 +77,11 @@ namespace COMMO.Server.Map {
 
 		public bool IsHouse => false;
 
-		public bool BlocksThrow {
-			get {
-				return (Ground != null && Ground.BlocksThrow) || TopItems1.Any(i => i.BlocksThrow) || TopItems2.Any(i => i.BlocksThrow) || DownItems.Any(i => i.BlocksThrow);
-			}
-		}
+		public bool BlocksThrow => (Ground != null && Ground.BlocksThrow) || TopItems1.Any(i => i.BlocksThrow) || TopItems2.Any(i => i.BlocksThrow) || DownItems.Any(i => i.BlocksThrow);
 
-		public bool BlocksPass {
-			get {
-				return (Ground != null && Ground.BlocksPass) || CreatureIds.Any() || TopItems1.Any(i => i.BlocksPass) || TopItems2.Any(i => i.BlocksPass) || DownItems.Any(i => i.BlocksPass);
-			}
-		}
+		public bool BlocksPass => (Ground != null && Ground.BlocksPass) || CreatureIds.Any() || TopItems1.Any(i => i.BlocksPass) || TopItems2.Any(i => i.BlocksPass) || DownItems.Any(i => i.BlocksPass);
 
-		public bool BlocksLay {
-			get {
-				return (Ground != null && Ground.BlocksLay) || TopItems1.Any(i => i.BlocksLay) || TopItems2.Any(i => i.BlocksLay) || DownItems.Any(i => i.BlocksLay);
-			}
-		}
+		public bool BlocksLay => (Ground != null && Ground.BlocksLay) || TopItems1.Any(i => i.BlocksLay) || TopItems2.Any(i => i.BlocksLay) || DownItems.Any(i => i.BlocksLay);
 
 		public byte[] CachedDescription {
 			get {
@@ -223,7 +203,6 @@ namespace COMMO.Server.Map {
 				throw new ArgumentException("Invalid count zero.");
 			}
 
-			var item = thing as Item;
 
 			if (thing is Creature creature) {
 				_creatureIdsOnTile.Push(creature.CreatureId);
@@ -232,17 +211,21 @@ namespace COMMO.Server.Map {
 
 				// invalidate the cache.
 				_cachedDescription = null;
-			} else if (item != null) {
+			}
+			else if (thing is Item item) {
 				if (item.IsGround) {
 					Ground = item;
 					item.Added();
-				} else if (item.IsTop1) {
+				}
+				else if (item.IsTop1) {
 					_topItems1OnTile.Push(item);
 					item.Added();
-				} else if (item.IsTop2) {
+				}
+				else if (item.IsTop2) {
 					_topItems2OnTile.Push(item);
 					item.Added();
-				} else {
+				}
+				else {
 					if (item.IsCumulative) {
 						var currentItem = _downItemsOnTile.Count > 0 ? _downItemsOnTile.Peek() as Item : null;
 
@@ -250,7 +233,7 @@ namespace COMMO.Server.Map {
 							// add these up.
 							var remaining = currentItem.Amount + count;
 
-							var newCount = (byte)Math.Min(remaining, 100);
+							var newCount = (byte) Math.Min(remaining, 100);
 
 							currentItem.Amount = newCount;
 
@@ -258,15 +241,17 @@ namespace COMMO.Server.Map {
 
 							if (remaining > 0) {
 								IThing newThing = ItemFactory.Create(item.Type.TypeId);
-								AddThing(ref newThing, (byte)remaining);
+								AddThing(ref newThing, (byte) remaining);
 								thing = newThing;
 							}
-						} else {
+						}
+						else {
 							item.Amount = count;
 							_downItemsOnTile.Push(item);
 							item.Added();
 						}
-					} else {
+					}
+					else {
 						_downItemsOnTile.Push(item);
 						item.Added();
 					}
@@ -284,28 +269,31 @@ namespace COMMO.Server.Map {
 				throw new ArgumentException("Invalid count zero.");
 			}
 
-			var item = thing as Item;
 
 			if (thing is Creature creature) {
 				RemoveCreature(creature);
 				creature.Tile = null;
 				creature.Removed();
-			} else if (item != null) {
+			}
+			else if (thing is Item item) {
 				var removeItem = true;
 
 				if (item.IsGround) {
 					Ground = null;
 					item.Removed();
 					removeItem = false;
-				} else if (item.IsTop1) {
+				}
+				else if (item.IsTop1) {
 					_topItems1OnTile.Pop();
 					item.Removed();
 					removeItem = false;
-				} else if (item.IsTop2) {
+				}
+				else if (item.IsTop2) {
 					_topItems2OnTile.Pop();
 					item.Removed();
 					removeItem = false;
-				} else {
+				}
+				else {
 					if (item.IsCumulative) {
 						if (item.Amount < count) // throwing because this should have been checked before.
 						{
@@ -329,7 +317,8 @@ namespace COMMO.Server.Map {
 					item.Removed();
 					item.Tile = null;
 				}
-			} else {
+			}
+			else {
 				throw new InvalidCastException("Thing did not cast to either a CreatureId or Item.");
 			}
 
@@ -579,9 +568,7 @@ namespace COMMO.Server.Map {
 			throw new Exception("Thing not found in tile.");
 		}
 
-		public void SetFlag(TileFlag flag) {
-			Flags |= (byte)flag;
-		}
+		public void SetFlag(TileFlag flag) => Flags |= (byte) flag;
 
 		// public FloorChangeDirection FloorChange
 		// {

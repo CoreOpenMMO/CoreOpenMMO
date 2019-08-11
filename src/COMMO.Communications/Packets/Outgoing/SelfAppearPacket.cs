@@ -46,9 +46,6 @@ namespace COMMO.Communications.Packets.Outgoing
             }
         }
 
-        public override void CleanUp()
-        {
-            Player = null;
-        }
-    }
+		public override void CleanUp() => Player = null;
+	}
 }

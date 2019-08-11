@@ -12,17 +12,12 @@ namespace COMMO.Server {
 		private readonly Func<bool> _condition;
 
 		public GenericEventCondition(Func<bool> condition, string errorMsg = "") {
-			if (condition == null)
-				throw new ArgumentNullException(nameof(condition));
-
-			_condition = condition;
+			_condition = condition ?? throw new ArgumentNullException(nameof(condition));
 			ErrorMessage = errorMsg;
 		}
 
 		public string ErrorMessage { get; }
 
-		public bool Evaluate() {
-			return _condition();
-		}
+		public bool Evaluate() => _condition();
 	}
 }

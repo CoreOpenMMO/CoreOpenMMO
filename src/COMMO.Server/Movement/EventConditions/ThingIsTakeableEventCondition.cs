@@ -49,10 +49,9 @@ namespace COMMO.Server.Movement.EventConditions
                 return false;
             }
 
-            var item = Thing as IItem;
 
-            // TODO: GrabberId access level?
-            return item != null && item.Type.Flags.Contains(ItemFlag.Take);
-        }
+			// TODO: GrabberId access level?
+			return Thing is IItem item && item.Type.Flags.Contains(ItemFlag.Take);
+		}
     }
 }

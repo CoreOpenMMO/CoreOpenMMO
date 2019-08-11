@@ -15,15 +15,13 @@ namespace COMMO.Server.Handlers
     {
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
-            // no further content
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
+			// no further content
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            if (Game.Instance.AttemptLogout(player))
+			if (Game.Instance.AttemptLogout(player))
             {
                 connection.Close();
             }

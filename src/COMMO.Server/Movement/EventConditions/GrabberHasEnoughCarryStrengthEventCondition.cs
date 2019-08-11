@@ -48,11 +48,10 @@ namespace COMMO.Server.Movement.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var itemBeingPicked = ThingPicking as IItem;
-            var itemBeingDropped = ThingDropping as IItem;
-            var picker = PickerId == 0 ? null : Game.Instance.GetCreatureWithId(PickerId);
+			var itemBeingDropped = ThingDropping as IItem;
+			var picker = PickerId == 0 ? null : Game.Instance.GetCreatureWithId(PickerId);
 
-            if (itemBeingPicked == null || picker == null)
+            if (!(ThingPicking is IItem itemBeingPicked) || picker == null)
             {
                 return false;
             }

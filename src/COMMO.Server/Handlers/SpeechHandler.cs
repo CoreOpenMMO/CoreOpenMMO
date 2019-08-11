@@ -17,15 +17,13 @@ namespace COMMO.Server.Handlers
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var speechPacket = new SpeechPacket(message);
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            // TODO: proper implementation.
-            var msgStr = speechPacket.Speech.Message;
+			// TODO: proper implementation.
+			var msgStr = speechPacket.Speech.Message;
 
             if (msgStr.ToLower().StartsWith("test"))
             {

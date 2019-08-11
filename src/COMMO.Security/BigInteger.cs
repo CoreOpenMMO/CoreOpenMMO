@@ -159,8 +159,8 @@ namespace COMMO.Security
         // ***********************************************************************
         public BigInteger(string value, int radix)
         {
-            BigInteger multiplier = new BigInteger(1);
-            BigInteger result = new BigInteger();
+            var multiplier = new BigInteger(1);
+            var result = new BigInteger();
             value = value.ToUpper().Trim();
             int limit = 0;
 
@@ -397,7 +397,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator +(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
@@ -436,7 +436,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator ++(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             long val, carry = 1;
             int index = 0;
@@ -483,7 +483,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator -(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
@@ -538,7 +538,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator --(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             long val;
             bool carryIn = true;
@@ -610,7 +610,7 @@ namespace COMMO.Security
             {
             }
 
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             // multiply the absolute values
             try
@@ -699,7 +699,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator <<(BigInteger bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
             result.DataLength = ShiftLeft(result.data, shiftVal);
 
             return result;
@@ -754,7 +754,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator >>(BigInteger bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
             result.DataLength = ShiftRight(result.data, shiftVal);
 
             if ((bi1.data[MaxLength - 1] & 0x80000000) != 0) // negative
@@ -829,7 +829,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator ~(BigInteger bi1)
         {
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             for (int i = 0; i < MaxLength; i++)
             {
@@ -858,7 +858,7 @@ namespace COMMO.Security
                 return new BigInteger();
             }
 
-            BigInteger result = new BigInteger(bi1);
+            var result = new BigInteger(bi1);
 
             // 1's complement
             for (int i = 0; i < MaxLength; i++)
@@ -901,22 +901,19 @@ namespace COMMO.Security
         // ***********************************************************************
         public static bool operator ==(BigInteger bi1, BigInteger bi2)
         {
-            if (ReferenceEquals(null, bi1))
+            if (bi1 is null)
             {
-                return ReferenceEquals(null, bi2);
+                return bi2 is null;
             }
 
             return bi1.Equals(bi2);
         }
 
-        public static bool operator !=(BigInteger bi1, BigInteger bi2)
-        {
-            return !bi1.Equals(bi2);
-        }
+		public static bool operator !=(BigInteger bi1, BigInteger bi2) => !bi1.Equals(bi2);
 
-        public override bool Equals(object o)
+		public override bool Equals(object o)
         {
-            BigInteger bi = (BigInteger)o;
+            var bi = (BigInteger)o;
 
             if (bi == null || DataLength != bi.DataLength)
             {
@@ -934,15 +931,12 @@ namespace COMMO.Security
             return true;
         }
 
-        public override int GetHashCode()
-        {
-            return ToString().GetHashCode();
-        }
+		public override int GetHashCode() => ToString().GetHashCode();
 
-        // ***********************************************************************
-        // Overloading of inequality operator
-        // ***********************************************************************
-        public static bool operator >(BigInteger bi1, BigInteger bi2)
+		// ***********************************************************************
+		// Overloading of inequality operator
+		// ***********************************************************************
+		public static bool operator >(BigInteger bi1, BigInteger bi2)
         {
             int pos = MaxLength - 1;
 
@@ -1012,23 +1006,17 @@ namespace COMMO.Security
             return false;
         }
 
-        public static bool operator >=(BigInteger bi1, BigInteger bi2)
-        {
-            return bi1 == bi2 || bi1 > bi2;
-        }
+		public static bool operator >=(BigInteger bi1, BigInteger bi2) => bi1 == bi2 || bi1 > bi2;
 
-        public static bool operator <=(BigInteger bi1, BigInteger bi2)
-        {
-            return bi1 == bi2 || bi1 < bi2;
-        }
+		public static bool operator <=(BigInteger bi1, BigInteger bi2) => bi1 == bi2 || bi1 < bi2;
 
-        // ***********************************************************************
-        // Private function that supports the division of two numbers with
-        // a divisor that has more than 1 digit.
-        //
-        // Algorithm taken from [1]
-        // ***********************************************************************
-        private static void MultiByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
+		// ***********************************************************************
+		// Private function that supports the division of two numbers with
+		// a divisor that has more than 1 digit.
+		//
+		// Algorithm taken from [1]
+		// ***********************************************************************
+		private static void MultiByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
         {
             uint[] result = new uint[MaxLength];
 
@@ -1103,8 +1091,8 @@ namespace COMMO.Security
                     dividendPart[h] = remainder[pos - h];
                 }
 
-                BigInteger kk = new BigInteger(dividendPart);
-                BigInteger ss = bi2 * (long)qHat;
+                var kk = new BigInteger(dividendPart);
+                var ss = bi2 * (long)qHat;
 
                 // Console.WriteLine("ss before = " + ss);
                 while (ss > kk)
@@ -1114,7 +1102,7 @@ namespace COMMO.Security
                     // Console.WriteLine(ss);
                 }
 
-                BigInteger yy = kk - ss;
+                var yy = kk - ss;
 
                 // Console.WriteLine("ss = " + ss);
                 // Console.WriteLine("kk = " + kk);
@@ -1260,8 +1248,8 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator /(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
+            var quotient = new BigInteger();
+            var remainder = new BigInteger();
 
             int lastPos = MaxLength - 1;
             bool divisorNeg = false, dividendNeg = false;
@@ -1305,8 +1293,8 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator %(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger(bi1);
+            var quotient = new BigInteger();
+            var remainder = new BigInteger(bi1);
 
             int lastPos = MaxLength - 1;
             bool dividendNeg = false;
@@ -1349,7 +1337,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator &(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
@@ -1374,7 +1362,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator |(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
@@ -1399,7 +1387,7 @@ namespace COMMO.Security
         // ***********************************************************************
         public static BigInteger operator ^(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
 
             int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
 
@@ -1458,25 +1446,22 @@ namespace COMMO.Security
             return new BigInteger(this);
         }
 
-        // ***********************************************************************
-        // Returns a string representing the BigInteger in base 10.
-        // ***********************************************************************
-        public override string ToString()
-        {
-            return ToString(10);
-        }
+		// ***********************************************************************
+		// Returns a string representing the BigInteger in base 10.
+		// ***********************************************************************
+		public override string ToString() => ToString(10);
 
-        // ***********************************************************************
-        // Returns a string representing the BigInteger in sign-and-magnitude
-        // format in the specified radix.
-        //
-        // Example
-        // -------
-        // If the value of BigInteger is -255 in base 10, then
-        // ToString(16) returns "-FF"
-        //
-        // ***********************************************************************
-        public string ToString(int radix)
+		// ***********************************************************************
+		// Returns a string representing the BigInteger in sign-and-magnitude
+		// format in the specified radix.
+		//
+		// Example
+		// -------
+		// If the value of BigInteger is -255 in base 10, then
+		// ToString(16) returns "-FF"
+		//
+		// ***********************************************************************
+		public string ToString(int radix)
         {
             if (radix < 2 || radix > 36)
             {
@@ -1486,7 +1471,7 @@ namespace COMMO.Security
             string charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             string result = string.Empty;
 
-            BigInteger a = this;
+            var a = this;
 
             bool negative = false;
             if ((a.data[MaxLength - 1] & 0x80000000) != 0)
@@ -1501,9 +1486,9 @@ namespace COMMO.Security
                 }
             }
 
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
-            BigInteger biRadix = new BigInteger(radix);
+            var quotient = new BigInteger();
+            var remainder = new BigInteger();
+            var biRadix = new BigInteger(radix);
 
             if (a.DataLength == 1 && a.data[0] == 0)
             {
@@ -1591,7 +1576,7 @@ namespace COMMO.Security
             }
 
             // calculate constant = b^(2k) / m
-            BigInteger constant = new BigInteger();
+            var constant = new BigInteger();
 
             int i = n.DataLength << 1;
             constant.data[i] = 0x00000001;
@@ -1656,7 +1641,7 @@ namespace COMMO.Security
                 kPlusOne = k + 1,
                 kMinusOne = k - 1;
 
-            BigInteger q1 = new BigInteger();
+            var q1 = new BigInteger();
 
             // q1 = x / b^(k-1)
             for (int i = kMinusOne, j = 0; i < x.DataLength; i++, j++)
@@ -1670,8 +1655,8 @@ namespace COMMO.Security
                 q1.DataLength = 1;
             }
 
-            BigInteger q2 = q1 * constant;
-            BigInteger q3 = new BigInteger();
+            var q2 = q1 * constant;
+            var q3 = new BigInteger();
 
             // q3 = q2 / b^(k+1)
             for (int i = kPlusOne, j = 0; i < q2.DataLength; i++, j++)
@@ -1687,7 +1672,7 @@ namespace COMMO.Security
 
             // r1 = x mod b^(k+1)
             // i.e. keep the lowest (k+1) words
-            BigInteger r1 = new BigInteger();
+            var r1 = new BigInteger();
             int lengthToCopy = (x.DataLength > kPlusOne) ? kPlusOne : x.DataLength;
             for (int i = 0; i < lengthToCopy; i++)
             {
@@ -1698,7 +1683,7 @@ namespace COMMO.Security
 
             // r2 = (q3 * n) mod b^(k+1)
             // partial multiplication of q3 and n
-            BigInteger r2 = new BigInteger();
+            var r2 = new BigInteger();
             for (int i = 0; i < q3.DataLength; i++)
             {
                 if (q3.data[i] == 0)
@@ -1733,7 +1718,7 @@ namespace COMMO.Security
             r1 -= r2;
             if ((r1.data[MaxLength - 1] & 0x80000000) != 0) // negative
             {
-                BigInteger val = new BigInteger();
+                var val = new BigInteger();
                 val.data[kPlusOne] = 0x00000001;
                 val.DataLength = kPlusOne + 1;
                 r1 += val;
@@ -1773,7 +1758,7 @@ namespace COMMO.Security
                 y = bi;
             }
 
-            BigInteger g = y;
+            var g = y;
 
             while (x.DataLength > 1 || (x.DataLength == 1 && x.data[0] != 0))
             {
@@ -1865,18 +1850,15 @@ namespace COMMO.Security
             return bits;
         }
 
-        // ***********************************************************************
-        // Returns the lowest 4 bytes of the BigInteger as an int.
-        // ***********************************************************************
-        public int IntValue()
-        {
-            return (int)data[0];
-        }
+		// ***********************************************************************
+		// Returns the lowest 4 bytes of the BigInteger as an int.
+		// ***********************************************************************
+		public int IntValue() => (int) data[0];
 
-        // ***********************************************************************
-        // Returns the lowest 8 bytes of the BigInteger as a long.
-        // ***********************************************************************
-        public long LongValue()
+		// ***********************************************************************
+		// Returns the lowest 8 bytes of the BigInteger as a long.
+		// ***********************************************************************
+		public long LongValue()
         {
             long val = 0;
 
@@ -1951,7 +1933,7 @@ namespace COMMO.Security
                 }
             }
 
-            BigInteger a1 = a >> e;
+            var a1 = a >> e;
 
             int s = 1;
             if ((e & 0x1) != 0 && ((b.data[0] & 0x7) == 3 || (b.data[0] & 0x7) == 5))
@@ -1979,22 +1961,22 @@ namespace COMMO.Security
         public BigInteger ModInverse(BigInteger modulus)
         {
             BigInteger[] p = { 0, 1 };
-            BigInteger[] q = new BigInteger[2];    // quotients
+            var q = new BigInteger[2];    // quotients
             BigInteger[] r = { 0, 0 };             // remainders
 
             int step = 0;
 
-            BigInteger a = modulus;
-            BigInteger b = this;
+            var a = modulus;
+            var b = this;
 
             while (b.DataLength > 1 || (b.DataLength == 1 && b.data[0] != 0))
             {
-                BigInteger quotient = new BigInteger();
-                BigInteger remainder = new BigInteger();
+                var quotient = new BigInteger();
+                var remainder = new BigInteger();
 
                 if (step > 1)
                 {
-                    BigInteger pval = (p[0] - (p[1] * q[0])) % modulus;
+                    var pval = (p[0] - (p[1] * q[0])) % modulus;
                     p[0] = p[1];
                     p[1] = pval;
                 }
@@ -2031,7 +2013,7 @@ namespace COMMO.Security
                 throw new ArithmeticException("No inverse!");
             }
 
-            BigInteger result = (p[0] - (p[1] * q[0])) % modulus;
+            var result = (p[0] - (p[1] * q[0])) % modulus;
 
             if ((result.data[MaxLength - 1] & 0x80000000) != 0)
             {
@@ -2164,7 +2146,7 @@ namespace COMMO.Security
 
             uint mask;
 
-            BigInteger result = new BigInteger();
+            var result = new BigInteger();
             if (bitPos == 0)
             {
                 mask = 0x80000000;
@@ -2234,7 +2216,7 @@ namespace COMMO.Security
         {
             if (k.DataLength == 1 && k.data[0] == 0)
             {
-                BigInteger[] result = new BigInteger[3];
+                var result = new BigInteger[3];
 
                 result[0] = 0;
                 result[1] = 2 % n;
@@ -2244,7 +2226,7 @@ namespace COMMO.Security
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            BigInteger constant = new BigInteger();
+            var constant = new BigInteger();
 
             int nLen = n.DataLength << 1;
             constant.data[nLen] = 0x00000001;
@@ -2272,7 +2254,7 @@ namespace COMMO.Security
                 }
             }
 
-            BigInteger t = k >> s;
+            var t = k >> s;
 
             // Console.WriteLine("s = " + s + " t = " + t);
             return LucasSequenceHelper(p, q, t, n, constant, s);
@@ -2286,7 +2268,7 @@ namespace COMMO.Security
         // ***********************************************************************
         private static BigInteger[] LucasSequenceHelper(BigInteger p, BigInteger q, BigInteger k, BigInteger n, BigInteger constant, int s)
         {
-            BigInteger[] result = new BigInteger[3];
+            var result = new BigInteger[3];
 
             if ((k.data[0] & 0x00000001) == 0)
             {

@@ -12,14 +12,9 @@ namespace COMMO.Server {
 		private readonly Action _action;
 
 		public GenericEventAction(Action action) {
-			if (action == null)
-				throw new ArgumentNullException(nameof(action));
-
-			_action = action;
+			_action = action ?? throw new ArgumentNullException(nameof(action));
 		}
 
-		public void Execute() {
-			_action();
-		}
+		public void Execute() => _action();
 	}
 }

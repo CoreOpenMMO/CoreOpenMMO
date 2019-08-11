@@ -230,22 +230,13 @@ namespace COMMO.Server
             return (Flags & flagValue) == flagValue;
         }
 
-        public void SetFlag(CreatureFlag flag)
-        {
-            Flags |= (uint)flag;
-        }
+		public void SetFlag(CreatureFlag flag) => Flags |= (uint) flag;
 
-        public void UnsetFlag(CreatureFlag flag)
-        {
-            Flags &= ~(uint)flag;
-        }
+		public void UnsetFlag(CreatureFlag flag) => Flags &= ~(uint) flag;
 
-        public bool CanSee(ICreature otherCreature)
-        {
-            return !otherCreature.IsInvisible || CanSeeInvisible;
-        }
+		public bool CanSee(ICreature otherCreature) => !otherCreature.IsInvisible || CanSeeInvisible;
 
-        public bool CanSee(Location pos)
+		public bool CanSee(Location pos)
         {
             if (Location.Z <= 7)
             {
@@ -277,17 +268,11 @@ namespace COMMO.Server
             return false;
         }
 
-        public byte GetStackPosition()
-        {
-            return Tile.GetStackPosition(this);
-        }
+		public byte GetStackPosition() => Tile.GetStackPosition(this);
 
-        public void TurnToDirection(Direction direction)
-        {
-            Direction = direction;
-        }
+		public void TurnToDirection(Direction direction) => Direction = direction;
 
-        public void SetAttackTarget(uint targetId)
+		public void SetAttackTarget(uint targetId)
         {
             if (targetId == CreatureId || AutoAttackTargetId == targetId)
             {
@@ -339,12 +324,9 @@ namespace COMMO.Server
             CheckAutoAttack(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(location) });
         }
 
-        public void UpdateLastAttack(TimeSpan exahust)
-        {
-            Cooldowns[CooldownType.Combat] = new Tuple<DateTime, TimeSpan>(Game.Instance.CombatSynchronizationTime, exahust);
-        }
+		public void UpdateLastAttack(TimeSpan exahust) => Cooldowns[CooldownType.Combat] = new Tuple<DateTime, TimeSpan>(Game.Instance.CombatSynchronizationTime, exahust);
 
-        public void CheckAutoAttack(IThing thingChanged, ThingStateChangedEventArgs eventAgrs)
+		public void CheckAutoAttack(IThing thingChanged, ThingStateChangedEventArgs eventAgrs)
         {
             if (AutoAttackTargetId == 0)
             {
@@ -398,7 +380,7 @@ namespace COMMO.Server
 
         public TimeSpan CalculateRemainingCooldownTime(CooldownType type, DateTime currentTime)
         {
-            TimeSpan timeDiff = TimeSpan.Zero;
+            var timeDiff = TimeSpan.Zero;
 
             try
             {

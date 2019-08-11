@@ -51,7 +51,7 @@ namespace COMMO.Server.Items
 
         public override string CloseInspectionText => InspectionText;
 
-        public uint HolderId => holder;
+        public uint HolderId { get; private set; }
 
         public new Location Location
         {
@@ -72,24 +72,18 @@ namespace COMMO.Server.Items
 
         public bool IsCumulative => Type.Flags.Contains(ItemFlag.Cumulative);
 
-        public byte Amount
-        {
-            get
-            {
-                if (Attributes.ContainsKey(ItemAttribute.Amount))
-                {
-                    return (byte)Math.Min(100, Convert.ToInt32(Attributes[ItemAttribute.Amount]));
-                }
-                return 0x01;
-            }
+        public byte Amount {
+			get {
+				if (Attributes.ContainsKey(ItemAttribute.Amount)) {
+					return (byte) Math.Min(100, Convert.ToInt32(Attributes[ItemAttribute.Amount]));
+				}
+				return 0x01;
+			}
 
-            set
-            {
-                Attributes[ItemAttribute.Amount] = value;
-            }
-        }
+			set => Attributes[ItemAttribute.Amount] = value;
+		}
 
-        public bool IsPathBlocking(byte avoidType = 0)
+		public bool IsPathBlocking(byte avoidType = 0)
         {
             var blocking = Type.Flags.Contains(ItemFlag.Unpass);
 
@@ -103,12 +97,9 @@ namespace COMMO.Server.Items
             return blocking;
         }
 
-        public virtual void AddContent(IEnumerable<object> content)
-        {
-            Console.WriteLine($"Item.AddContent: Item with id {Type.TypeId} is not a Container, ignoring content.");
-        }
+		public virtual void AddContent(IEnumerable<object> content) => Console.WriteLine($"Item.AddContent: Item with id {Type.TypeId} is not a Container, ignoring content.");
 
-        public bool IsContainer => Type.Flags.Contains(ItemFlag.Container) || Type.Flags.Contains(ItemFlag.Chest); // TODO: chest actually means a quest chest...
+		public bool IsContainer => Type.Flags.Contains(ItemFlag.Container) || Type.Flags.Contains(ItemFlag.Chest); // TODO: chest actually means a quest chest...
 
         public bool IsDressable => Type.Flags.Contains(ItemFlag.Clothes);
 
@@ -140,24 +131,18 @@ namespace COMMO.Server.Items
 
         public bool IsLiquidContainer => Type.Flags.Contains(ItemFlag.LiquidContainer);
 
-        public byte LiquidType
-        {
-            get
-            {
-                if (!Type.Flags.Contains(ItemFlag.LiquidSource))
-                {
-                    return 0x00;
-                }
-                return Convert.ToByte(Attributes[ItemAttribute.SourceLiquidType]);
-            }
+        public byte LiquidType {
+			get {
+				if (!Type.Flags.Contains(ItemFlag.LiquidSource)) {
+					return 0x00;
+				}
+				return Convert.ToByte(Attributes[ItemAttribute.SourceLiquidType]);
+			}
 
-            set
-            {
-                Attributes[ItemAttribute.SourceLiquidType] = value;
-            }
-        }
+			set => Attributes[ItemAttribute.SourceLiquidType] = value;
+		}
 
-        public byte Attack
+		public byte Attack
         {
             get
             {
@@ -235,13 +220,11 @@ namespace COMMO.Server.Items
 
         public bool BlocksLay => Type.Flags.Contains(ItemFlag.Unlay);
 
-        public decimal Weight => (Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(Attributes[ItemAttribute.Weight]) / 100 : default(decimal)) * Amount;
+        public decimal Weight => (Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(Attributes[ItemAttribute.Weight]) / 100 : default) * Amount;
 
         public IContainer Parent { get; private set; }
 
-        private uint holder;
-
-        public Item(ItemType type)
+		public Item(ItemType type)
         {
             Type = type;
             // UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
@@ -264,20 +247,18 @@ namespace COMMO.Server.Items
                 }
                 else
                 {
-                    // these are safe to add as Attributes of the item.
-                    ItemAttribute itemAttr;
+					// these are safe to add as Attributes of the item.
 
-                    if (!Enum.TryParse(attribute.Name, out itemAttr))
-                    {
-                        if (!ServerConfiguration.SupressInvalidItemWarnings)
-                        {
-                            Console.WriteLine($"Item.AddContent: Unexpected attribute with name {attribute.Name} on item {Type.Name}, igoring.");
-                        }
+					if (!Enum.TryParse(attribute.Name, out                     // these are safe to add as Attributes of the item.
+					ItemAttribute itemAttr)) {
+						if (!ServerConfiguration.SupressInvalidItemWarnings) {
+							Console.WriteLine($"Item.AddContent: Unexpected attribute with name {attribute.Name} on item {Type.Name}, igoring.");
+						}
 
-                        continue;
-                    }
+						continue;
+					}
 
-                    try
+					try
                     {
                         Attributes.Add(itemAttr, attribute.Value as IConvertible);
                     }
@@ -289,10 +270,10 @@ namespace COMMO.Server.Items
             }
         }
 
-        public void SetHolder(ICreature holder, Location holdingLoc = default(Location))
+        public void SetHolder(ICreature holder, Location holdingLoc = default)
         {
-            var oldHolder = this.holder;
-            this.holder = holder?.CreatureId ?? 0;
+            var oldHolder = HolderId;
+            HolderId = holder?.CreatureId ?? 0;
             CarryLocation = holdingLoc;
 
             OnHolderChanged?.Invoke(this, oldHolder);
@@ -307,12 +288,9 @@ namespace COMMO.Server.Items
             OnAmountChanged?.Invoke(this, oldAmount);
         }
 
-        public void SetParent(IContainer parentContainer)
-        {
-            Parent = parentContainer;
-        }
+		public void SetParent(IContainer parentContainer) => Parent = parentContainer;
 
-        public virtual bool Join(IItem otherItem)
+		public virtual bool Join(IItem otherItem)
         {
             if (!IsCumulative || otherItem?.Type.TypeId != Type.TypeId)
             {

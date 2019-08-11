@@ -37,9 +37,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddByte(Player.SoulPoints);
         }
 
-        public override void CleanUp()
-        {
-            Player = null;
-        }
-    }
+		public override void CleanUp() => Player = null;
+	}
 }

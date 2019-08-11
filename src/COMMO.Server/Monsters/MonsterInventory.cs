@@ -28,12 +28,7 @@ namespace COMMO.Server.Monsters
 
         public MonsterInventory(ICreature owner, IEnumerable<Tuple<ushort, byte, ushort>> inventoryComposition, ushort maxCapacity = 100) // 100 is arbitrary.
         {
-            if (owner == null)
-            {
-                throw new ArgumentNullException(nameof(owner));
-            }
-
-            Owner = owner;
+			Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             inventory = new Dictionary<byte, Tuple<IItem, ushort>>();
 
             recalcLocks = new object[3];
@@ -57,25 +52,22 @@ namespace COMMO.Server.Monsters
                     continue;
                 }
 
-                // got lucky!
-                var newItem = ItemFactory.Create(tuple.Item1) as IItem;
+				// got lucky!
 
-                if (newItem == null)
-                {
-                    Console.WriteLine($"Unknown item with id {tuple.Item1} as loot in monster type {(Owner as Monster)?.Type.RaceId}.");
-                    continue;
-                }
+				if (!(ItemFactory.Create(tuple.Item1) is IItem newItem)) {
+					Console.WriteLine($"Unknown item with id {tuple.Item1} as loot in monster type {(Owner as Monster)?.Type.RaceId}.");
+					continue;
+				}
 
-                if (newItem.IsCumulative)
+				if (newItem.IsCumulative)
                 {
                     var amount = (byte)(rng.Next(tuple.Item2) + 1);
 
                     newItem.SetAmount(amount);
                 }
 
-                IItem unused;
-                Add(newItem, out unused);
-            }
+				Add(newItem, out var unused);
+			}
         }
 
         public IItem this[byte idx] => inventory.ContainsKey(idx) ? inventory[idx].Item1 : null;

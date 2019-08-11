@@ -23,12 +23,7 @@ namespace COMMO.Server.Notifications
         public CreatureRemovedNotification(Connection connection, ICreature creature, byte oldStackPos, EffectT removeEffect = EffectT.None)
             : base(connection)
         {
-            if (creature == null)
-            {
-                throw new ArgumentNullException(nameof(creature));
-            }
-
-            Creature = creature;
+			Creature = creature ?? throw new ArgumentNullException(nameof(creature));
             OldStackPosition = oldStackPos;
             RemoveEffect = removeEffect;
         }

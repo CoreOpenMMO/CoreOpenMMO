@@ -21,12 +21,7 @@ namespace COMMO.Server.Notifications
         public CreatureTurnedNotification(Connection connection, ICreature creature, EffectT turnEffect = EffectT.None)
             : base(connection)
         {
-            if (creature == null)
-            {
-                throw new ArgumentNullException(nameof(creature));
-            }
-
-            Creature = creature;
+			Creature = creature ?? throw new ArgumentNullException(nameof(creature));
             TurnedEffect = turnEffect;
         }
 

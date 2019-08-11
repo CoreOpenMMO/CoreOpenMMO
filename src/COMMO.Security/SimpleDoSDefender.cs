@@ -30,7 +30,7 @@ namespace COMMO.Security
         private static SimpleDoSDefender singleton;
 
         private static readonly object SingletonLock = new object();
-        private Task cleaningTask;
+        private readonly Task cleaningTask;
 
         public static SimpleDoSDefender Instance
         {
@@ -69,9 +69,8 @@ namespace COMMO.Security
                     {
                         if (kvp.Value < secondsToWait)
                         {
-                            int count;
-                            ConnectionCount.TryRemove(kvp.Key, out count);
-                        }
+							ConnectionCount.TryRemove(kvp.Key, out Int32 count);
+						}
                         else
                         {
                             ConnectionCount.TryUpdate(kvp.Key, kvp.Value - secondsToWait, kvp.Value);
@@ -103,12 +102,9 @@ namespace COMMO.Security
             }
         }
 
-        public bool IsBlockedAddress(string addressStr)
-        {
-            return BlockedIpAddresses.Contains(addressStr);
-        }
+		public bool IsBlockedAddress(string addressStr) => BlockedIpAddresses.Contains(addressStr);
 
-        public void LogConnectionAttempt(string addressStr)
+		public void LogConnectionAttempt(string addressStr)
         {
             ConnectionCount.AddOrUpdate(addressStr, 0, (key, prev) => { return prev + 1; });
 
@@ -118,9 +114,8 @@ namespace COMMO.Security
                 {
                     AddInternal(addressStr);
 
-                    int count;
-                    ConnectionCount.TryRemove(addressStr, out count);
-                }
+					ConnectionCount.TryRemove(addressStr, out Int32 count);
+				}
             }
             catch
             {

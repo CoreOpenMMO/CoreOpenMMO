@@ -35,17 +35,14 @@ namespace COMMO.Server.Movement
                 new GenericEventAction(
                     () =>
                     {
-                        var player = Requestor as Player;
-
-                        if (player != null)
-                        {
-                            Game.Instance.NotifySinglePlayer(player, conn =>
-                                new GenericNotification(
-                                    conn,
-                                    new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
-                                    new TextMessagePacket { Message = ErrorMessage ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
-                        }
-                    }));
+						if (Requestor is Player player) {
+							Game.Instance.NotifySinglePlayer(player, conn =>
+								new GenericNotification(
+									conn,
+									new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
+									new TextMessagePacket { Message = ErrorMessage ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
+						}
+					}));
         }
 
         /// <summary>

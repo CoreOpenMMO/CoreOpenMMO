@@ -12,9 +12,6 @@ namespace COMMO.Data.Configurations
 {
     public class StatConfiguration : IEntityTypeConfiguration<Stat>
     {
-        public void Configure(EntityTypeBuilder<Stat> builder)
-        {
-            builder.HasKey(b => b.PlayersOnline);
-        }
-    }
+		public void Configure(EntityTypeBuilder<Stat> builder) => builder.HasKey(b => b.PlayersOnline);
+	}
 }

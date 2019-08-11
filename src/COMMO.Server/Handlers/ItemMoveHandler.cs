@@ -20,14 +20,12 @@ namespace COMMO.Server.Handlers
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var itemMovePacket = new ItemMovePacket(message);
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            player.ClearPendingActions();
+			player.ClearPendingActions();
 
             // Before actually moving the item, check if we're close enough to use it.
             if (itemMovePacket.FromLocation.Type == LocationType.Ground)
@@ -47,11 +45,10 @@ namespace COMMO.Server.Handlers
 
                 if (locationDiff.MaxValueIn2D > 1)
                 {
-                    // Too far away to use it.
-                    Location retryLoc;
-                    var directions = Game.Instance.Pathfind(player.Location, itemMovePacket.FromLocation, out retryLoc).ToArray();
+					// Too far away to use it.
+					var directions = Game.Instance.Pathfind(player.Location, itemMovePacket.FromLocation, out var retryLoc).ToArray();
 
-                    player.SetPendingAction(new MoveItemPlayerAction(player, itemMovePacket, retryLoc));
+					player.SetPendingAction(new MoveItemPlayerAction(player, itemMovePacket, retryLoc));
 
                     if (directions.Length > 0)
                     {

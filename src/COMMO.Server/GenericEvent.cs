@@ -51,15 +51,9 @@ namespace COMMO.Server
             }
         }
 
-        /// <summary>
-        /// Gets the creature that is requesting the event, if 
-        /// </summary>
-        public ICreature Requestor
-        {
-            get
-            {
-                return RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
-            }
-        }
-    }
+		/// <summary>
+		/// Gets the creature that is requesting the event, if 
+		/// </summary>
+		public ICreature Requestor => RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+	}
 }

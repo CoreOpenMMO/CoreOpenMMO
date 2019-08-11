@@ -61,34 +61,21 @@ namespace COMMO.Server.Data.Models.Structs
 
         public byte Container => Convert.ToByte(Y - 0x40);
 
-        public sbyte ContainerPosition
-        {
-            get
-            {
-                return Convert.ToSByte(Z);
-            }
+        public sbyte ContainerPosition {
+			get => Convert.ToSByte(Z);
 
-            set
-            {
-                Z = value;
-            }
-        }
+			set => Z = value;
+		}
 
-        public int MaxValueIn2D => Math.Max(Math.Abs(X), Math.Abs(Y));
+		public int MaxValueIn2D => Math.Max(Math.Abs(X), Math.Abs(Y));
 
         public int MaxValueIn3D => Math.Max(MaxValueIn2D, Math.Abs(Z));
 
-        public override string ToString()
-        {
-            return $"[{X}, {Y}, {Z}]";
-        }
+		public override string ToString() => $"[{X}, {Y}, {Z}]";
 
-        public override bool Equals(object obj)
-        {
-            return obj is Location && this == (Location)obj;
-        }
+		public override bool Equals(object obj) => obj is Location && this == (Location) obj;
 
-        public override int GetHashCode()
+		public override int GetHashCode()
         {
             int hash = 13;
 

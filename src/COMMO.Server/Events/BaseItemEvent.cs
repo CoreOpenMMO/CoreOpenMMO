@@ -34,15 +34,9 @@ namespace COMMO.Server.Events
 
         public IEnumerable<IItemEventFunction> Conditions { get; protected set; }
 
-        public bool CanBeExecuted
-        {
-            get
-            {
-                return isSetup && Conditions.All(condition => Functions.InvokeCondition(Obj1, Obj2, User, condition.FunctionName, condition.Parameters));
-            }
-        }
+		public bool CanBeExecuted => isSetup && Conditions.All(condition => Functions.InvokeCondition(Obj1, Obj2, User, condition.FunctionName, condition.Parameters));
 
-        public BaseItemEvent(IList<string> conditionSet, IList<string> actionSet)
+		public BaseItemEvent(IList<string> conditionSet, IList<string> actionSet)
         {
             Conditions = ParseFunctions(conditionSet);
             Actions = ParseFunctions(actionSet);

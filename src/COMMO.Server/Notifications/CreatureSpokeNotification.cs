@@ -25,17 +25,12 @@ namespace COMMO.Server.Notifications
         public CreatureSpokeNotification(Connection connection, ICreature creature, SpeechType speechType, string message, ChatChannel channel = ChatChannel.None)
             : base(connection)
         {
-            if (creature == null)
-            {
-                throw new ArgumentNullException(nameof(creature));
-            }
-
-            if (string.IsNullOrWhiteSpace(message))
+			if (string.IsNullOrWhiteSpace(message))
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
-            Creature = creature;
+            Creature = creature ?? throw new ArgumentNullException(nameof(creature));
             SpeechType = speechType;
             Message = message;
             Channel = channel;

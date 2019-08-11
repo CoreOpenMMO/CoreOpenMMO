@@ -31,9 +31,6 @@ namespace COMMO.Communications.Packets.Outgoing
             }
         }
 
-        public override void CleanUp()
-        {
-            Houses = null;
-        }
-    }
+		public override void CleanUp() => Houses = null;
+	}
 }

@@ -29,9 +29,6 @@ namespace COMMO.Communications.Packets.Outgoing
             }
         }
 
-        public override void CleanUp()
-        {
-            LoadedPlayers = null;
-        }
-    }
+		public override void CleanUp() => LoadedPlayers = null;
+	}
 }

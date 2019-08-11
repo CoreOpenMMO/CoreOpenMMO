@@ -72,16 +72,12 @@ namespace COMMO.Server.Movement
 
         private void MoveBetweenContainers()
         {
-            IItem extraItem;
-            var updatedItem = Thing as IItem;
+			if (FromContainer == null || ToContainer == null || !(Thing is IItem updatedItem) || Requestor == null) {
+				return;
+			}
 
-            if (FromContainer == null || ToContainer == null || updatedItem == null || Requestor == null)
-            {
-                return;
-            }
-
-            // attempt to remove from the source container
-            if (!FromContainer.RemoveContent(updatedItem.Type.TypeId, FromIndex, Count, out extraItem))
+			// attempt to remove from the source container
+			if (!FromContainer.RemoveContent(updatedItem.Type.TypeId, FromIndex, Count, out var extraItem))
             {
                 return;
             }

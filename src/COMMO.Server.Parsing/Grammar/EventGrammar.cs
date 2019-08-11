@@ -32,14 +32,13 @@ namespace COMMO.Server.Parsing.Grammar
 
                 var firstCondition = rule.ConditionSet.FirstOrDefault();
 
-                ItemEventType eventType;
 
-                if (!Enum.TryParse(firstCondition, out eventType))
-                {
-                    throw new ArgumentException("Invalid rule supplied.");
-                }
+				if (!Enum.TryParse(firstCondition, out
+				ItemEventType eventType)) {
+					throw new ArgumentException("Invalid rule supplied.");
+				}
 
-                Type = eventType;
+				Type = eventType;
                 Rule = rule;
 
                 rule.ConditionSet.RemoveAt(0); // remove first.

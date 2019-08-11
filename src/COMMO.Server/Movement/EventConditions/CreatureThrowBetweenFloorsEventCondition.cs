@@ -49,10 +49,9 @@ namespace COMMO.Server.Movement.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var thingAsCreature = Thing as ICreature;
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+			var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
 
-            if (requestor == null || thingAsCreature == null)
+			if (requestor == null || !(Thing is ICreature thingAsCreature))
             {
                 // Not a creature requesting this one, possibly a script.
                 // Or the thing moving is null, not this policy's job to restrict ..

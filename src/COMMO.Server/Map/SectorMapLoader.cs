@@ -35,8 +35,8 @@ namespace COMMO.Server.Map
         private readonly DirectoryInfo _mapDirInfo;
         private readonly bool[,,] _sectorsLoaded;
 
-        private long _totalTileCount;
-        private long _totalLoadedCount;
+        private readonly long _totalTileCount;
+        private readonly long _totalLoadedCount;
 
         public byte PercentageComplete => (byte)Math.Floor(Math.Min(100, Math.Max((decimal)0, _totalLoadedCount * 100 / (_totalTileCount + 1))));
 
@@ -65,8 +65,6 @@ namespace COMMO.Server.Map
             return _sectorsLoaded[x - SectorXMin, y - SectorYMin, z - SectorZMin];
         }
 
-		public ITile GetTile(Location location) {
-			throw new NotImplementedException();
-		}
+		public ITile GetTile(Location location) => throw new NotImplementedException();
 	}
 }

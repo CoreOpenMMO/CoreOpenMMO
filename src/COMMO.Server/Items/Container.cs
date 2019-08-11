@@ -75,20 +75,16 @@ namespace COMMO.Server.Items
 
                 try
                 {
-                    var item = ItemFactory.Create((ushort)element.Data) as IItem;
+					if (!(ItemFactory.Create((ushort) element.Data) is IItem item)) {
+						if (!ServerConfiguration.SupressInvalidItemWarnings) {
+							Console.WriteLine($"Container.AddContent: Item with id {element.Data} not found in the catalog, skipping.");
+						}
 
-                    if (item == null)
-                    {
-                        if (!ServerConfiguration.SupressInvalidItemWarnings)
-                        {
-                            Console.WriteLine($"Container.AddContent: Item with id {element.Data} not found in the catalog, skipping.");
-                        }
+						continue;
+					}
 
-                        continue;
-                    }
-
-                    // TODO: this is hacky.
-                    ((Item)item).AddAttributes(element.Attributes);
+					// TODO: this is hacky.
+					((Item)item).AddAttributes(element.Attributes);
 
                     AddContent(item, 0xFF);
                 }

@@ -18,8 +18,6 @@ namespace COMMO.Utilities {
 		/// <param name="x">The first integer to compare.</param>
 		/// <param name="y">The second integer to compare.c</param>
 		/// <returns>-1 if first is less than or equal to second, 1 otherwise.</returns>
-		public int Compare(int x, int y) {
-			return (x <= y) ? -1 : 1;
-		}
+		public int Compare(int x, int y) => (x <= y) ? -1 : 1;
 	}
 }

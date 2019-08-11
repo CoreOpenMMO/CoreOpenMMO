@@ -16,12 +16,9 @@ namespace COMMO.Communications.Packets.Outgoing
 
         public override byte PacketType => (byte)ManagementOutgoingPacketType.NoType;
 
-        public override void Add(NetworkMessage message)
-        {
-            message.AddBytes(Data.ToByteArray());
-        }
+		public override void Add(NetworkMessage message) => message.AddBytes(Data.ToByteArray());
 
-        public override void CleanUp()
+		public override void CleanUp()
         {
             // No references to clear.
         }

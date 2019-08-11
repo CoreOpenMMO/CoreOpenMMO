@@ -4,15 +4,11 @@ using System.Reflection;
 namespace COMMO.Server {
 	public class ServerResourcesManager
     {
-		public const string ItemsFilesDirectory = "COMMO.Server.Data.items";
-		public const string MapFilesDirectory = "COMMO.Server.Data.map";
-        public const string MapName = "COMMO.otbm";
+		private const string ItemsFilesDirectory = "COMMO.Server.Data.items";
+		private const string MapFilesDirectory = "Data/map/COMMO.otbm";
+		//private const string MapFilesDirectory = "Data/map/forgotten.otbm";
 
-		public static byte[] GetMap() {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(MapFilesDirectory + "." + MapName))
-				return ReadFully(stream);
-		}
+		public static string GetMap() => MapFilesDirectory;
 
 		public static Stream GetItems(string itemsFileName) {
             var assembly = Assembly.GetExecutingAssembly();

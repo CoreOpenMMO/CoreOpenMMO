@@ -5,7 +5,7 @@ using System;
 
 namespace COMMO.Server.World {
 	public sealed class WorldLoader : IMapLoader {
-		private World _world;
+		private readonly World _world;
 
 		public byte PercentageComplete {
 			get {
@@ -25,9 +25,9 @@ namespace COMMO.Server.World {
 		
 		public ITile GetTile(Location location) => _world.GetTile(location);
 
-		public WorldLoader(Memory<byte> serializedWorldData)
+		public WorldLoader(string worldFile)
 		{ 
-			_world = OTBMWorldLoader.LoadWorld(serializedWorldData); 
+			_world = OTBMWorldLoader.LoadWorld(worldFile); 
 			Console.WriteLine($"Tiles loaded in world: {_world.LoadedTilesCount()}");
 		}
 	}

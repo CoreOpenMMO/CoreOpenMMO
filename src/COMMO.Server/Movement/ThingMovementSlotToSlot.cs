@@ -60,85 +60,73 @@ namespace COMMO.Server.Movement
                 return;
             }
 
-            bool partialRemove;
 
-            // attempt to remove the item from the inventory
-            var movingItem = Requestor.Inventory?.Remove(FromSlot, Count, out partialRemove);
+			// attempt to remove the item from the inventory
+			var movingItem = Requestor.Inventory?.Remove(FromSlot, Count, out Boolean partialRemove);
 
-            if (movingItem == null)
+			if (movingItem == null)
             {
                 return;
             }
 
-            // attempt to place the intended item at the slot.
-            IItem addedItem;
-            if (!Requestor.Inventory.Add(movingItem, out addedItem, ToSlot, movingItem.Count))
-            {
-                // failed to add to the slot, add again to the source slot
-                if (!Requestor.Inventory.Add(movingItem, out addedItem, FromSlot, movingItem.Count))
-                {
-                    // and we somehow failed to re-add it to the source container...
-                    // throw to the ground.
-                    IThing thing = movingItem;
-                    Requestor.Tile.AddThing(ref thing, movingItem.Count);
+			// attempt to place the intended item at the slot.
+			if (!Requestor.Inventory.Add(movingItem, out var addedItem, ToSlot, movingItem.Count)) {
+				// failed to add to the slot, add again to the source slot
+				if (!Requestor.Inventory.Add(movingItem, out addedItem, FromSlot, movingItem.Count)) {
+					// and we somehow failed to re-add it to the source container...
+					// throw to the ground.
+					IThing thing = movingItem;
+					Requestor.Tile.AddThing(ref thing, movingItem.Count);
 
-                    // notify all spectator players of that tile.
-                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, Requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, Requestor.Location)), Requestor.Location);
+					// notify all spectator players of that tile.
+					Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, Requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, Requestor.Location)), Requestor.Location);
 
-                    // call any collision events again.
-                    if (Requestor.Tile.HandlesCollision)
-                    {
-                        foreach (var itemWithCollision in Requestor.Tile.ItemsWithCollision)
-                        {
-                            var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
+					// call any collision events again.
+					if (Requestor.Tile.HandlesCollision) {
+						foreach (var itemWithCollision in Requestor.Tile.ItemsWithCollision) {
+							var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                            var candidate =
-                                collisionEvents.FirstOrDefault(
-                                    e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId &&
-                                         e.Setup(itemWithCollision, thing) && e.CanBeExecuted);
+							var candidate =
+								collisionEvents.FirstOrDefault(
+									e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId &&
+										 e.Setup(itemWithCollision, thing) && e.CanBeExecuted);
 
-                            // Execute all actions.
-                            candidate?.Execute();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (addedItem == null)
-                {
-                    return;
-                }
+							// Execute all actions.
+							candidate?.Execute();
+						}
+					}
+				}
+			}
+			else {
+				if (addedItem == null) {
+					return;
+				}
 
-                // added the new item to the slot
-                IItem extraAddedItem;
-                if (!Requestor.Inventory.Add(addedItem, out extraAddedItem, FromSlot, movingItem.Count))
-                {
-                    // we exchanged or got some leftover item, place back in the source container at any index.
-                    IThing remainderThing = extraAddedItem;
+				// added the new item to the slot
+				if (!Requestor.Inventory.Add(addedItem, out var extraAddedItem, FromSlot, movingItem.Count)) {
+					// we exchanged or got some leftover item, place back in the source container at any index.
+					IThing remainderThing = extraAddedItem;
 
-                    Requestor.Tile.AddThing(ref remainderThing, remainderThing.Count);
+					Requestor.Tile.AddThing(ref remainderThing, remainderThing.Count);
 
-                    // notify all spectator players of that tile.
-                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, Requestor.Tile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, Requestor.Location)), Requestor.Location);
+					// notify all spectator players of that tile.
+					Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, Requestor.Tile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, Requestor.Location)), Requestor.Location);
 
-                    // call any collision events again.
-                    if (!Requestor.Tile.HandlesCollision)
-                    {
-                        return;
-                    }
+					// call any collision events again.
+					if (!Requestor.Tile.HandlesCollision) {
+						return;
+					}
 
-                    foreach (var itemWithCollision in Requestor.Tile.ItemsWithCollision)
-                    {
-                        var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
+					foreach (var itemWithCollision in Requestor.Tile.ItemsWithCollision) {
+						var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                        var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, remainderThing) && e.CanBeExecuted);
+						var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, remainderThing) && e.CanBeExecuted);
 
-                        // Execute all actions.
-                        candidate?.Execute();
-                    }
-                }
-            }
-        }
+						// Execute all actions.
+						candidate?.Execute();
+					}
+				}
+			}
+		}
     }
 }

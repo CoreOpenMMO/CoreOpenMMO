@@ -69,16 +69,12 @@ namespace COMMO.Server.Movement
 
         private void MoveContainerToGround()
         {
-            IItem extraItem;
-            var itemToUpdate = Thing as IItem;
+			if (FromContainer == null || ToTile == null || !(Thing is IItem itemToUpdate)) {
+				return;
+			}
 
-            if (FromContainer == null || ToTile == null || itemToUpdate == null)
-            {
-                return;
-            }
-
-            // attempt to remove from the source container
-            if (!FromContainer.RemoveContent(itemToUpdate.Type.TypeId, FromIndex, Count, out extraItem))
+			// attempt to remove from the source container
+			if (!FromContainer.RemoveContent(itemToUpdate.Type.TypeId, FromIndex, Count, out var extraItem))
             {
                 return;
             }

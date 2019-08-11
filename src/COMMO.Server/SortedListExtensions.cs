@@ -45,18 +45,14 @@ namespace COMMO.Server {
 		/// <typeparam name="TValue"></typeparam>
 		/// <param name="sortedList">SortedList to check if it is empty.</param>
 		/// <returns>True if sortedList is empty, false if it still has elements.</returns>
-		internal static bool IsEmpty<TKey, TValue>(this SortedList<TKey, TValue> sortedList) {
-			return sortedList.Count == 0;
-		}
+		internal static bool IsEmpty<TKey, TValue>(this SortedList<TKey, TValue> sortedList) => sortedList.Count == 0;
 
 		/// <summary>
 		/// Adds a INode to the SortedList.
 		/// </summary>
 		/// <param name="sortedList">SortedList to add the node to.</param>
 		/// <param name="node">Node to add to the sortedList.</param>
-		internal static void Add(this SortedList<int, INode> sortedList, INode node) {
-			sortedList.Add(node.TotalCost, node);
-		}
+		internal static void Add(this SortedList<int, INode> sortedList, INode node) => sortedList.Add(node.TotalCost, node);
 
 		/// <summary>
 		/// Removes the node from the sorted list with the smallest TotalCost and returns that node.

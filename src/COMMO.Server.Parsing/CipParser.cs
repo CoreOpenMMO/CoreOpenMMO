@@ -175,9 +175,8 @@ namespace COMMO.Server.Parsing
         private static CipElement ParseElement(string eString)
         {
             var attrs = SplitByTokenPreserveQuoted(eString);
-            int intValue;
-            var attributesList = attrs as IList<string> ?? attrs.ToList();
-            var hasIdData = int.TryParse(attributesList.FirstOrDefault(), out intValue);
+			var attributesList = attrs as IList<string> ?? attrs.ToList();
+			var hasIdData = int.TryParse(attributesList.FirstOrDefault(), out Int32 intValue);
 
             Func<string, CipAttribute> extractAttribute = str =>
             {
@@ -191,14 +190,12 @@ namespace COMMO.Server.Parsing
                     };
                 }
 
-                int numericValue;
 
-                return new CipAttribute
-                {
-                    Name = sections[0],
-                    Value = int.TryParse(sections[1], out numericValue) ? (IConvertible)numericValue : sections[1]
-                };
-            };
+				return new CipAttribute {
+					Name = sections[0],
+					Value = int.TryParse(sections[1], out Int32 numericValue) ? (IConvertible) numericValue : sections[1]
+				};
+			};
 
             var element = new CipElement(hasIdData ? intValue : -1)
             {

@@ -15,20 +15,18 @@ namespace COMMO.Server.Data
     public class NetworkMessage
     {
         private byte[] _buffer;
-        private readonly int _bufferSize = 16394;
-        private int _length;
-        private int _position;
+		private int _length;
 
-        public int Length => _length;
+		public int Length => _length;
 
-        public int Position => _position;
-		
+        public int Position { get; private set; }
+
 
         public byte[] Buffer => _buffer;
 
-        public int BufferSize => _bufferSize;
+        public int BufferSize { get; } = 16394;
 
-        public NetworkMessage()
+		public NetworkMessage()
         {
             Reset();
         }
@@ -40,24 +38,21 @@ namespace COMMO.Server.Data
 
         public void Reset(int startingIndex)
         {
-            _buffer = new byte[_bufferSize];
+            _buffer = new byte[BufferSize];
             _length = startingIndex;
-            _position = startingIndex;
+            Position = startingIndex;
         }
 
-        public void Reset()
-        {
-            Reset(2);
-        }
+		public void Reset() => Reset(2);
 
-        public byte GetByte()
+		public byte GetByte()
         {
             if (Position + 1 > Length)
             {
                 throw new IndexOutOfRangeException("NetworkMessage GetByte() out of range.");
             }
 
-            return _buffer[_position++];
+            return _buffer[Position++];
         }
 
         public byte[] GetBytes(int count)
@@ -70,7 +65,7 @@ namespace COMMO.Server.Data
             byte[] t = new byte[count];
             Array.Copy(_buffer, Position, t, 0, count);
 
-            _position += count;
+            Position += count;
             return t;
         }
 
@@ -86,7 +81,7 @@ namespace COMMO.Server.Data
             inMessage.Buffer.CopyTo(newMessage._buffer, 0);
 
             newMessage._length = inMessage.Length;
-            newMessage._position = inMessage.Position;
+            newMessage.Position = inMessage.Position;
 
             return newMessage;
         }
@@ -96,40 +91,28 @@ namespace COMMO.Server.Data
             int len = GetUInt16();
             string t = ASCIIEncoding.Default.GetString(_buffer, Position, len);
 
-            _position += len;
+            Position += len;
             return t;
         }
 
-        public ushort GetUInt16()
-        {
-            return BitConverter.ToUInt16(GetBytes(2), 0);
-        }
+		public ushort GetUInt16() => BitConverter.ToUInt16(GetBytes(2), 0);
 
-        public uint GetUInt32()
-        {
-            return BitConverter.ToUInt32(GetBytes(4), 0);
-        }
+		public uint GetUInt32() => BitConverter.ToUInt32(GetBytes(4), 0);
 
-        public byte[] GetPacket()
+		public byte[] GetPacket()
         {
             byte[] t = new byte[Length - 2];
             Array.Copy(_buffer, 2, t, 0, Length - 2);
             return t;
         }
 
-        private ushort GetPacketHeader()
-        {
-            return BitConverter.ToUInt16(_buffer, 0);
-        }
+		private ushort GetPacketHeader() => BitConverter.ToUInt16(_buffer, 0);
 
-        public void AddPacket(IPacketOutgoing packet)
-        {
-            packet.Add(this);
-        }
+		public void AddPacket(IPacketOutgoing packet) => packet.Add(this);
 
-        public void AddByte(byte value)
+		public void AddByte(byte value)
         {
-            if (1 + Length > _bufferSize)
+            if (1 + Length > BufferSize)
             {
                 throw new Exception("NetworkMessage buffer is full.");
             }
@@ -139,14 +122,14 @@ namespace COMMO.Server.Data
 
         public void AddBytes(byte[] value)
         {
-            if (value.Length + Length > _bufferSize)
+            if (value.Length + Length > BufferSize)
             {
                 throw new Exception("NetworkMessage buffer is full.");
             }
 
             Array.Copy(value, 0, _buffer, Position, value.Length);
 
-            _position += value.Length;
+            Position += value.Length;
 
             if (Position > Length)
             {
@@ -160,19 +143,13 @@ namespace COMMO.Server.Data
             AddBytes(ASCIIEncoding.Default.GetBytes(value));
         }
 
-        public void AddUInt16(ushort value)
-        {
-            AddBytes(BitConverter.GetBytes(value));
-        }
+		public void AddUInt16(ushort value) => AddBytes(BitConverter.GetBytes(value));
 
-        public void AddUInt32(uint value)
-        {
-            AddBytes(BitConverter.GetBytes(value));
-        }
+		public void AddUInt32(uint value) => AddBytes(BitConverter.GetBytes(value));
 
-        public void AddPaddingBytes(int count)
+		public void AddPaddingBytes(int count)
         {
-            _position += count;
+            Position += count;
 
             if (Position > Length)
             {
@@ -264,15 +241,12 @@ namespace COMMO.Server.Data
             }
         }
 
-        public byte PeekByte()
-        {
-            return _buffer[Position];
-        }
+		public byte PeekByte() => _buffer[Position];
 
-        public void Resize(int size)
+		public void Resize(int size)
         {
             _length = size;
-            _position = 0;
+            Position = 0;
         }
 
         public byte[] PeekBytes(int count)
@@ -282,17 +256,11 @@ namespace COMMO.Server.Data
             return t;
         }
 
-        public ushort PeekUInt16()
-        {
-            return BitConverter.ToUInt16(PeekBytes(2), 0);
-        }
+		public ushort PeekUInt16() => BitConverter.ToUInt16(PeekBytes(2), 0);
 
-        public uint PeekUInt32()
-        {
-            return BitConverter.ToUInt32(PeekBytes(4), 0);
-        }
+		public uint PeekUInt32() => BitConverter.ToUInt32(PeekBytes(4), 0);
 
-        public string PeekString()
+		public string PeekString()
         {
             int len = PeekUInt16();
             return ASCIIEncoding.ASCII.GetString(PeekBytes(len + 2), 2, len);
@@ -313,38 +281,26 @@ namespace COMMO.Server.Data
                 throw new IndexOutOfRangeException("NetworkMessage SkipBytes() out of range.");
             }
 
-            _position += count;
+            Position += count;
         }
 
         public void RsaDecrypt(bool useCipKeys = true, bool useRsa2 = false)
         {
 			if (!useRsa2)
-				Rsa.Decrypt(ref _buffer, _position, _length, useCipKeys);
+				Rsa.Decrypt(ref _buffer, Position, _length, useCipKeys);
 			else
-				Rsa2.Decrypt(ref _buffer, _position, _length);
+				Rsa2.Decrypt(ref _buffer, Position, _length);
         }
 
-        public bool XteaDecrypt(uint[] key)
-        {
-            return Xtea.Decrypt(ref _buffer, ref _length, 2, key);
-        }
+		public bool XteaDecrypt(uint[] key) => Xtea.Decrypt(ref _buffer, ref _length, 2, key);
 
-        public bool XteaEncrypt(uint[] key)
-        {
-            return Xtea.Encrypt(ref _buffer, ref _length, 2, key);
-        }
+		public bool XteaEncrypt(uint[] key) => Xtea.Encrypt(ref _buffer, ref _length, 2, key);
 
-        private void InsertPacketLength()
-        {
-            Array.Copy(BitConverter.GetBytes((ushort)(_length - 4)), 0, _buffer, 2, 2);
-        }
+		private void InsertPacketLength() => Array.Copy(BitConverter.GetBytes((ushort) (_length - 4)), 0, _buffer, 2, 2);
 
-        private void InsertTotalLength()
-        {
-            Array.Copy(BitConverter.GetBytes((ushort)(_length - 2)), 0, _buffer, 0, 2);
-        }
+		private void InsertTotalLength() => Array.Copy(BitConverter.GetBytes((ushort) (_length - 2)), 0, _buffer, 0, 2);
 
-        public bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false)
+		public bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false)
         {
             if (!insertOnlyOneLength)
             {
@@ -380,7 +336,7 @@ namespace COMMO.Server.Data
                 return false;
             }
 
-            _position = 4;
+            Position = 4;
             return true;
         }
     }

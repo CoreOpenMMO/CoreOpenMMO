@@ -23,14 +23,11 @@ namespace COMMO.Server.Actions
 
         protected override void InternalPerform()
         {
-            var useOnPacket = Packet as ItemUseOnPacket;
+			if (!(Packet is ItemUseOnPacket useOnPacket)) {
+				return;
+			}
 
-            if (useOnPacket == null)
-            {
-                return;
-            }
-
-            IThing thingToUse = null;
+			IThing thingToUse = null;
             switch (useOnPacket.FromLocation.Type)
             {
                 case LocationType.Ground:

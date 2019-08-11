@@ -16,15 +16,13 @@ namespace COMMO.Server.Handlers
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var packet = new OutfitChangedPacket(message);
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            // TODO: check if player actually has permissions to change outfit.
-            player.SetOutfit(packet.Outfit);
+			// TODO: check if player actually has permissions to change outfit.
+			player.SetOutfit(packet.Outfit);
 
             Game.Instance.NotifySpectatingPlayers(conn => new CreatureChangedOutfitNotification(conn, player), player.Location);
         }

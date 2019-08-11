@@ -29,12 +29,7 @@ namespace COMMO.Server.Notifications
         public ItemMovedNotification(Connection connection, IItem item, Location fromLocation, byte fromStackPos, Location toLocation, byte toStackPos, bool wasTeleport)
             : base(connection)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            Item = item;
+			Item = item ?? throw new ArgumentNullException(nameof(item));
             FromLocation = fromLocation;
             FromStackpos = fromStackPos;
             ToLocation = toLocation;

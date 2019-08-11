@@ -36,14 +36,10 @@ namespace COMMO.Server.Combat
 
         public void Execute()
         {
-            EffectT resultEffect;
-            bool wasShielded;
-            bool wasArmorBlocked;
-            TextColor textColor;
 
-            var inflicted = InternalExecute(out resultEffect, out wasShielded, out wasArmorBlocked, out textColor);
+			var inflicted = InternalExecute(out var resultEffect, out Boolean wasShielded, out Boolean wasArmorBlocked, out var textColor);
 
-            AnimatedTextPacket animTextPacket = null;
+			AnimatedTextPacket animTextPacket = null;
             var effectPacket = new MagicEffectPacket
             {
                 Effect = resultEffect,

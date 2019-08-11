@@ -20,8 +20,6 @@ namespace COMMO.Utilities {
 			GarbageCollected?.Invoke(null, EventArgs.Empty);
 		}
 
-		public static void Start() {
-			new GcNotifier();
-		}
+		public static void Start() => new GcNotifier();
 	}
 }

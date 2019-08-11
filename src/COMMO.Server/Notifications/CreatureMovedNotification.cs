@@ -41,14 +41,11 @@ namespace COMMO.Server.Notifications
 
         public override void Prepare()
         {
-            var player = Game.Instance.GetCreatureWithId(Connection.PlayerId) as IPlayer;
+			if (!(Game.Instance.GetCreatureWithId(Connection.PlayerId) is IPlayer player)) {
+				return;
+			}
 
-            if (player == null)
-            {
-                return;
-            }
-
-            var creature = Game.Instance.GetCreatureWithId(CreatureId);
+			var creature = Game.Instance.GetCreatureWithId(CreatureId);
 
             if (CreatureId == Connection.PlayerId)
             {

@@ -31,10 +31,7 @@ namespace COMMO.Server.Movement.EventConditions
         /// <inheritdoc/>
         public string ErrorMessage => "There is not enough room.";
 
-        /// <inheritdoc/>
-        public bool Evaluate()
-        {
-            return TargetContainer != null && TargetContainer?.Volume - TargetContainer.Content.Count > 0;
-        }
-    }
+		/// <inheritdoc/>
+		public bool Evaluate() => TargetContainer != null && TargetContainer?.Volume - TargetContainer.Content.Count > 0;
+	}
 }

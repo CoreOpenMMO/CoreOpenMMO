@@ -4,6 +4,7 @@
 bin/
 obj/
 packages/
+packaging/
 FileRandom/
 TestResults/
 PublishProfiles/
@@ -16,6 +17,8 @@ PublishProfiles/
 *.exe
 *.o
 *.so
+*.deps
+*.json
 
 # Debug symbols #
 ###################

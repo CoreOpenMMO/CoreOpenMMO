@@ -25,11 +25,8 @@ namespace COMMO.OTB {
 		/// Creates a new instance of a <see cref="OTBNode"/>.
 		/// </summary>
 		public OTBNode(OTBNodeType type, ReadOnlyArray<OTBNode> children, ReadOnlyMemory<byte> data) {
-			if (children == null)
-				throw new ArgumentNullException(nameof(children));
-
 			Type = type;
-			Children = children;
+			Children = children ?? throw new ArgumentNullException(nameof(children));
 			Data = data;
 		}
 	}

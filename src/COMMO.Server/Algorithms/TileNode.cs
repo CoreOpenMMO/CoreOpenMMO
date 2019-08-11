@@ -69,18 +69,14 @@ namespace COMMO.Server.Algorithms {
 				return _isInClosedList || MovementCost > 0 && !Tile.CanBeWalked();
 			}
 
-			set {
-				_isInClosedList = value;
-			}
+			set => _isInClosedList = value;
 		}
 
 		public TileNode(string searchId, ITile tile) {
 			if (string.IsNullOrWhiteSpace(searchId))
 				throw new ArgumentException(nameof(searchId) + " can't be null or whitespace.");
-			if (tile == null)
-				throw new ArgumentNullException(nameof(tile));
 
-			Tile = tile;
+			Tile = tile ?? throw new ArgumentNullException(nameof(tile));
 			_isInClosedList = false;
 			SearchId = searchId;
 		}

@@ -65,17 +65,14 @@ namespace COMMO.Server.Movement.EventConditions
                 return false;
             }
 
-            var thingAsItem = Thing as IItem;
 
-            if (thingAsItem != null)
-            {
-                if (destTile.BlocksLay || (thingAsItem.BlocksPass && destTile.BlocksPass))
-                {
-                    return false;
-                }
-            }
+			if (Thing is IItem thingAsItem) {
+				if (destTile.BlocksLay || (thingAsItem.BlocksPass && destTile.BlocksPass)) {
+					return false;
+				}
+			}
 
-            return true;
+			return true;
         }
     }
 }

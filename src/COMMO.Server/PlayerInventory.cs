@@ -53,12 +53,7 @@ namespace COMMO.Server
 
         public PlayerInventory(ICreature owner)
         {
-            if (owner == null)
-            {
-                throw new ArgumentNullException(nameof(owner));
-            }
-
-            Owner = owner;
+			Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Inventory = new Dictionary<Slot, Tuple<IItem, ushort>>();
         }
 

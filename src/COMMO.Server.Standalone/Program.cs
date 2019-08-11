@@ -25,10 +25,11 @@ namespace COMMO.Server.Standalone {
 		private static IOpenTibiaListener _gameListener;
 
 		// private static IOpenTibiaListener managementListener;
-		static void Main() {
+		private static void Main() {
 
 			// Loading the logger configuration file
-			var loggerConfigurationPath = Path.Combine("..", "..", "..", "..", "..", "COMMO.Configuration", "LoggerConfiguration.xml");
+			//var loggerConfigurationPath = Path.Combine("..", "..", "..", "..", "..", "COMMO.Configuration", "LoggerConfiguration.xml");
+			var loggerConfigurationPath = "LoggerConfiguration.xml";
 			LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(
 				fileName: loggerConfigurationPath,
 				ignoreErrors: false);

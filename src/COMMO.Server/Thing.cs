@@ -30,42 +30,30 @@ namespace COMMO.Server
 
         public abstract bool CanBeMoved { get; }
 
-        public Location Location
-        {
-            get
-            {
-                return location;
-            }
+        public Location Location {
+			get => location;
 
-            protected set
-            {
-                var oldValue = location;
-                location = value;
-                if (oldValue != location)
-                {
-                    OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(Location) });
-                }
-            }
-        }
+			protected set {
+				var oldValue = location;
+				location = value;
+				if (oldValue != location) {
+					OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(Location) });
+				}
+			}
+		}
 
-        public ITile Tile
-        {
-            get
-            {
-                return tile;
-            }
+		public ITile Tile {
+			get => tile;
 
-            set
-            {
-                if (value != null)
-                {
-                    Location = value.Location;
-                }
-                tile = value;
-            }
-        }
+			set {
+				if (value != null) {
+					Location = value.Location;
+				}
+				tile = value;
+			}
+		}
 
-        public void Added()
+		public void Added()
         {
             // OnThingAdded?.Invoke();
         }

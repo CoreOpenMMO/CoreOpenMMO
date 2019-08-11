@@ -244,46 +244,29 @@ namespace COMMO.Server.Scripting
             return false;
         }
 
-        public static bool IsCreature(IThing thing)
+		public static bool IsCreature(IThing thing) => thing is ICreature;
+
+		public static bool IsType(IThing thing, ushort typeId)
         {
-            return thing is ICreature;
-        }
+			return thing is IItem item && item.Type.TypeId == typeId;
+		}
 
-        public static bool IsType(IThing thing, ushort typeId)
-        {
-            var item = thing as IItem;
+		public static bool IsPosition(IThing thing, Location location) => thing != null && thing.Location == location;
 
-            return item != null && item.Type.TypeId == typeId;
-        }
+		public static bool IsPlayer(IThing thing) => thing is IPlayer;
 
-        public static bool IsPosition(IThing thing, Location location)
-        {
-            return thing != null && thing.Location == location;
-        }
-
-        public static bool IsPlayer(IThing thing)
-        {
-            return thing is IPlayer;
-        }
-
-        public static bool IsObjectThere(Location location, ushort typeId)
+		public static bool IsObjectThere(Location location, ushort typeId)
         {
             var targetTile = Game.Instance.GetTileAt(location);
 
             return targetTile?.BruteFindItemWithId(typeId) != null;
         }
 
-        public static bool HasRight(IPlayer user, string rightStr)
-        {
-            return true; // TODO: implement.
-        }
+		public static bool HasRight(IPlayer user, string rightStr) => true; // TODO: implement.
 
-        public static bool MayLogout(IPlayer user)
-        {
-            return user.CanLogout;
-        }
+		public static bool MayLogout(IPlayer user) => user.CanLogout;
 
-        public static bool HasFlag(IThing itemThing, string flagStr)
+		public static bool HasFlag(IThing itemThing, string flagStr)
         {
             if (!(itemThing is IItem))
             {
@@ -295,33 +278,26 @@ namespace COMMO.Server.Scripting
                 return true;
             }
 
-            ItemFlag parsedFlag;
 
-            return Enum.TryParse(flagStr, out parsedFlag) && ((IItem)itemThing).Type.Flags.Contains(parsedFlag);
-        }
+			return Enum.TryParse(flagStr, out
+			ItemFlag parsedFlag) && ((IItem) itemThing).Type.Flags.Contains(parsedFlag);
+		}
 
-        public static bool HasProfession(IThing thing, byte profesionId)
+		public static bool HasProfession(IThing thing, byte profesionId) => thing != null && thing is IPlayer && false; // TODO: implement professions.
+
+		public static bool HasInstanceAttribute(IThing thing, string attributeStr, string comparer, ushort value)
         {
-            return thing != null && thing is IPlayer && false; // TODO: implement professions.
-        }
+			if (thing == null || string.IsNullOrWhiteSpace(attributeStr) || string.IsNullOrWhiteSpace(comparer) || !(thing is IItem thingAsItem)) {
+				return false;
+			}
 
-        public static bool HasInstanceAttribute(IThing thing, string attributeStr, string comparer, ushort value)
-        {
-            var thingAsItem = thing as IItem;
 
-            if (thing == null || string.IsNullOrWhiteSpace(attributeStr) || string.IsNullOrWhiteSpace(comparer) || thingAsItem == null)
-            {
-                return false;
-            }
+			if (!Enum.TryParse(attributeStr, out
+			ItemAttribute actualAttribute)) {
+				return false;
+			}
 
-            ItemAttribute actualAttribute;
-
-            if (!Enum.TryParse(attributeStr, out actualAttribute))
-            {
-                return false;
-            }
-
-            if (!thingAsItem.Attributes.ContainsKey(actualAttribute))
+			if (!thingAsItem.Attributes.ContainsKey(actualAttribute))
             {
                 return false;
             }
@@ -344,22 +320,13 @@ namespace COMMO.Server.Scripting
             return false;
         }
 
-        public static bool IsHouse(IThing thing)
-        {
-            return thing?.Tile != null && thing.Tile.IsHouse;
-        }
+		public static bool IsHouse(IThing thing) => thing?.Tile != null && thing.Tile.IsHouse;
 
-        public static bool IsHouseOwner(IThing thing, IPlayer user)
-        {
-            return IsHouse(thing); // && thing.Tile.House.Owner == user.Name;
-        }
+		public static bool IsHouseOwner(IThing thing, IPlayer user) => IsHouse(thing); // && thing.Tile.House.Owner == user.Name;
 
-        public static bool Random(byte value)
-        {
-            return new Random().Next(100) <= value;
-        }
+		public static bool Random(byte value) => new Random().Next(100) <= value;
 
-        public static void Create(IThing atThing, ushort itemId, byte unknown)
+		public static void Create(IThing atThing, ushort itemId, byte unknown)
         {
             IThing item = ItemFactory.Create(itemId);
             var targetTile = atThing.Tile;
@@ -549,15 +516,13 @@ namespace COMMO.Server.Scripting
 
         public static void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue)
         {
-            // TODO: implement correctly when combat is...
-            var damagedCreature = damagedThing as ICreature;
+			// TODO: implement correctly when combat is...
 
-            if (damagedCreature == null)
-            {
-                return;
-            }
+			if (!(damagedThing is ICreature damagedCreature)) {
+				return;
+			}
 
-            switch (damageSourceType)
+			switch (damageSourceType)
             {
                 default: // physical
                     break;
@@ -581,37 +546,26 @@ namespace COMMO.Server.Scripting
             }
         }
 
-        public static void Logout(IPlayer user)
-        {
-            Game.Instance.AttemptLogout(user); // TODO: force?
-        }
+		public static void Logout(IPlayer user) => Game.Instance.AttemptLogout(user); // TODO: force?
 
-        public static void Move(IThing thingToMove, Location targetLocation)
+		public static void Move(IThing thingToMove, Location targetLocation)
         {
             if (thingToMove == null)
             {
                 return;
             }
 
-            var thingAsCreature = thingToMove as ICreature;
-            var thingAsItem = thingToMove as IItem;
+			if (thingToMove is ICreature thingAsCreature) {
+				Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation), DelayForFunctions);
+			}
+			else if (thingToMove is IItem thingAsItem) {
+				Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count), DelayForFunctions);
+			}
+		}
 
-            if (thingAsCreature != null)
-            {
-                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation), DelayForFunctions);
-            }
-            else if (thingAsItem != null)
-            {
-                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count), DelayForFunctions);
-            }
-        }
+		public static void MoveRel(ICreature user, IThing objectUsed, Location locationOffset) => Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true), DelayForFunctions);
 
-        public static void MoveRel(ICreature user, IThing objectUsed, Location locationOffset)
-        {
-            Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true), DelayForFunctions);
-        }
-
-        public static void MoveTop(IThing fromThing, Location targetLocation)
+		public static void MoveTop(IThing fromThing, Location targetLocation)
         {
             if (fromThing == null)
             {

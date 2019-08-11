@@ -36,7 +36,7 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddByte(PacketType);
             message.AddByte((byte)Characters.Count());
 
-            foreach (ICharacterListItem character in Characters)
+            foreach (var character in Characters)
             {
                 message.AddString(character.Name);
                 message.AddString(character.World);
@@ -47,9 +47,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddUInt16(PremiumDaysLeft);
         }
 
-        public override void CleanUp()
-        {
-            Characters = null;
-        }
-    }
+		public override void CleanUp() => Characters = null;
+	}
 }

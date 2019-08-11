@@ -22,9 +22,6 @@ namespace COMMO.Communications.Packets.Outgoing
             message.AddByte(0x00);
         }
 
-        public override void CleanUp()
-        {
-            Player = null;
-        }
-    }
+		public override void CleanUp() => Player = null;
+	}
 }

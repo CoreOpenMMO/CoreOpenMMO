@@ -14,10 +14,7 @@ namespace COMMO.Utilities {
 		private readonly T[] _items;
 
 		private ReadOnlyArray(T[] items) {
-			if (items == null)
-				throw new ArgumentNullException(nameof(items));
-
-			_items = items;
+			_items = items ?? throw new ArgumentNullException(nameof(items));
 		}
 
 		/// <summary>

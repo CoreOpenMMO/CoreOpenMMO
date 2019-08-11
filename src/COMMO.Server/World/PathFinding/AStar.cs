@@ -32,11 +32,6 @@ namespace COMMO.Server.World.PathFinding {
 		private readonly SortedList<int, INode> _closedList;
 
 		/// <summary>
-		/// The current node.
-		/// </summary>
-		private INode _current;
-
-		/// <summary>
 		/// The goal node.
 		/// </summary>
 		private INode _goal;
@@ -58,18 +53,18 @@ namespace COMMO.Server.World.PathFinding {
 		/// </summary>
 		public IEnumerable<INode> ClosedList => _closedList.Values;
 
-		/// <summary>
-		/// Gets the current node that the AStar algorithm is at.
-		/// </summary>
-		public INode CurrentNode => _current;
+        /// <summary>
+        /// Gets the current node that the AStar algorithm is at.
+        /// </summary>
+        public INode CurrentNode { get; private set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AStar"/> class.
-		/// </summary>
-		/// <param name="start">The starting node for the AStar algorithm.</param>
-		/// <param name="goal">The goal node for the AStar algorithm.</param>
-		/// <param name="maxSearchSteps">Optional. The maximum number of Step operations to perform on the search.</param>
-		public AStar(INode start, INode goal, int maxSearchSteps = 100) {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AStar"/> class.
+        /// </summary>
+        /// <param name="start">The starting node for the AStar algorithm.</param>
+        /// <param name="goal">The goal node for the AStar algorithm.</param>
+        /// <param name="maxSearchSteps">Optional. The maximum number of Step operations to perform on the search.</param>
+        public AStar(INode start, INode goal, int maxSearchSteps = 100) {
 			var duplicateComparer = new DuplicateComparer();
 			_openList = new SortedList<int, INode>(duplicateComparer);
 			_closedList = new SortedList<int, INode>(duplicateComparer);
@@ -85,10 +80,10 @@ namespace COMMO.Server.World.PathFinding {
 		public void Reset(INode start, INode goal) {
 			_openList.Clear();
 			_closedList.Clear();
-			_current = start;
+			CurrentNode = start;
 			_goal = goal;
-			_openList.Add(_current);
-			_current.IsInOpenList = true;
+			_openList.Add(CurrentNode);
+			CurrentNode.IsInOpenList = true;
 		}
 
 		/// <summary>
@@ -123,10 +118,10 @@ namespace COMMO.Server.World.PathFinding {
 				}
 
 				// Check the next best node in the graph by TotalCost.
-				_current = _openList.Pop();
+				CurrentNode = _openList.Pop();
 
 				// This node has already been searched, check the next one.
-				if (_current.IsInClosedList) {
+				if (CurrentNode.IsInClosedList) {
 					continue;
 				}
 
@@ -136,18 +131,18 @@ namespace COMMO.Server.World.PathFinding {
 
 			// Remove from the open list and place on the closed list
 			// since this node is now being searched.
-			_current.IsInOpenList = false;
-			_closedList.Add(_current);
-			_current.IsInClosedList = true;
+			CurrentNode.IsInOpenList = false;
+			_closedList.Add(CurrentNode);
+			CurrentNode.IsInClosedList = true;
 
 			// Found the goal, stop searching.
-			if (_current.IsGoal(_goal)) {
+			if (CurrentNode.IsGoal(_goal)) {
 				return SearchState.GoalFound;
 			}
 
 			// Node was not the goal so add all children nodes to the open list.
 			// Each child needs to have its movement cost set and estimated cost.
-			foreach (var child in _current.Children) {
+			foreach (var child in CurrentNode.Children) {
 				// If the child has already been searched (closed list) just ignore.
 				if (child.IsInClosedList) {
 					continue;
@@ -156,18 +151,18 @@ namespace COMMO.Server.World.PathFinding {
 				// If the child has already beem searched, lets see if we get a better MovementCost by setting this parent instead.
 				if (child.IsInOpenList) {
 					var oldCost = child.MovementCost;
-					child.SetMovementCost(_current);
+					child.SetMovementCost(CurrentNode);
 
 					if (oldCost != child.MovementCost) {
 						// it's better with this parent.
-						child.Parent = _current;
+						child.Parent = CurrentNode;
 					}
 
 					continue;
 				}
 
-				child.Parent = _current;
-				child.SetMovementCost(_current);
+				child.Parent = CurrentNode;
+				child.SetMovementCost(CurrentNode);
 				child.SetEstimatedCost(_goal);
 				_openList.Add(child);
 				child.IsInOpenList = true;
@@ -183,8 +178,8 @@ namespace COMMO.Server.World.PathFinding {
 		/// </summary>
 		/// <returns>Returns null if the algorithm has never been run.</returns>
 		public IEnumerable<INode> GetPath() {
-			if (_current != null) {
-				var next = _current;
+			if (CurrentNode != null) {
+				var next = CurrentNode;
 				var path = new List<INode>();
 				while (next != null) {
 					path.Add(next);

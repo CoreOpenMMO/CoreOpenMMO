@@ -112,12 +112,9 @@ namespace COMMO.Server.Monsters
             Locked = false;
         }
 
-        public void LockChanges()
-        {
-            Locked = true;
-        }
+		public void LockChanges() => Locked = true;
 
-        public void SetId(ushort id)
+		public void SetId(ushort id)
         {
             if (Locked)
             {
@@ -199,13 +196,12 @@ namespace COMMO.Server.Monsters
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            BloodType bloodType;
 
-            if (Enum.TryParse(propData, out bloodType))
-            {
-                Blood = bloodType;
-            }
-        }
+			if (Enum.TryParse(propData, out
+			BloodType bloodType)) {
+				Blood = bloodType;
+			}
+		}
 
         internal void SetExperience(uint experience)
         {
@@ -320,13 +316,12 @@ namespace COMMO.Server.Monsters
                     continue;
                 }
 
-                CreatureFlag creatureFlag;
 
-                if (Enum.TryParse(flagName, out creatureFlag))
-                {
-                    Flags.Add(creatureFlag);
-                }
-            }
+				if (Enum.TryParse(flagName, out
+				CreatureFlag creatureFlag)) {
+					Flags.Add(creatureFlag);
+				}
+			}
         }
 
         internal void SetSpells(string v)
@@ -368,14 +363,13 @@ namespace COMMO.Server.Monsters
                     throw new InvalidDataException($"Unexpected number of elements in skill line {v} on monster type {Name}.");
                 }
 
-                MonsterSkill mSkill;
 
-                if (!Enum.TryParse(skillParams[0].ToUpper(), out mSkill))
-                {
-                    continue;
-                }
+				if (!Enum.TryParse(skillParams[0].ToUpper(), out
+				MonsterSkill mSkill)) {
+					continue;
+				}
 
-                switch (mSkill)
+				switch (mSkill)
                 {
                     case MonsterSkill.HITPOINTS:
                         MaxHitPoints = Convert.ToUInt32(skillParams[1]);

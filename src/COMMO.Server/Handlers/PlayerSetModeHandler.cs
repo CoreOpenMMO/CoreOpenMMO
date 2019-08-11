@@ -15,15 +15,13 @@ namespace COMMO.Server.Handlers
     {
         public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
-            // No other content in message.
-            var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
+			// No other content in message.
 
-            if (player == null)
-            {
-                return;
-            }
+			if (!(Game.Instance.GetCreatureWithId(connection.PlayerId) is Player player)) {
+				return;
+			}
 
-            var rawFightMode = message.GetByte(); // 1 - offensive, 2 - balanced, 3 - defensive
+			var rawFightMode = message.GetByte(); // 1 - offensive, 2 - balanced, 3 - defensive
             var rawChaseMode = message.GetByte(); // 0 - stand while fightning, 1 - chase opponent
             var rawSafeMode = message.GetByte();
 
