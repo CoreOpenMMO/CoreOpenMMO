@@ -26,7 +26,7 @@ namespace COMMO.Server.Items
 
         public Dictionary<uint, byte> OpenedBy { get; }
 
-        private readonly object openedByLock;
+        private readonly object _openedByLock;
 
         public byte Volume => Convert.ToByte(Attributes.ContainsKey(ItemAttribute.Capacity) ? Attributes[ItemAttribute.Capacity] : 0x08);
 
@@ -37,7 +37,7 @@ namespace COMMO.Server.Items
         {
             Content = new List<IItem>();
             OpenedBy = new Dictionary<uint, byte>();
-            openedByLock = new object();
+            _openedByLock = new object();
 
             OnContentUpdated += Game.Instance.OnContainerContentUpdated;
             OnContentAdded += Game.Instance.OnContainerContentAdded;
@@ -246,7 +246,7 @@ namespace COMMO.Server.Items
         /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
         public byte Open(uint creatureOpeningId, byte containerId)
         {
-            lock (openedByLock)
+            lock (_openedByLock)
             {
                 if (!OpenedBy.ContainsKey(creatureOpeningId))
                 {
@@ -263,7 +263,7 @@ namespace COMMO.Server.Items
         /// <param name="creatureClosingId">The id of the creature closing this container.</param>
         public void Close(uint creatureClosingId)
         {
-            lock (openedByLock)
+            lock (_openedByLock)
             {
                 if (OpenedBy.ContainsKey(creatureClosingId))
                 {
@@ -279,7 +279,7 @@ namespace COMMO.Server.Items
         /// <returns>A non-negative number if an id was found, -1 otherwise.</returns>
         public sbyte GetIdFor(uint creatureId)
         {
-            lock (openedByLock)
+            lock (_openedByLock)
             {
                 if (OpenedBy.ContainsKey(creatureId))
                 {

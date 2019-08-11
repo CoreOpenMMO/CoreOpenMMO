@@ -50,7 +50,7 @@ namespace COMMO.Server.Movement
             Conditions.Add(new GrabberHasContainerOpenEventCondition(RequestorId, ToContainer));
             Conditions.Add(new ContainerHasEnoughCapacityEventCondition(ToContainer));
             Conditions.Add(new ThingIsTakeableEventCondition(RequestorId, Thing));
-            Conditions.Add(new LocationsMatchEventCondition(Thing?.Location ?? default(Location), FromLocation));
+            Conditions.Add(new LocationsMatchEventCondition(Thing?.Location ?? default, FromLocation));
             Conditions.Add(new TileContainsThingEventCondition(Thing, FromLocation, Count));
 
             ActionsOnPass.Add(new GenericEventAction(PickupToContainer));

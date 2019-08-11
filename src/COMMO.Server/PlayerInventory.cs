@@ -106,7 +106,7 @@ namespace COMMO.Server
                     else
                     {
                         extraItem = current.Item1;
-                        extraItem.SetHolder(null, default(Location));
+                        extraItem.SetHolder(null, default);
                     }
                 }
             }
@@ -148,7 +148,7 @@ namespace COMMO.Server
                 if (found.Count == count)
                 {
                     Inventory.Remove((Slot)positionByte);
-                    found.SetHolder(null, default(Location));
+                    found.SetHolder(null, default);
 
                     // update the slot.
                     Game.Instance.NotifySinglePlayer(
@@ -185,7 +185,7 @@ namespace COMMO.Server
 
             var slot = Inventory.Keys.FirstOrDefault(k => Inventory[k].Item1.Type.TypeId == itemId);
 
-            if (slot != default(Slot))
+            if (slot != default)
             {
                 var found = Inventory[slot].Item1;
 
@@ -198,7 +198,7 @@ namespace COMMO.Server
                 if (found.Count == count)
                 {
                     Inventory.Remove(slot);
-                    found.SetHolder(null, default(Location));
+                    found.SetHolder(null, default);
 
                     // update the slot.
                     Game.Instance.NotifySinglePlayer(

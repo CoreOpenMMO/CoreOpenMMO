@@ -21,7 +21,7 @@ namespace COMMO.Server.Movement
         /// <summary>
         /// Caches the requestor creature, if defined.
         /// </summary>
-        private ICreature requestor;
+        private ICreature _requestor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementBase"/> class.
@@ -52,12 +52,12 @@ namespace COMMO.Server.Movement
         {
             get
             {
-                if (requestor == null)
+                if (_requestor == null)
                 {
-                    requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+                    _requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
                 }
 
-                return requestor;
+                return _requestor;
             }
         }
     }

@@ -15,28 +15,28 @@ namespace COMMO.Server.Monsters
 {
     internal class MonsterInventory : IInventory
     {
-        private Dictionary<byte, Tuple<IItem, ushort>> inventory;
-        private byte lastPosByte;
+        private Dictionary<byte, Tuple<IItem, ushort>> _inventory;
+        private byte _lastPosByte;
 
-        private readonly object[] recalcLocks;
+        private readonly object[] _recalcLocks;
 
-        private byte totalArmor;
-        private byte totalAttack;
-        private byte totalDefense;
+        private byte _totalArmor;
+        private byte _totalAttack;
+        private byte _totalDefense;
 
         public ICreature Owner { get; }
 
         public MonsterInventory(ICreature owner, IEnumerable<Tuple<ushort, byte, ushort>> inventoryComposition, ushort maxCapacity = 100) // 100 is arbitrary.
         {
 			Owner = owner ?? throw new ArgumentNullException(nameof(owner));
-            inventory = new Dictionary<byte, Tuple<IItem, ushort>>();
+            _inventory = new Dictionary<byte, Tuple<IItem, ushort>>();
 
-            recalcLocks = new object[3];
-            lastPosByte = 0;
+            _recalcLocks = new object[3];
+            _lastPosByte = 0;
 
-            totalAttack = 0xFF;
-            totalArmor = 0xFF;
-            totalDefense = 0xFF;
+            _totalAttack = 0xFF;
+            _totalArmor = 0xFF;
+            _totalDefense = 0xFF;
 
             DetermineLoot(inventoryComposition, maxCapacity);
         }
@@ -70,31 +70,31 @@ namespace COMMO.Server.Monsters
 			}
         }
 
-        public IItem this[byte idx] => inventory.ContainsKey(idx) ? inventory[idx].Item1 : null;
+        public IItem this[byte idx] => _inventory.ContainsKey(idx) ? _inventory[idx].Item1 : null;
 
         public byte TotalArmor
         {
             get
             {
-                if (totalArmor == 0xFF)
+                if (_totalArmor == 0xFF)
                 {
-                    lock (recalcLocks[0])
+                    lock (_recalcLocks[0])
                     {
-                        if (totalArmor == 0xFF)
+                        if (_totalArmor == 0xFF)
                         {
                             var total = default(byte);
 
-                            foreach (var tuple in inventory.Values)
+                            foreach (var tuple in _inventory.Values)
                             {
                                 total += tuple.Item1.Armor;
                             }
 
-                            totalArmor = total;
+                            _totalArmor = total;
                         }
                     }
                 }
 
-                return totalArmor;
+                return _totalArmor;
             }
         }
 
@@ -102,24 +102,24 @@ namespace COMMO.Server.Monsters
         {
             get
             {
-                if (totalAttack != 0xFF)
+                if (_totalAttack != 0xFF)
                 {
-                    return totalAttack;
+                    return _totalAttack;
                 }
 
-                lock (recalcLocks[1])
+                lock (_recalcLocks[1])
                 {
-                    if (totalAttack != 0xFF)
+                    if (_totalAttack != 0xFF)
                     {
-                        return totalAttack;
+                        return _totalAttack;
                     }
 
-                    var total = inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Attack));
+                    var total = _inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Attack));
 
-                    totalAttack = total;
+                    _totalAttack = total;
                 }
 
-                return totalAttack;
+                return _totalAttack;
             }
         }
 
@@ -127,24 +127,24 @@ namespace COMMO.Server.Monsters
         {
             get
             {
-                if (totalDefense != 0xFF)
+                if (_totalDefense != 0xFF)
                 {
-                    return totalDefense;
+                    return _totalDefense;
                 }
 
-                lock (recalcLocks[2])
+                lock (_recalcLocks[2])
                 {
-                    if (totalDefense != 0xFF)
+                    if (_totalDefense != 0xFF)
                     {
-                        return totalDefense;
+                        return _totalDefense;
                     }
 
-                    var total = inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Defense));
+                    var total = _inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Defense));
 
-                    totalDefense = total;
+                    _totalDefense = total;
                 }
 
-                return totalDefense;
+                return _totalDefense;
             }
         }
 
@@ -154,7 +154,7 @@ namespace COMMO.Server.Monsters
         {
             extraItem = null;
 
-            inventory[lastPosByte++] = new Tuple<IItem, ushort>(item, lossProbability);
+            _inventory[_lastPosByte++] = new Tuple<IItem, ushort>(item, lossProbability);
 
             return true;
         }
@@ -163,9 +163,9 @@ namespace COMMO.Server.Monsters
         {
             wasPartial = false;
 
-            if (inventory.ContainsKey(positionByte))
+            if (_inventory.ContainsKey(positionByte))
             {
-                var found = inventory[positionByte].Item1;
+                var found = _inventory[positionByte].Item1;
 
                 if (found.Count < count)
                 {
@@ -175,8 +175,8 @@ namespace COMMO.Server.Monsters
                 // remove the whole item
                 if (found.Count == count)
                 {
-                    inventory.Remove(positionByte);
-                    found.SetHolder(null, default(Location));
+                    _inventory.Remove(positionByte);
+                    found.SetHolder(null, default);
 
                     return found;
                 }
@@ -190,7 +190,7 @@ namespace COMMO.Server.Monsters
                 return newItem;
             }
 
-            inventory = new Dictionary<byte, Tuple<IItem, ushort>>(inventory);
+            _inventory = new Dictionary<byte, Tuple<IItem, ushort>>(_inventory);
 
             return null;
         }
@@ -199,11 +199,11 @@ namespace COMMO.Server.Monsters
         {
             wasPartial = false;
             bool removed = false;
-            var slot = inventory.Keys.FirstOrDefault(k => inventory[k].Item1.Type.TypeId == itemId);
+            var slot = _inventory.Keys.FirstOrDefault(k => _inventory[k].Item1.Type.TypeId == itemId);
 
             try
             {
-                var found = inventory[slot].Item1;
+                var found = _inventory[slot].Item1;
 
                 if (found.Count < count)
                 {
@@ -213,8 +213,8 @@ namespace COMMO.Server.Monsters
                 // remove the whole item
                 if (found.Count == count)
                 {
-                    inventory.Remove(slot);
-                    found.SetHolder(null, default(Location));
+                    _inventory.Remove(slot);
+                    found.SetHolder(null, default);
 
                     removed = true;
                     return found;
@@ -237,7 +237,7 @@ namespace COMMO.Server.Monsters
             {
                 if (removed)
                 {
-                    inventory = new Dictionary<byte, Tuple<IItem, ushort>>(inventory);
+                    _inventory = new Dictionary<byte, Tuple<IItem, ushort>>(_inventory);
                 }
             }
         }

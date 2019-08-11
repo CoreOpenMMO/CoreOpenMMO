@@ -28,7 +28,7 @@ namespace COMMO.Server.Scripting
 
         public const string NameShorthand = "%N";
 
-        private static TimeSpan DelayForFunctions = TimeSpan.FromMilliseconds(1);
+        private static TimeSpan _delayForFunctions = TimeSpan.FromMilliseconds(1);
 
         private static object ConvertSingleItem(string value, Type newType)
         {
@@ -246,10 +246,7 @@ namespace COMMO.Server.Scripting
 
 		public static bool IsCreature(IThing thing) => thing is ICreature;
 
-		public static bool IsType(IThing thing, ushort typeId)
-        {
-			return thing is IItem item && item.Type.TypeId == typeId;
-		}
+		public static bool IsType(IThing thing, ushort typeId) => thing is IItem item && item.Type.TypeId == typeId;
 
 		public static bool IsPosition(IThing thing, Location location) => thing != null && thing.Location == location;
 
@@ -556,14 +553,14 @@ namespace COMMO.Server.Scripting
             }
 
 			if (thingToMove is ICreature thingAsCreature) {
-				Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation), DelayForFunctions);
+				Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation), _delayForFunctions);
 			}
 			else if (thingToMove is IItem thingAsItem) {
-				Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count), DelayForFunctions);
+				Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count), _delayForFunctions);
 			}
 		}
 
-		public static void MoveRel(ICreature user, IThing objectUsed, Location locationOffset) => Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true), DelayForFunctions);
+		public static void MoveRel(ICreature user, IThing objectUsed, Location locationOffset) => Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true), _delayForFunctions);
 
 		public static void MoveTop(IThing fromThing, Location targetLocation)
         {
@@ -575,12 +572,12 @@ namespace COMMO.Server.Scripting
             // Move all down items and creatures on tile.
             foreach (var item in fromThing.Tile.DownItems.ToList())
             {
-                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(item), targetLocation), DelayForFunctions);
+                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(item), targetLocation), _delayForFunctions);
             }
 
             foreach (var creatureId in fromThing.Tile.CreatureIds.ToList())
             {
-                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true), DelayForFunctions);
+                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true), _delayForFunctions);
             }
         }
 
@@ -596,12 +593,12 @@ namespace COMMO.Server.Scripting
             // Move all down items and creatures on tile.
             foreach (var item in fromThing.Tile.DownItems.ToList())
             {
-                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(fromThing), targetLocation, item.Count), DelayForFunctions);
+                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(fromThing), targetLocation, item.Count), _delayForFunctions);
             }
 
             foreach (var creatureId in fromThing.Tile.CreatureIds.ToList())
             {
-                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true), DelayForFunctions);
+                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true), _delayForFunctions);
             }
         }
 

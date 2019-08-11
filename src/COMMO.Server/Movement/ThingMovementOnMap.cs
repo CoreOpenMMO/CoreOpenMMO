@@ -46,7 +46,7 @@ namespace COMMO.Server.Movement
             Conditions.Add(new LocationNotObstructedEventCondition(RequestorId, Thing, ToLocation));
             Conditions.Add(new LocationHasTileWithGroundEventCondition(ToLocation));
             Conditions.Add(new UnpassItemsInRangeEventCondition(RequestorId, Thing, ToLocation));
-            Conditions.Add(new LocationsMatchEventCondition(Thing?.Location ?? default(Location), FromLocation));
+            Conditions.Add(new LocationsMatchEventCondition(Thing?.Location ?? default, FromLocation));
             Conditions.Add(new TileContainsThingEventCondition(Thing, FromLocation, Count));
 
             ActionsOnPass.Add(new GenericEventAction(MoveThing));

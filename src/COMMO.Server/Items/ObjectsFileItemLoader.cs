@@ -14,11 +14,9 @@ using System.Reflection;
 using COMMO.Data.Contracts;
 using COMMO.Server.Parsing;
 using COMMO.OTB;
-using COMMO.IO;
 
-namespace COMMO.Server.Items
-{
-    public class ObjectsFileItemLoader : IItemLoader
+namespace COMMO.Server.Items {
+	public class ObjectsFileItemLoader : IItemLoader
     {
         /*
             An item definition starts and ends with blank lines.
@@ -156,8 +154,7 @@ namespace COMMO.Server.Items
 		var attrsNotSuported = 0;
 		var attrsNotValid = 0;
 
-		var ss = File.ReadAllBytes("data/items/items.otb");
-		var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(ss));
+		var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes("data/items/items.otb")));
 
         foreach (var itemChildren in fileTree.Children)
         {

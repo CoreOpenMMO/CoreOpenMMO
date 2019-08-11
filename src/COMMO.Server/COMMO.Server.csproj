@@ -40,8 +40,6 @@
     <ProjectReference Include="..\COMMO.Configuration\COMMO.Configuration.csproj" />
     <ProjectReference Include="..\COMMO.Data.Contracts\COMMO.Data.Contracts.csproj" />
     <ProjectReference Include="..\COMMO.Data\COMMO.Data.csproj" />
-    <ProjectReference Include="..\COMMO.FileFormats\COMMO.FileFormats.csproj" />
-    <ProjectReference Include="..\COMMO.IO\COMMO.IO.csproj" />
     <ProjectReference Include="..\COMMO.OTB\COMMO.OTB.csproj" />
     <ProjectReference Include="..\COMMO.Scheduling.Contracts\COMMO.Scheduling.Contracts.csproj" />
     <ProjectReference Include="..\COMMO.Scheduling\COMMO.Scheduling.csproj" />
