@@ -90,7 +90,7 @@ namespace COMMO.Configuration
                             PremiumRookgardiansBuffer = 250,
                             QueryManagerPassword = "a6glaf0c",
                             LocationString = "United States",
-                            MessageOfTheDay = "Welcome to OpenTibia.",
+                            MessageOfTheDay = "Bem vindo ao COTS!",
                             WebsiteUrl = @"http://www.randomot.com",
                             WorldName = "Open Tibia"
                         };

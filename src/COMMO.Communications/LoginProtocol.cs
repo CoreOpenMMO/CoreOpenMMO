@@ -41,16 +41,29 @@ namespace COMMO.Communications
                 throw new ArgumentNullException(nameof(inboundMessage));
             }
 
-            var packetType = (LoginOrManagementIncomingPacketType)inboundMessage.GetByte();
+			//var version = 1098;
 
-            if (packetType != LoginOrManagementIncomingPacketType.LoginServerRequest)
-            {
-                // This packet should NOT have been routed to this protocol.
-                Trace.TraceWarning("Non LoginServerRequest packet routed to LoginProtocol. Packet was ignored.");
-                return;
-            }
+			//if (version > 772) 
+			//{
+			//	inboundMessage.SkipBytes(4);
+			//}
 
-            var newConnPacket = new NewConnectionPacket(inboundMessage);
+			var packetType = (LoginOrManagementIncomingPacketType) inboundMessage.GetByte();
+
+			if (packetType != LoginOrManagementIncomingPacketType.LoginServerRequest) {
+
+				inboundMessage.SkipBytes(3);
+
+				packetType = (LoginOrManagementIncomingPacketType) inboundMessage.GetByte();
+
+				if (packetType != LoginOrManagementIncomingPacketType.LoginServerRequest) {
+					// This packet should NOT have been routed to this protocol.
+					Trace.TraceWarning("Non LoginServerRequest packet routed to LoginProtocol. Packet was ignored.");
+					return;
+				}
+			}
+
+			var newConnPacket = new NewConnectionPacket(inboundMessage);
             var gameConfig = ServiceConfiguration.GetConfiguration();
 
 			if (gameConfig.ReceivedClientVersionInt < gameConfig.ClientMinVersionInt || gameConfig.ReceivedClientVersionInt > gameConfig.ClientMaxVersionInt) {
@@ -117,7 +130,7 @@ namespace COMMO.Communications
 			            Passwd = "1",
 						Userlevel = 255,
 						Premium = 1,
-						Premium_Days = 100
+						Premium_Days = 0
 		            };
 
 		            otContext.Users.Add(u);
@@ -128,9 +141,9 @@ namespace COMMO.Communications
 			            Account_Id = 1,
 			            Player_Id = 1,
 			            Account_Nr = 1,
-			            Charname = "MUNIZ",
+			            Charname = "Player 1",
 						Level = 10,
-						Comment = "Felipe Muniz"
+						Comment = ""
 		            };
 
 		            otContext.Players.Add(p);
@@ -144,7 +157,7 @@ namespace COMMO.Communications
 			            Passwd = "2",
 			            Userlevel = 50,
 			            Premium = 1,
-			            Premium_Days = 100
+			            Premium_Days = 0
 		            };
 
 		            otContext.Users.Add(u2);
@@ -155,9 +168,9 @@ namespace COMMO.Communications
 			            Account_Id = 2,
 			            Player_Id = 2,
 			            Account_Nr = 2,
-			            Charname = "FELIPE",
+			            Charname = "Player 2",
 			            Level = 10,
-			            Comment = "Felipe"
+			            Comment = ""
 		            };
 
 		            otContext.Players.Add(p2);
@@ -216,7 +229,7 @@ namespace COMMO.Communications
                         }
 
                         // TODO: motd
-                        SendCharacterList(connection, gameConfig.MessageOfTheDay, (ushort)Math.Min(user.Premium_Days + user.Trial_Premium_Days, ushort.MaxValue), charList);
+                        SendCharacterList(connection, user.Login, user.Passwd, gameConfig.MessageOfTheDay, (ushort)Math.Min(user.Premium_Days + user.Trial_Premium_Days, ushort.MaxValue), charList);
                     }
                 }
             }
@@ -233,17 +246,46 @@ namespace COMMO.Communications
             connection.Send(message);
         }
 
-        private void SendCharacterList(Connection connection, string motd, ushort premiumDays, IEnumerable<ICharacterListItem> chars)
+        private void SendCharacterList(Connection connection, int login, string password, string motd, ushort premiumDays, IEnumerable<ICharacterListItem> chars)
         {
             var message = new NetworkMessage(4);
 
-            if (motd != string.Empty)
-            {
-                message.AddPacket(new MessageOfTheDayPacket
-                {
-                    MessageOfTheDay = motd
-                });
-            }
+			long ticks = DateTime.Now.Ticks / 30;
+
+			var token = "";
+
+			if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt > 1071) {
+
+				message = new NetworkMessage(8);
+
+				//Add session key
+				if (!string.IsNullOrEmpty(password)) {
+					//    if (token.empty() || !(token == generateToken(account.key, ticks) || token == generateToken(account.key, ticks - 1) || token == generateToken(account.key, ticks + 1)))
+					//    {
+					//        output->addByte(0x0D);
+					//        output->addByte(0);
+					//        send(output);
+					//        disconnect();
+					//        return;
+					//    }
+					message.AddByte(0x0C);
+					message.AddByte(0);
+				}
+			}
+
+			////Update premium days
+			//Game::updatePremium(account);
+
+			if (motd != string.Empty) {
+				message.AddPacket(new MessageOfTheDayPacket {
+					MessageOfTheDay = motd
+				});
+			}
+
+			if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt > 1071) { //Add session key
+				message.AddByte(0x28);
+				message.AddString(login + "\n" + password + "\n" + token + "\n" + ticks);
+			}
 
             message.AddPacket(new CharacterListPacket
             {

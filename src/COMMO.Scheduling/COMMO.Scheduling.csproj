@@ -6,6 +6,14 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutputPath>..\..\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutputPath>..\..\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="OptimizedPriorityQueue" Version="4.1.1" />
   </ItemGroup>

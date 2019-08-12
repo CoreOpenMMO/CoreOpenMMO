@@ -295,10 +295,48 @@ namespace COMMO.Server.Data
 		public bool XteaDecrypt(uint[] key) => Xtea.Decrypt(ref _buffer, ref _length, 2, key);
 
 		public bool XteaEncrypt(uint[] key) => Xtea.Encrypt(ref _buffer, ref _length, 2, key);
+		public bool XteaEncrypt2(uint[] key) => Xtea.Encrypt(ref _buffer, ref _length, 6, key);
 
 		private void InsertPacketLength() => Array.Copy(BitConverter.GetBytes((ushort) (_length - 4)), 0, _buffer, 2, 2);
 
-		private void InsertTotalLength() => Array.Copy(BitConverter.GetBytes((ushort) (_length - 2)), 0, _buffer, 0, 2);
+		public void InsertTotalLength() => Array.Copy(BitConverter.GetBytes((ushort) (_length - 2)), 0, _buffer, 0, 2);
+
+		public void InsertAdler32() => Array.Copy(BitConverter.GetBytes(Tools.AdlerChecksum(Buffer, 6, Length)), 0, Buffer, 2, 4);
+
+		/// <summary>
+		/// Current position of header cursor 
+		/// </summary>
+		public int HeaderPosition { get; set; }
+
+		public void WriteMessageLength() {
+			//Array.Copy(Buffer, 0, Buffer, 4, Length);
+			AddHeaderUInt16((ushort) Length);
+		}
+
+		public void AddCryptoHeader(bool addChecksum) {
+			if (addChecksum) {
+				AddHeaderUInt32(Tools.AdlerChecksum(Buffer, 6, Length));
+			}
+
+			AddHeaderUInt16((ushort) Length);
+		}
+
+		#region Add To Header
+		protected void AddHeaderBytes(byte[] value) {
+			if (value.Length > HeaderPosition) {
+				Console.WriteLine("OutputMessage AddHeader buffer is full!");
+				return;
+			}
+
+			HeaderPosition -= value.Length;
+			Array.Copy(value, 0, Buffer, HeaderPosition, value.Length);
+			_length += value.Length;
+		}
+
+		protected void AddHeaderUInt32(uint value) => AddHeaderBytes(BitConverter.GetBytes(value));
+
+		protected void AddHeaderUInt16(ushort value) => AddHeaderBytes(BitConverter.GetBytes(value));
+		#endregion
 
 		public bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false)
         {
@@ -329,7 +367,16 @@ namespace COMMO.Server.Data
             return true;
         }
 
-        public bool PrepareToRead(uint[] xteaKey)
+		public bool PrepareToSend2(uint[] xteaKey) {
+			
+			if (!XteaEncrypt2(xteaKey)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		public bool PrepareToRead(uint[] xteaKey)
         {
             if (!XteaDecrypt(xteaKey))
             {

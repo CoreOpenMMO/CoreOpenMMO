@@ -1,33 +1,17 @@
-using System.IO;
-using System.Reflection;
+using COMMO.Server.Data.Models.Structs;
 
 namespace COMMO.Server {
 	public class ServerResourcesManager
     {
-		private const string ItemsFilesDirectory = "COMMO.Server.Data.items";
-		private const string MapFilesDirectory = "Data/map/COMMO.otbm";
-		//private const string MapFilesDirectory = "Data/map/forgotten.otbm";
+		public static string ConfigVersion { get; set; }
+		public static string ConfigMap { get; set; }
 
-		public static string GetMap() => MapFilesDirectory;
+		public static Location StartLocation { get; set; }
 
-		public static Stream GetItems(string itemsFileName) {
-            var assembly = Assembly.GetExecutingAssembly();
-            return assembly.GetManifestResourceStream(ItemsFilesDirectory + "." + itemsFileName);
-		}
+		public static string GetMap() => $"Data/map/{ConfigVersion}/{ConfigMap}.otbm";
+		public static string GetItemsOtb() => $"Data/items/{ConfigVersion}/items.otb";
+		public static string GetItemsXml() => $"Data/items/{ConfigVersion}/items.xml";
+	}
 
-		public static byte[] GetItemsBytes(string itemsFileName) {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(ItemsFilesDirectory + "." + itemsFileName))
-				return ReadFully(stream);
-		}
-
-		private static byte[] ReadFully(Stream input)
-		{
-			using (var ms = new MemoryStream())
-			{
-				input.CopyTo(ms);
-				return ms.ToArray();
-			}
-		}
-    }
+	
 }

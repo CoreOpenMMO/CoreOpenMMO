@@ -6,6 +6,7 @@
 
 using System;
 using System.Net.Sockets;
+using COMMO.Configuration;
 using COMMO.Security;
 using COMMO.Server.Data;
 
@@ -158,14 +159,36 @@ namespace COMMO.Communications
         // }
         private void SendMessage(NetworkMessage message, bool useEncryption, bool managementProtocol = false)
         {
-            if (useEncryption)
-            {
-                message.PrepareToSend(XTeaKey);
-            }
-            else
-            {
-                message.PrepareToSendWithoutEncryption(managementProtocol);
-            }
+			if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt >= 971) {
+
+				message.HeaderPosition = 8;
+
+				message.WriteMessageLength();
+
+				if (useEncryption) {
+
+					message.PrepareToSend2(XTeaKey);
+					message.AddCryptoHeader(true);
+
+				}
+				else {
+
+					message.InsertAdler32();
+					message.InsertTotalLength();
+
+				}
+			}
+			else 
+			{
+				if (useEncryption) {
+					message.PrepareToSend(XTeaKey);
+				}
+				else {
+					message.PrepareToSendWithoutEncryption(managementProtocol);
+				}
+			}
+
+           
 
             try
             {

@@ -17,7 +17,10 @@ namespace COMMO.Communications.Packets.Incoming
 			Os = message.GetUInt16();
 			ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt = message.GetUInt16();
 
-            message.SkipBytes(12);
+			if (ServiceConfiguration.GetConfiguration().ReceivedClientVersionInt >= 971)
+				message.SkipBytes(17);
+			else
+				message.SkipBytes(12);
         }
 
         public ushort Os { get; set; }

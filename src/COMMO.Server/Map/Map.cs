@@ -18,7 +18,8 @@ namespace COMMO.Server.Map {
 
         // Start positions
         public static Location NewbieStart = new Location { X = 1000, Y = 1000, Z = 7 };
-		public static Location VeteranStart = new Location { X = 996, Y = 991, Z = 7 };
+		public static Location VeteranStart = ServerResourcesManager.StartLocation;
+		//public static Location VeteranStart = new Location { X = 996, Y = 991, Z = 7 };
 		//public static Location VeteranStart = new Location { X = 95, Y = 130, Z = 7 };
 
 		private IMapLoader _loader { get; }

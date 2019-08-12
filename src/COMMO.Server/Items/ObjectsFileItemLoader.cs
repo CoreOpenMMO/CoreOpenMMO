@@ -154,7 +154,7 @@ namespace COMMO.Server.Items {
 		var attrsNotSuported = 0;
 		var attrsNotValid = 0;
 
-		var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes("data/items/items.otb")));
+		var fileTree = OTBDeserializer.DeserializeOTBData(new ReadOnlyMemory<byte>(File.ReadAllBytes(ServerResourcesManager.GetItemsOtb())));
 
         foreach (var itemChildren in fileTree.Children)
         {
@@ -196,7 +196,7 @@ namespace COMMO.Server.Items {
             itemDictionary.Add(current.TypeId, current);
         }
 
-       var rootElement = XElement.Load("data/items/items.xml", LoadOptions.SetLineInfo);
+       var rootElement = XElement.Load(ServerResourcesManager.GetItemsXml(), LoadOptions.SetLineInfo);
 
         foreach (var element in rootElement.Elements("item"))
         {

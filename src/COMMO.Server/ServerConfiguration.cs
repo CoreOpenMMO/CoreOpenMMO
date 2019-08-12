@@ -4,6 +4,8 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
+using Newtonsoft.Json;
+
 namespace COMMO.Server
 {
     public class ServerConfiguration
@@ -22,4 +24,22 @@ namespace COMMO.Server
 
         public static bool SupressInvalidItemWarnings { get; set; }
     }
+
+	[JsonObject("config")]
+	public class Config {
+		[JsonProperty("version")]
+		public string Version { get; set; }
+
+		[JsonProperty("map")]
+		public string Map { get; set; }
+
+		[JsonProperty("x")]
+		public int X { get; set; }
+
+		[JsonProperty("y")]
+		public int Y { get; set; }
+
+		[JsonProperty("z")]
+		public sbyte Z { get; set; }
+	}
 }

@@ -18,7 +18,7 @@ namespace COMMO.Communications.Packets.Outgoing
         public override void Add(NetworkMessage message)
         {
             message.AddByte(PacketType);
-            message.AddString("1\n" + MessageOfTheDay);
+            message.AddString("0\n" + MessageOfTheDay);
         }
 
         public override void CleanUp()
